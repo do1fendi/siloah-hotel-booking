@@ -21,24 +21,27 @@ export default function Header({}: Props) {
         </button>
         {showLang && (
           <div className="absolute -bottom-15 right-0 rounded shadow-lg">
-            <button
-              className="hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
-              onClick={() => {
-                setLang("EN");
-                setShowLang(false);
-              }}
-            >
-              English
-            </button>
-            <button
-              className="hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded" 
-              onClick={() => {
-                setLang("CN");
-                setShowLang(false);
-              }}
-            >
-              Chinese
-            </button>
+            <div className="bg-transparent p-5 relative">
+              <button className="text-right">x</button>
+              <button 
+                className="hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+                onClick={() => {
+                  setLang("EN");
+                  setShowLang(false);
+                }}
+              >
+                English
+              </button>
+              <button
+                className="hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+                onClick={() => {
+                  setLang("CN");
+                  setShowLang(false);
+                }}
+              >
+                Chinese
+              </button>
+            </div>
           </div>
         )}
       </div>
