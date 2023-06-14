@@ -2,11 +2,18 @@
 const nextConfig = {
   output: "export",
   trailingSlash: true,
+  // images: {
+  //   loader: "imgix",
+  //   path: "",
+  // },
   images: {
     domains: ["localhost", "www.taiwanviptravel.com", "do1fendi.github.io"],
+    loader: "imgix",
+    path:"",
+    unoptimized: true,
   },
   env: {
-    BASEURL: "http://localhost:3000",
+    BASEURL: "http://localhost:3002",
     SERVER: "http://localhost:3001",
   },
 };

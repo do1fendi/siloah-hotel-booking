@@ -1,6 +1,7 @@
 "use client";
 import useLangStore from "@/store/lang";
 import { useState } from "react";
+import Link from "next/link";
 
 type Props = {};
 
@@ -8,9 +9,11 @@ export default function Header({}: Props) {
   const { lang, setLang } = useLangStore((state) => state);
   const [showLang, setShowLang] = useState<boolean>(false);
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center bg-teal-50 p-5">
       <div>
-        <p className="text-2xl text-teal-600 font-bold">SILOAH</p>
+        <p className="text-2xl text-teal-600 font-bold">
+          <Link href={"/"}> SILOAH</Link>
+        </p>
       </div>
       <div className="hidden lg:block relative">
         <button
@@ -20,11 +23,13 @@ export default function Header({}: Props) {
           {lang}
         </button>
         {showLang && (
-          <div className="absolute -bottom-15 right-0 rounded shadow-lg">
-            <div className="bg-transparent p-5 relative">
-              <button className="text-right">x</button>
-              <button 
-                className="hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+          <div className="absolute -bottom-15 right-0 rounded shadow-lg bg-white z-20">
+            <div className="bg-transparent p-5 relative flex flex-col gap-2">
+              <div className="flex justify-end">
+                <button onClick={() => setShowLang(false)}>x</button>
+              </div>
+              <button
+                className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
                 onClick={() => {
                   setLang("EN");
                   setShowLang(false);
@@ -33,7 +38,7 @@ export default function Header({}: Props) {
                 English
               </button>
               <button
-                className="hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+                className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
                 onClick={() => {
                   setLang("CN");
                   setShowLang(false);
