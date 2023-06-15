@@ -13,7 +13,7 @@ const nextConfig = {
     unoptimized: true,
   },
   env: {
-    BASEURL: "http://localhost:3002",
+    BASEURL: "http://localhost:3000",
     SERVER: "http://localhost:3001",
   },
 };

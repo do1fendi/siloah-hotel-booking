@@ -1,12 +1,12 @@
 import { create } from "zustand";
 
-interface LangState {
+interface iLangState {
   lang: string;
   setLang: (a: string) => void;
 }
 
-const useLangStore = create<LangState>()((set) => ({
-  lang: "En",
+const useLangStore = create<iLangState>()((set) => ({
+  lang: "TW",
   setLang: (a) => set({ lang: a }),
 }));
 
