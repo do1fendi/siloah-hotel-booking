@@ -1,4 +1,17 @@
+"use client";
 import { create } from "zustand";
+
+const getLocalStorage = (key: string) => {
+  if (typeof window !== "undefined") {
+    return JSON.parse(window.localStorage.getItem(key)!);
+    // return { logged: true, name: "John", email: "siloah.dev@gmail.com" };
+  }
+};
+const setLocalStorage = (key: string, value: any) => {
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  }
+};
 
 interface iUser {
   userData: {
@@ -17,10 +30,5 @@ const useUserStore = create<iUser>((set) => ({
       return { userData };
     }),
 }));
-
-const getLocalStorage = (key: string) =>
-  JSON.parse(window.localStorage.getItem(key)!);
-const setLocalStorage = (key: string, value: any) =>
-  window.localStorage.setItem(key, JSON.stringify(value));
 
 export default useUserStore;

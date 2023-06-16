@@ -7,13 +7,14 @@ const nextConfig = {
   //   path: "",
   // },
   images: {
-    domains: ["localhost", "www.taiwanviptravel.com", "do1fendi.github.io"],
+    domains: ["localhost", "www.taiwanviptravel.com", "do1fendi.github.io", "192.168.12.3:3000"],
     loader: "imgix",
-    path:"",
+    path:"/",
     unoptimized: true,
   },
   env: {
-    BASEURL: "http://localhost:3000",
+    // BASEURL: "http://localhost:3000",
+    BASEURL: "http://192.168.12.3:3000",
     SERVER: "http://localhost:3001",
   },
 };

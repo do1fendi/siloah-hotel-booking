@@ -1,8 +1,10 @@
 "use client";
 import useLangStore from "@/store/lang";
 import useCurrencyStore from "@/store/currency";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
+import useUserStore from "@/store/user";
 
 type Props = {};
 
@@ -11,27 +13,38 @@ export default function Header({}: Props) {
   const [showLang, setShowLang] = useState<boolean>(false);
   const { currency, setCurrency } = useCurrencyStore((state) => state);
   const [showCurrency, setShowCurrency] = useState<boolean>(false);
+  const [showNav, setShowNav] = useState<boolean>(false);
+  const { userData, setUserData } = useUserStore((state) => state);
+  const router = usePathname();
+
+  // set all showCurrency, showLang, showNave to false if route change
+  useEffect(() => {
+    setShowCurrency(false);
+    setShowLang(false);
+    setShowNav(false);
+  }, [router]);
   return (
-    <div className="flex justify-between items-center p-5 shadow-sm">
+    <div className="flex justify-between items-center p-2 lg:p-5 shadow-sm">
       <div>
         <p className="text-2xl text-teal-600 font-bold">
           <Link href={"/"}> SILOAH</Link>
         </p>
       </div>
-      <div className="flex gap-5 justify-center items-center">
+      <div className="flex gap-2 lg:gap-5 justify-center items-center">
         <div className="currency relative">
           <button
             className="font-bold px-2"
             onClick={() => {
               setShowCurrency(true);
               setShowLang(false);
+              setShowNav(false);
             }}
           >
             ${currency}
           </button>
           {showCurrency && (
-            <div className="absolute -bottom-15 right-0 rounded shadow-lg bg-transparent z-20">
-              <div className="bg-transparent p-5 relative flex flex-col gap-2 bg-white">
+            <div className="absolute -bottom-15 right-0 rounded shadow-lg z-20">
+              <div className="p-5 relative flex flex-col gap-2 bg-white">
                 <div className="flex justify-end">
                   <button onClick={() => setShowCurrency(false)}>x</button>
                 </div>
@@ -63,13 +76,14 @@ export default function Header({}: Props) {
             onClick={() => {
               setShowLang(true);
               setShowCurrency(false);
+              setShowNav(false);
             }}
           >
             {lang}
           </button>
           {showLang && (
-            <div className="absolute -bottom-15 right-0 rounded shadow-lg bg-transparent z-20">
-              <div className="bg-transparent p-5 relative flex flex-col gap-2 bg-white">
+            <div className="absolute -bottom-15 right-0 rounded shadow-lg z-20">
+              <div className="p-5 relative flex flex-col gap-2 bg-white">
                 <div className="flex justify-end">
                   <button onClick={() => setShowLang(false)}>x</button>
                 </div>
@@ -95,9 +109,15 @@ export default function Header({}: Props) {
             </div>
           )}
         </div>
-
-        <div>
-          <button className="p-2">
+        <div className="nav relative">
+          <button
+            className="p-2"
+            onClick={() => {
+              setShowNav(true);
+              setShowLang(false);
+              setShowCurrency(false);
+            }}
+          >
             <svg
               className="w-6 h-6 text-teal-600"
               aria-hidden="true"
@@ -112,6 +132,35 @@ export default function Header({}: Props) {
               ></path>
             </svg>
           </button>
+          {showNav && (
+            <div className="absolute -bottom-15 right-0 rounded shadow-lg z-20 min-w-[200px]">
+              <div className="p-5 relative flex flex-col gap-2 bg-white">
+                <div className="flex justify-end">
+                  <button onClick={() => setShowNav(false)}>x</button>
+                </div>
+                {userData === null ? (
+                  <Link href={"/signup"}>
+                    <button
+                      className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+                      onClick={() => setShowNav(false)}
+                    >
+                      {lang === "TW" ? "註冊" : "Sign Up"}
+                    </button>
+                  </Link>
+                ) : (
+                  <button
+                    className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+                    onClick={() => {
+                      setUserData(null);
+                      setShowNav(false);
+                    }}
+                  >
+                    {lang === "TW" ? "登出" : "Sign Out"}
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
