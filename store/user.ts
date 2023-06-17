@@ -7,28 +7,30 @@ const getLocalStorage = (key: string) => {
     // return { logged: true, name: "John", email: "siloah.dev@gmail.com" };
   }
 };
-const setLocalStorage = (key: string, value: any) => {
+const setLocalStorage = (key: string, value: userData | null) => {
   if (typeof window !== "undefined") {
     window.localStorage.setItem(key, JSON.stringify(value));
   }
 };
 
+type userData = {
+  logged: boolean;
+  name: string;
+  token: string;
+};
+
 interface iUser {
-  userData: {
-    logged: boolean;
-    name: string;
-    email: string;
-  };
-  setUserData: (a: any) => void;
+  userData: userData;
+  setUserData: (a: userData | null) => void;
 }
 
 const useUserStore = create<iUser>((set) => ({
   userData: getLocalStorage("userData"),
-  setUserData: (userData) =>
-    set((state) => {
-      setLocalStorage("userData", userData);
-      return { userData };
-    }),
+  setUserData: (dt: userData | null) =>
+    // set() => {
+    setLocalStorage("userData", dt),
+  // return { dt };
+  // }),
 }));
 
 export default useUserStore;

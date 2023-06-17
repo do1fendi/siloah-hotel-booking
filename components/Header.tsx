@@ -139,6 +139,7 @@ export default function Header({}: Props) {
                   <button onClick={() => setShowNav(false)}>x</button>
                 </div>
                 {userData === null ? (
+                  <div className="flex flex-col gap-2">
                   <Link href={"/signup"}>
                     <button
                       className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
@@ -147,6 +148,15 @@ export default function Header({}: Props) {
                       {lang === "TW" ? "註冊" : "Sign Up"}
                     </button>
                   </Link>
+                  <Link href={"/signin"}>
+                    <button
+                      className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+                      onClick={() => setShowNav(false)}
+                    >
+                      {lang === "TW" ? "登入" : "Sign In"}
+                    </button>
+                  </Link>
+                  </div>
                 ) : (
                   <button
                     className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"

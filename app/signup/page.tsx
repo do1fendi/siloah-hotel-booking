@@ -1,6 +1,10 @@
 "use client";
 import { FormEvent, useState } from "react";
 import useLangStore from "@/store/lang";
+import useUserStore from "@/store/user";
+import Google from "@/components/Google";
+import Facebook from "@/components/Facebook";
+import Link from "next/link";
 
 type iFormProps = {
   firstName: string;
@@ -15,7 +19,7 @@ type iFormErrProps = {
   firstName: {
     error: boolean;
   };
-  lastName?: {
+  lastName: {
     error: boolean;
   };
   email: {
@@ -27,30 +31,31 @@ type iFormErrProps = {
   rePassword: {
     error: boolean;
   };
+  dbResponse?: {
+    error: boolean;
+    msgCN: string;
+    msgEN: string;
+  };
 };
 
 export default function page({}: {}) {
   const { lang } = useLangStore((state) => state);
+  const { userData, setUserData } = useUserStore((state) => state);
   const [form, setForm] = useState<iFormProps>({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
     rePassword: "",
-    platform: "",
+    platform: "EMAIL",
   });
   const [formErr, setFormErr] = useState<iFormErrProps>({
     firstName: {
       error: false,
     },
-    // lastName: {
-    //   hasTyped: false,
-    //   error: false,
-    //   label:
-    //     lang === "TW"
-    //       ? "請輸入有效的姓氏(限英文)。"
-    //       : "Please enter a valid last name (English only).",
-    // },
+    lastName: {
+      error: false,
+    },
     email: {
       error: false,
     },
@@ -65,56 +70,31 @@ export default function page({}: {}) {
   const onChange = (inpt: HTMLInputElement) => {
     setForm({ ...form, [inpt.name]: inpt.value });
     const key: keyof iFormProps = inpt.name as keyof iFormProps;
-    if (form[key] !== "") setFormErr({ ...formErr, [key]: { error: false } });
+    if (inpt.value !== "") setFormErr({ ...formErr, [key]: { error: false } });
+    else setFormErr({ ...formErr, [key]: { error: true } });
   };
 
-  const onSubmit = (e: FormEvent) => {
-    // form.firstName === ""
-    //   ? setFormErr({
-    //       ...formErr,
-    //       firstName: { ...formErr.firstName, error: true },
-    //     })
-    //   : setFormErr({
-    //       ...formErr,
-    //       firstName: { ...formErr.firstName, error: false },
-    //     });
-
-    // form.email === ""
-    //   ? setFormErr({
-    //       ...formErr,
-    //       email: { ...formErr.email, error: true },
-    //     })
-    //   : setFormErr({
-    //       ...formErr,
-    //       email: { ...formErr.email, error: false },
-    //     });
-
-    // form.password === ""
-    //   ? setFormErr({
-    //       ...formErr,
-    //       password: { ...formErr.password, error: true },
-    //     })
-    //   : setFormErr({
-    //       ...formErr,
-    //       password: { ...formErr.password, error: false },
-    //     });
-
-    // form.rePassword === ""
-    //   ? setFormErr({
-    //       ...formErr,
-    //       rePassword: { ...formErr.rePassword, error: true },
-    //     })
-    //   : setFormErr({
-    //       ...formErr,
-    //       rePassword: { ...formErr.rePassword, error: false },
-    //     });
-    
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
     setFormErr({
       firstName: { error: form.firstName != "" ? false : true },
+      lastName: { error: form.lastName != "" ? false : true },
       email: { error: form.email != "" ? false : true },
       password: { error: form.password != "" ? false : true },
       rePassword: { error: form.rePassword != "" ? false : true },
+    });
+
+    // check if any error
+    setFormErr((prevState: any) => {
+      const anyErr = [];
+      for (const key in prevState) {
+        // console.log(`${key}: ${prevState[key]['error']}`);
+        anyErr.push(prevState[key]["error"]);
+      }
+      // if no error, do login
+      setUserData({ logged: true, name: "john", token: "token" });
+      return prevState;
     });
   };
   return (
@@ -150,12 +130,21 @@ export default function page({}: {}) {
               {lang === "TW" ? "護照英文姓" : "Last Name"}
             </label>
             <input
-              className="border rounded-lg p-2"
+              className={`border rounded-lg p-2 ${
+                formErr.lastName.error === true && "border-pink-800"
+              }`}
               type="text"
               name="lastName"
               id="lastName"
               onChange={(e) => onChange(e.target)}
             />
+            {formErr.lastName.error === true && (
+              <label className="text-sm text-pink-800">
+                {lang === "TW"
+                  ? "請輸入有效的姓氏(限英文)。。"
+                  : "Please enter a valid last name (English only)."}
+              </label>
+            )}
           </div>
           <div className="flex flex-col mb-2 lg:mb-5">
             <label htmlFor="email" className="mb-[2px]">
@@ -207,7 +196,7 @@ export default function page({}: {}) {
               className={`border rounded-lg p-2 ${
                 formErr.rePassword.error === true && "border-pink-800"
               }`}
-              type="rePassword"
+              type="password"
               name="rePassword"
               id="rePassword"
               onChange={(e) => onChange(e.target)}
@@ -220,6 +209,13 @@ export default function page({}: {}) {
               </label>
             )}
           </div>
+          {formErr.dbResponse?.error === true && (
+            <label className="text-sm text-pink-800">
+              {lang === "TW"
+                ? formErr.dbResponse?.msgCN
+                : formErr.dbResponse?.msgEN}
+            </label>
+          )}
           <button
             className="rounded-lg bg-orange-500 hover:bg-orange-400 text-gray-100 p-2 w-full"
             onClick={(e) => onSubmit(e)}
@@ -227,7 +223,40 @@ export default function page({}: {}) {
             {lang === "TW" ? "送出" : "Submit"}
           </button>
         </form>
-        {/* {JSON.stringify(formErr)} */}
+        {/* {JSON.stringify(userData)} */}
+        <div className="splitter flex justify-center items-center gap-2 mt-5 text-gray-500 text-sm">
+          <p className="flex-grow h-px bg-gray-400"></p>
+          <p className="">
+            {lang === "TW" ? "或用以下帳號登入" : "or continue with"}
+          </p>
+          <p className="flex-grow h-px bg-gray-400"></p>
+        </div>
+        <div className="social-media-login flex flex-col gap-2 mt-5">
+          <Google
+            clientId={
+              "267711026176-4qvtdrssib8rid36b01kp3eoduh1ie9u.apps.googleusercontent.com"
+            }
+          ></Google>
+
+          <Facebook appId={"746859163687935"}></Facebook>
+        </div>
+        <div className="splitter mt-5">
+          <p className="flex-grow h-px bg-gray-400"></p>
+        </div>
+        <div className="signin mt-5">
+          <Link href="/signin">
+            <button className="border border-orange-500 hover:bg-orange-500 hover:text-gray-100 p-2 rounded w-full">
+              {lang === "TW"
+                ? "已經是會員？登入"
+                : "Already have an account? Sign in"}
+            </button>
+          </Link>
+        </div>
+        <div className="term-policy text-xs text-gray-400 text-center mt-5">
+          {lang === "TW"
+            ? "點擊登錄即代表我同意Siloah的服務條款和隱私權政策。"
+            : "By signing in, I agree to Siloah's Terms of Use and Privacy Policy."}
+        </div>
       </div>
     </div>
   );
