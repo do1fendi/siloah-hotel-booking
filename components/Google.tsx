@@ -63,7 +63,7 @@ export default function Google(props: IGoogleProps) {
       setIsgoogleLogin(false);
       return prev;
     });
-    console.log(isGoogleLogin);
+   
   }, [isGoogleLogin]);
 
   return (

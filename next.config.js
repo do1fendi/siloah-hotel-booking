@@ -15,7 +15,7 @@ const nextConfig = {
   env: {
     // BASEURL: "http://localhost:3000",
     BASEURL: "http://192.168.12.3:3000",
-    SERVER: "http://localhost:3001",
+    SERVER: "http://localhost:5000",
   },
 };
 

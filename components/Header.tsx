@@ -2,7 +2,7 @@
 import useLangStore from "@/store/lang";
 import useCurrencyStore from "@/store/currency";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import useUserStore from "@/store/user";
 
@@ -15,6 +15,7 @@ export default function Header({}: Props) {
   const [showCurrency, setShowCurrency] = useState<boolean>(false);
   const [showNav, setShowNav] = useState<boolean>(false);
   const { userData, setUserData } = useUserStore((state) => state);
+  // const [userInital, setUserInitial] = useState<null|string>(null)
   const router = usePathname();
 
   // set all showCurrency, showLang, showNave to false if route change
@@ -23,6 +24,7 @@ export default function Header({}: Props) {
     setShowLang(false);
     setShowNav(false);
   }, [router]);
+
   return (
     <div className="flex justify-between items-center p-2 lg:p-5 shadow-sm">
       <div>
@@ -109,6 +111,7 @@ export default function Header({}: Props) {
             </div>
           )}
         </div>
+        {userData !== undefined && userData !== null && <div className="rounded-full bg-pink-600 font-bold text-gray-100 w-8 h-8 flex justify-center items-center p-2">{userData.name[0].toUpperCase()}</div>}
         <div className="nav relative">
           <button
             className="p-2"
@@ -140,22 +143,22 @@ export default function Header({}: Props) {
                 </div>
                 {userData === null ? (
                   <div className="flex flex-col gap-2">
-                  <Link href={"/signup"}>
-                    <button
-                      className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
-                      onClick={() => setShowNav(false)}
-                    >
-                      {lang === "TW" ? "註冊" : "Sign Up"}
-                    </button>
-                  </Link>
-                  <Link href={"/signin"}>
-                    <button
-                      className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
-                      onClick={() => setShowNav(false)}
-                    >
-                      {lang === "TW" ? "登入" : "Sign In"}
-                    </button>
-                  </Link>
+                    <Link href={"/signup"}>
+                      <button
+                        className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+                        onClick={() => setShowNav(false)}
+                      >
+                        {lang === "TW" ? "註冊" : "Sign Up"}
+                      </button>
+                    </Link>
+                    <Link href={"/signin"}>
+                      <button
+                        className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+                        onClick={() => setShowNav(false)}
+                      >
+                        {lang === "TW" ? "登入" : "Sign In"}
+                      </button>
+                    </Link>
                   </div>
                 ) : (
                   <button
@@ -163,6 +166,7 @@ export default function Header({}: Props) {
                     onClick={() => {
                       setUserData(null);
                       setShowNav(false);
+                      location.reload();
                     }}
                   >
                     {lang === "TW" ? "登出" : "Sign Out"}

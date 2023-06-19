@@ -5,6 +5,7 @@ import useUserStore from "@/store/user";
 import Google from "@/components/Google";
 import Facebook from "@/components/Facebook";
 import Link from "next/link";
+import Error from "@/components/Error";
 
 type iFormProps = {
   firstName: string;
@@ -31,16 +32,16 @@ type iFormErrProps = {
   rePassword: {
     error: boolean;
   };
-  dbResponse?: {
+  dbResponse: {
     error: boolean;
-    msgCN: string;
-    msgEN: string;
+    msgCN?: string;
+    msgEN?: string;
   };
 };
 
 export default function page({}: {}) {
   const { lang } = useLangStore((state) => state);
-  const { userData, setUserData } = useUserStore((state) => state);
+  const { setUserData, refresh, setRefresh } = useUserStore((state) => state);
   const [form, setForm] = useState<iFormProps>({
     firstName: "",
     lastName: "",
@@ -65,13 +66,28 @@ export default function page({}: {}) {
     rePassword: {
       error: false,
     },
+    dbResponse: {
+      error: false,
+    },
   });
 
   const onChange = (inpt: HTMLInputElement) => {
     setForm({ ...form, [inpt.name]: inpt.value });
     const key: keyof iFormProps = inpt.name as keyof iFormProps;
-    if (inpt.value !== "") setFormErr({ ...formErr, [key]: { error: false } });
-    else setFormErr({ ...formErr, [key]: { error: true } });
+
+    if (inpt.value === "") setFormErr({ ...formErr, [key]: { error: true } });
+    else if (
+      inpt.name === "email" &&
+      inpt.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g) == null
+    )
+      setFormErr({ ...formErr, [key]: { error: true } });
+    else if (
+      (inpt.name === "password" && inpt.value.length < 8) ||
+      (inpt.name === "rePassword" && inpt.value.length < 8) ||
+      (inpt.name === "rePassword" && inpt.value !== form.password)
+    )
+      setFormErr({ ...formErr, [key]: { error: true } });
+    else setFormErr({ ...formErr, [key]: { error: false } });
   };
 
   const onSubmit = async (e: FormEvent) => {
@@ -80,9 +96,23 @@ export default function page({}: {}) {
     setFormErr({
       firstName: { error: form.firstName != "" ? false : true },
       lastName: { error: form.lastName != "" ? false : true },
-      email: { error: form.email != "" ? false : true },
-      password: { error: form.password != "" ? false : true },
-      rePassword: { error: form.rePassword != "" ? false : true },
+      email: {
+        error:
+          form.email != "" &&
+          form.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)
+            ? false
+            : true,
+      },
+      password: {
+        error: form.password != "" || form.password.length >= 8 ? false : true,
+      },
+      rePassword: {
+        error:
+          form.rePassword != "" || form.password.length >= 8 ? false : true,
+      },
+      dbResponse: {
+        error: false,
+      },
     });
 
     // check if any error
@@ -92,14 +122,54 @@ export default function page({}: {}) {
         // console.log(`${key}: ${prevState[key]['error']}`);
         anyErr.push(prevState[key]["error"]);
       }
+
       // if no error, do login
-      setUserData({ logged: true, name: "john", token: "token" });
+      if (!anyErr.includes(true))
+        (async () => {
+          const config = {
+            headers: {
+              "Content-Type": "application/json",
+              "x-siloah": "siloah",
+            },
+            method: "POST",
+            body: JSON.stringify(form),
+          };
+          const result = await fetch(
+            `${process.env.SERVER}/hotel/customer/signup`,
+            config
+          );
+          const dt = await result.json();
+
+          if (dt.status === "Error") {
+            setFormErr({
+              ...formErr,
+              dbResponse: { error: true, msgCN: dt.msgCN, msgEN: dt.msgEN },
+            });
+          } else {
+            setUserData({
+              logged: true,
+              name: `${dt.msg.firstName} ${dt.msg.lastName}`,
+              token: dt.msg.token,
+            });
+            // refresh page after sign up
+            location.reload();
+          }
+          console.log(dt);
+        })();
       return prevState;
     });
   };
   return (
     <div className="flex justify-center items-center p-2 lg:p-5 lg:p-0 mt-2 lg:mt-8 text-md lg:text-lg">
       <div className="shadow-xl p-5 border rounded-lg w-full lg:w-auto lg:min-w-[500px]">
+        <Error
+          show={formErr.dbResponse!.error}
+          msg={
+            lang === "TW"
+              ? formErr.dbResponse?.msgCN
+              : formErr.dbResponse?.msgEN
+          }
+        />
         <p className="text-lg font-bold hidden lg:block">
           {lang === "TW" ? "免費入會" : "Sign Up"}
         </p>
@@ -183,8 +253,8 @@ export default function page({}: {}) {
             {formErr.password.error === true && (
               <label className="text-sm text-pink-800">
                 {lang === "TW"
-                  ? "請輸入有效的密碼。"
-                  : "Please enter a valid password."}
+                  ? "請輸入有效的密碼。 最少須由8個英數字組合!"
+                  : "Please enter a valid password. At least 8 characters"}
               </label>
             )}
           </div>
@@ -204,18 +274,11 @@ export default function page({}: {}) {
             {formErr.rePassword.error === true && (
               <label className="text-sm text-pink-800">
                 {lang === "TW"
-                  ? "請輸入有效的密碼。"
-                  : "Please enter a valid password."}
+                  ? "請輸入有效的密碼。 最少須由8個英數字組合!"
+                  : "Please enter a valid password. At least 8 characters"}
               </label>
             )}
           </div>
-          {formErr.dbResponse?.error === true && (
-            <label className="text-sm text-pink-800">
-              {lang === "TW"
-                ? formErr.dbResponse?.msgCN
-                : formErr.dbResponse?.msgEN}
-            </label>
-          )}
           <button
             className="rounded-lg bg-orange-500 hover:bg-orange-400 text-gray-100 p-2 w-full"
             onClick={(e) => onSubmit(e)}

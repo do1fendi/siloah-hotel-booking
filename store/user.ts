@@ -21,16 +21,20 @@ type userData = {
 
 interface iUser {
   userData: userData;
+  refresh: boolean;
+  setRefresh: (a: boolean) => void;
   setUserData: (a: userData | null) => void;
 }
 
 const useUserStore = create<iUser>((set) => ({
   userData: getLocalStorage("userData"),
+  refresh: false,
   setUserData: (dt: userData | null) =>
     // set() => {
     setLocalStorage("userData", dt),
   // return { dt };
   // }),
+  setRefresh: (a: boolean) => set({ refresh: a }),
 }));
 
 export default useUserStore;
