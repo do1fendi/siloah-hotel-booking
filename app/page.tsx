@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Loader from "@/components/Loader"
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
       <div className="container mx-auto">
         <div>HOME</div>
       </div>
+      <Loader show={true}/>
     </div>
   );
 }
