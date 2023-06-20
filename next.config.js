@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "export",
-  basePath: '/siloah-hotel-booking',
+  // basePath: '/siloah-hotel-booking',
   trailingSlash: true,
-  assetPrefix: "/siloah-hotel-booking",
+  // assetPrefix: "/siloah-hotel-booking",
   // images: {
   //   loader: "imgix",
   //   path: "",
@@ -15,9 +15,9 @@ const nextConfig = {
     unoptimized: true,
   },
   env: {
-    // BASEURL: "http://localhost:3000",
+    BASEURL: "http://localhost:3000",
     // BASEURL: "http://192.168.12.3:3000",
-    BASEURL: "https://do1fendi.github.io/siloah-hotel-booking",
+    // BASEURL: "https://do1fendi.github.io/siloah-hotel-booking",
     SERVER: "http://localhost:5000",
   },
 };
