@@ -1,15 +1,19 @@
 "use client";
 import { create } from "zustand";
+import { encode, decode } from "js-base64";
 
 const getLocalStorage = (key: string) => {
   if (typeof window !== "undefined") {
-    return JSON.parse(window.localStorage.getItem(key)!);
+    // return decode(JSON.parse(window.localStorage.getItem(key)!));
+    return window.localStorage.getItem(key) !== null
+      ? JSON.parse(decode(window.localStorage.getItem(key)!))
+      : null;
     // return { logged: true, name: "John", email: "siloah.dev@gmail.com" };
   }
 };
 const setLocalStorage = (key: string, value: userData | null) => {
   if (typeof window !== "undefined") {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    window.localStorage.setItem(key, encode(JSON.stringify(value)));
   }
 };
 
@@ -22,19 +26,16 @@ type userData = {
 interface iUser {
   userData: userData;
   refresh: boolean;
-  setRefresh: (a: boolean) => void;
+  // setRefresh: (a: boolean) => void;
   setUserData: (a: userData | null) => void;
 }
 
 const useUserStore = create<iUser>((set) => ({
-  userData: getLocalStorage("userData"),
+  userData: getLocalStorage("ud"),
   refresh: false,
-  setUserData: (dt: userData | null) =>
-    // set() => {
-    setLocalStorage("userData", dt),
-  // return { dt };
-  // }),
-  setRefresh: (a: boolean) => set({ refresh: a }),
+  setUserData: (dt: userData | null) => {
+    setLocalStorage("ud", dt);
+  },
 }));
 
 export default useUserStore;

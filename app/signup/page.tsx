@@ -5,7 +5,7 @@ import useUserStore from "@/store/user";
 import Google from "@/components/Google";
 import Facebook from "@/components/Facebook";
 import Link from "next/link";
-import Error from "@/components/Error";
+import Error from "@/components/Error"; 
 
 type iFormProps = {
   firstName: string;
@@ -41,7 +41,7 @@ type iFormErrProps = {
 
 export default function page({}: {}) {
   const { lang } = useLangStore((state) => state);
-  const { setUserData, refresh, setRefresh } = useUserStore((state) => state);
+  const { setUserData, refresh } = useUserStore((state) => state);
   const [form, setForm] = useState<iFormProps>({
     firstName: "",
     lastName: "",
@@ -151,8 +151,9 @@ export default function page({}: {}) {
               name: `${dt.msg.firstName} ${dt.msg.lastName}`,
               token: dt.msg.token,
             });
-            // refresh page after sign up
-            location.reload();
+        
+            window.location.replace("/");
+      
           }
           console.log(dt);
         })();

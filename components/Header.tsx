@@ -2,7 +2,7 @@
 import useLangStore from "@/store/lang";
 import useCurrencyStore from "@/store/currency";
 import { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import useUserStore from "@/store/user";
 
@@ -15,7 +15,7 @@ export default function Header({}: Props) {
   const [showCurrency, setShowCurrency] = useState<boolean>(false);
   const [showNav, setShowNav] = useState<boolean>(false);
   const { userData, setUserData } = useUserStore((state) => state);
-  // const [userInital, setUserInitial] = useState<null|string>(null)
+  const [userInital, setUserInitial] = useState<null | string>(null);
   const router = usePathname();
 
   // set all showCurrency, showLang, showNave to false if route change
@@ -24,6 +24,10 @@ export default function Header({}: Props) {
     setShowLang(false);
     setShowNav(false);
   }, [router]);
+
+  useEffect(() => {
+    if (userData !== null) setUserInitial(userData.name[0].toUpperCase());
+  }, [userData]);
 
   return (
     <div className="flex justify-between items-center p-2 lg:p-5 shadow-sm">
@@ -111,7 +115,14 @@ export default function Header({}: Props) {
             </div>
           )}
         </div>
-        {userData !== undefined && userData !== null && <div className="rounded-full bg-pink-600 font-bold text-gray-100 w-8 h-8 flex justify-center items-center p-2">{userData.name[0].toUpperCase()}</div>}
+        <div>
+          {" "}
+          {userInital !== null && (
+            <span className="rounded-full bg-pink-600 font-bold text-gray-100 w-8 h-8 flex justify-center items-center p-2">
+              {userInital}
+            </span>
+          )}
+        </div>
         <div className="nav relative">
           <button
             className="p-2"
