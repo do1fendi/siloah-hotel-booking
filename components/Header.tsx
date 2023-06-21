@@ -29,6 +29,7 @@ export default function Header({}: Props) {
     if (userData !== null) setUserInitial(userData.name[0].toUpperCase());
   }, [userData]);
 
+ 
   return (
     <div className="flex justify-between items-center p-2 lg:p-5 shadow-sm">
       <div>
