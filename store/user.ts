@@ -1,5 +1,7 @@
 "use client";
 import { create } from "zustand";
+// import create, { GetState, SetState } from "zustand";
+import { persist, devtools } from "zustand/middleware";
 import { encode, decode } from "js-base64";
 
 const getLocalStorage = (key: string) => {
@@ -24,8 +26,8 @@ type userData = {
 };
 
 interface iUser {
-  userData: userData;
-  refresh: boolean;
+  userData: userData | null;
+  // refresh: boolean;
   // setRefresh: (a: boolean) => void;
   setUserData: (a: userData | null) => void;
 }
@@ -37,5 +39,18 @@ const useUserStore = create<iUser>((set) => ({
     setLocalStorage("ud", dt);
   },
 }));
+
+// export const useUserStore = create<iUser>(
+//   persist(
+//     (set) => ({
+//       userData: null,
+//       setUserData: (a: userData) => set({ userData: a }),
+//     }),
+//     {
+//       name: "userData", // name of the item in the storage (must be unique)
+//       // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
+//     }
+//   )
+// );
 
 export default useUserStore;

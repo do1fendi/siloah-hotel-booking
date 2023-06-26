@@ -5,7 +5,7 @@ import useUserStore from "@/store/user";
 import Google from "@/components/Google";
 import Facebook from "@/components/Facebook";
 import Link from "next/link";
-import Error from "@/components/Error"; 
+import Error from "@/components/Error";
 
 type iFormProps = {
   firstName: string;
@@ -132,8 +132,10 @@ export default function page({}: {}) {
               "x-siloah": "siloah",
             },
             method: "POST",
-            body: JSON.stringify(form),
-          };
+            body: JSON.stringify(
+              (Object.fromEntries(Object.entries(form).filter(e => e[0] != 'rePassword')))
+            ),
+          }; 
           const result = await fetch(
             `${process.env.SERVER}/hotel/customer/signup`,
             config
@@ -148,12 +150,11 @@ export default function page({}: {}) {
           } else {
             setUserData({
               logged: true,
-              name: `${dt.msg.firstName} ${dt.msg.lastName}`,
-              token: dt.msg.token,
+              name: `${dt.data.firstName} ${dt.data.lastName}`,
+              token: dt.data.token,
             });
-        
+
             window.location.replace("/");
-      
           }
           console.log(dt);
         })();
