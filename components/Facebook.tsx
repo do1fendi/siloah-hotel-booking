@@ -1,11 +1,13 @@
 "use client";
 import Script from "next/script";
+import useUserStore from "@/store/user";
 
 export interface IFacebookProps {
   appId: String;
 }
 
 export default function Facebook(props: IFacebookProps) {
+  const { userData, setUserData } = useUserStore((state) => state);
   function loginFb() {
     (window as any).FB.login(
       function (response: any) {
@@ -16,6 +18,38 @@ export default function Facebook(props: IFacebookProps) {
             "/me?fields=id,first_name,last_name,email",
             function (res: any) {
               console.log(res);
+              (async () => {
+                const config = {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "x-siloah": "siloah",
+                  },
+                  method: "POST",
+                  body: JSON.stringify({
+                    firstName: res.first_name,
+                    lastName: res.last_name,
+                    email: res.email,
+                    platform: "FACEBOOK",
+                  }),
+                };
+                const result = await fetch(
+                  `${process.env.SERVER}/hotel/customer/signin`,
+                  config
+                );
+                const dt = await result.json();
+                console.log(dt);
+                if (dt.status === "Error") {
+                  setUserData(null);
+                  window.location.replace("/");
+                } else {
+                  setUserData({
+                    logged: true,
+                    name: `${dt.data.firstName} ${dt.data.lastName}`,
+                    token: dt.data.token,
+                  });
+                  window.location.replace("/");
+                }
+              })();
             }
           );
         } else {
