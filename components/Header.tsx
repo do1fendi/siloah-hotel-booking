@@ -126,7 +126,7 @@ export default function Header({}: Props) {
         </div>
         <div className="nav relative">
           <button
-            className="p-2"
+            className="p-2 border border-teal-600"
             onClick={() => {
               setShowNav(true);
               setShowLang(false);

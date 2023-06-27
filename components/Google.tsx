@@ -1,21 +1,72 @@
 "use client";
 import Script from "next/script";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import jwtDecode from "jwt-decode";
 import { useRouter } from "next/navigation";
+import useUserStore from "@/store/user";
+
 
 export interface IGoogleProps {
   clientId: String;
 }
-
+type googleRet = {
+  aud: String;
+  azp: String;
+  email: String;
+  email_verified: Boolean;
+  exp: Number;
+  family_name: String;
+  given_name: String;
+  iat: Number;
+  iss: String;
+  jti: String;
+  name: String;
+  nbf: Number;
+  picture: String;
+  sub: String;
+};
 export default function Google(props: IGoogleProps) {
   const router = useRouter();
+  const { userData, setUserData } = useUserStore((state) => state);
   const [isGoogleLogin, setIsgoogleLogin] = useState<boolean>(false);
   const handleResponse = (response: any) => {
     console.log(response);
     console.log(jwtDecode(response.credential));
-  };
+    const decoded: googleRet = jwtDecode(response.credential);
 
+    (async () => {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          "x-siloah": "siloah",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          firstName: decoded.given_name,
+          lastName: decoded.family_name,
+          email: decoded.email,
+          platform: "GOOGLE",
+        }),
+      };
+      const result = await fetch(
+        `${process.env.SERVER}/hotel/customer/signin`,
+        config
+      );
+      const dt = await result.json();
+      console.log(dt);
+      if (dt.status === "Error") {
+        setUserData(null);
+        window.location.replace("/");
+      } else {
+        setUserData({
+          logged: true,
+          name: `${dt.data.firstName} ${dt.data.lastName}`,
+          token: dt.data.token,
+        });
+        window.location.replace("/");
+      }
+    })();
+  };
 
   const googleLogin = () => {
     (window as any).googleButtonWrapper.click();
@@ -23,7 +74,6 @@ export default function Google(props: IGoogleProps) {
 
   return (
     <>
-    
       <Script
         src="https://accounts.google.com/gsi/client"
         strategy="lazyOnload"
