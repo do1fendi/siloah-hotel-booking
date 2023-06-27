@@ -6,6 +6,7 @@ import Google from "@/components/Google";
 import Facebook from "@/components/Facebook";
 import Link from "next/link";
 import Error from "@/components/Error";
+import { useRouter } from "next/navigation";
 
 type iFormProps = {
   email: string;
@@ -28,8 +29,9 @@ type iFormErrProps = {
 };
 
 export default function page({}: {}) {
+  const path = useRouter();
   const { lang } = useLangStore((state) => state);
-  const { setUserData, refresh } = useUserStore((state) => state);
+  const { setUserData } = useUserStore((state) => state);
   const [form, setForm] = useState<iFormProps>({
     email: "",
     password: "",
@@ -124,7 +126,8 @@ export default function page({}: {}) {
               token: dt.data.token,
             });
 
-            window.location.replace("/");
+            //window.location.replace("/");
+            path.back();
           }
           console.log(dt);
         })();

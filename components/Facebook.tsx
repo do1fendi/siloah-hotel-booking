@@ -13,11 +13,11 @@ export default function Facebook(props: IFacebookProps) {
       function (response: any) {
         if (response.status === "connected") {
           // Logged into your webpage and Facebook.
-          console.log(response);
+          // console.log(response);
           (window as any).FB.api(
             "/me?fields=id,first_name,last_name,email",
             function (res: any) {
-              console.log(res);
+              // console.log(res);
               (async () => {
                 const config = {
                   headers: {
@@ -37,7 +37,7 @@ export default function Facebook(props: IFacebookProps) {
                   config
                 );
                 const dt = await result.json();
-                console.log(dt);
+                // console.log(dt);
                 if (dt.status === "Error") {
                   setUserData(null);
                   window.location.replace("/");
@@ -54,7 +54,7 @@ export default function Facebook(props: IFacebookProps) {
           );
         } else {
           // The person is not logged into your webpage or we are unable to tell.
-          console.log(response);
+          // console.log(response);
         }
       },
       { scope: "email", return_scopes: true }

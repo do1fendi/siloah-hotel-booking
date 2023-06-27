@@ -30,8 +30,8 @@ export default function Google(props: IGoogleProps) {
   const { userData, setUserData } = useUserStore((state) => state);
   const [isGoogleLogin, setIsgoogleLogin] = useState<boolean>(false);
   const handleResponse = (response: any) => {
-    console.log(response);
-    console.log(jwtDecode(response.credential));
+    // console.log(response);
+    // console.log(jwtDecode(response.credential));
     const decoded: googleRet = jwtDecode(response.credential);
 
     (async () => {
@@ -53,7 +53,7 @@ export default function Google(props: IGoogleProps) {
         config
       );
       const dt = await result.json();
-      console.log(dt);
+      // console.log(dt);
       if (dt.status === "Error") {
         setUserData(null);
         window.location.replace("/");

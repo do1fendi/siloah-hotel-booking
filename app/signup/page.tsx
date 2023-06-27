@@ -1,11 +1,12 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import useLangStore from "@/store/lang";
 import useUserStore from "@/store/user";
 import Google from "@/components/Google";
 import Facebook from "@/components/Facebook";
 import Link from "next/link";
 import Error from "@/components/Error";
+import { useRouter } from "next/navigation";
 
 type iFormProps = {
   firstName: string;
@@ -41,7 +42,7 @@ type iFormErrProps = {
 
 export default function page({}: {}) {
   const { lang } = useLangStore((state) => state);
-  const { setUserData, refresh } = useUserStore((state) => state);
+  const { setUserData } = useUserStore((state) => state);
   const [form, setForm] = useState<iFormProps>({
     firstName: "",
     lastName: "",
@@ -70,6 +71,7 @@ export default function page({}: {}) {
       error: false,
     },
   });
+  const path = useRouter();
 
   const onChange = (inpt: HTMLInputElement) => {
     setForm({ ...form, [inpt.name]: inpt.value });
@@ -133,9 +135,11 @@ export default function page({}: {}) {
             },
             method: "POST",
             body: JSON.stringify(
-              (Object.fromEntries(Object.entries(form).filter(e => e[0] != 'rePassword')))
+              Object.fromEntries(
+                Object.entries(form).filter((e) => e[0] != "rePassword")
+              )
             ),
-          }; 
+          };
           const result = await fetch(
             `${process.env.SERVER}/hotel/customer/signup`,
             config
@@ -154,7 +158,8 @@ export default function page({}: {}) {
               token: dt.data.token,
             });
 
-            window.location.replace("/");
+            // window.location.replace("/");
+            path.back();
           }
           console.log(dt);
         })();

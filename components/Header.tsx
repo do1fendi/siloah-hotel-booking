@@ -2,7 +2,7 @@
 import useLangStore from "@/store/lang";
 import useCurrencyStore from "@/store/currency";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import useUserStore from "@/store/user";
 
@@ -17,6 +17,7 @@ export default function Header({}: Props) {
   const { userData, setUserData } = useUserStore((state) => state);
   const [userInital, setUserInitial] = useState<null | string>(null);
   const router = usePathname();
+  const param = useSearchParams();
 
   // set all showCurrency, showLang, showNave to false if route change
   useEffect(() => {
@@ -29,7 +30,6 @@ export default function Header({}: Props) {
     if (userData !== null) setUserInitial(userData.name[0].toUpperCase());
   }, [userData]);
 
- 
   return (
     <div className="flex justify-between items-center p-2 lg:p-5 shadow-sm">
       <div>
@@ -155,7 +155,12 @@ export default function Header({}: Props) {
                 </div>
                 {userData === null ? (
                   <div className="flex flex-col gap-2">
-                    <Link href={"/signup"}>
+                    <Link
+                      href={{
+                        pathname: "/signup",
+                        query: Object.fromEntries(param.entries()), // the data
+                      }}
+                    >
                       <button
                         className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
                         onClick={() => setShowNav(false)}
@@ -163,7 +168,12 @@ export default function Header({}: Props) {
                         {lang === "TW" ? "註冊" : "Sign Up"}
                       </button>
                     </Link>
-                    <Link href={"/signin"}>
+                    <Link
+                      href={{
+                        pathname: "/signin",
+                        query: Object.fromEntries(param.entries()), // the data
+                      }}
+                    >
                       <button
                         className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
                         onClick={() => setShowNav(false)}
