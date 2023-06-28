@@ -25,8 +25,11 @@ export default function Header({}: Props) {
   useEffect(() => {
     setShowCurrency(false);
     setShowLang(false);
-    setShowNav(false);   
-    setRouteList([...routeList, `${process.env.BASEURL}${path}?${param}`]);
+    setShowNav(false);
+    // if (path === "/")
+    //   setRouteList([...routeList, `${process.env.BASEURL}/?${param}`]);
+    // else 
+    setRouteList([...routeList, `${window.origin}${path}?${param}`]);
   }, [path]);
 
   useEffect(() => {
@@ -35,7 +38,7 @@ export default function Header({}: Props) {
 
   return (
     <div className="flex justify-between items-center p-2 lg:p-5 shadow-sm">
-      {JSON.stringify(routeList)}
+      {/* {JSON.stringify(routeList)} */}
       <div>
         <p className="text-2xl text-teal-600 font-bold">
           <Link href={"/"}> SILOAH</Link>

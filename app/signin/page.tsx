@@ -6,7 +6,7 @@ import Google from "@/components/Google";
 import Facebook from "@/components/Facebook";
 import Link from "next/link";
 import Error from "@/components/Error";
-// import { useRouter } from "next/navigation";
+// import { usePathname } from "next/navigation";
 import useRouteListStore from "@/store/routeList";
 
 type iFormProps = {
@@ -31,6 +31,7 @@ type iFormErrProps = {
 
 export default function page({}: {}) {
   const { routeList, acceptedList } = useRouteListStore((state) => state);
+  // const path = usePathname();
   const { lang } = useLangStore((state) => state);
   const { setUserData } = useUserStore((state) => state);
   const [form, setForm] = useState<iFormProps>({
@@ -126,7 +127,12 @@ export default function page({}: {}) {
             });
 
             // set back to previous page after login
-            if (routeList[routeList.length - 2] !== undefined && acceptedList.some(value => routeList[routeList.length - 2].includes(value)))
+            if (
+              routeList[routeList.length - 2] !== undefined &&
+              acceptedList.some((value) =>
+                routeList[routeList.length - 2].includes(value)
+              )
+            )
               window.location.replace(routeList[routeList.length - 2]);
             else window.location.replace(`${process.env.BASEURL}`);
             // path.back();

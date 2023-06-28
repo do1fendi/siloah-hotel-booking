@@ -2,6 +2,7 @@
 import Script from "next/script";
 import useUserStore from "@/store/user";
 import useRouteListStore from "@/store/routeList";
+// import { usePathname } from "next/navigation";
 
 export interface IFacebookProps {
   appId: String;
@@ -10,6 +11,7 @@ export interface IFacebookProps {
 export default function Facebook(props: IFacebookProps) {
   const { userData, setUserData } = useUserStore((state) => state);
   const { routeList, acceptedList } = useRouteListStore((state) => state);
+  // const path = usePathname();
   function loginFb() {
     (window as any).FB.login(
       function (response: any) {
@@ -57,7 +59,7 @@ export default function Facebook(props: IFacebookProps) {
                     )
                   )
                     window.location.replace(routeList[routeList.length - 1]);
-                  else window.location.replace(`${process.env.BASEURL}`);
+                    window.location.replace(`${process.env.BASEURL}`);
                 }
               })();
             }

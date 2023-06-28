@@ -5,6 +5,7 @@ import jwtDecode from "jwt-decode";
 // import { useRouter } from "next/navigation";
 import useUserStore from "@/store/user";
 import useRouteListStore from "@/store/routeList";
+// import { usePathname } from "next/navigation";
 
 export interface IGoogleProps {
   clientId: String;
@@ -26,6 +27,7 @@ type googleRet = {
   sub: String;
 };
 export default function Google(props: IGoogleProps) {
+  // const path = usePathname();
   const { routeList, acceptedList } = useRouteListStore((state) => state);
   const { userData, setUserData } = useUserStore((state) => state);
   const [isGoogleLogin, setIsgoogleLogin] = useState<boolean>(false);
@@ -127,7 +129,7 @@ export default function Google(props: IGoogleProps) {
       {/* <div id="btn"></div> */}
 
       {/* <Button onClick={() => setIsgoogleLogin(true)} text="Testing Google" /> */}
-      {JSON.stringify(routeList)}
+      {/* {JSON.stringify(routeList)} */}
       <button
         className="border border-orange-500 hover:bg-orange-500 hover:text-gray-100 p-2 rounded w-full"
         onClick={() => googleLogin()}
