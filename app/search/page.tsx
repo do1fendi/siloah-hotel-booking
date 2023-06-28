@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const { userData, setUserData } = useUserStore((state) => state);
   // const searchParams = useSearchParams();
-  const router = useRouter();
+  const path = useRouter();
   useEffect(() => {
     // for (const [key, value] of searchParams.entries()) {
     //   console.log(`${key}, ${value}`);
@@ -32,29 +32,10 @@ export default function Home() {
         // console.log(dt);
         if (dt.status === "Error") {
           setUserData(null);
-          // router.back();
           window.location.reload();
         }
       })();
     }
-    // router.push("/search/?code=asdd&ab=aaa");
   }, [userData]);
-  return (
-    <div>
-      <div className="banner w-full h-[140px] lg:h-[340px] relative">
-        <Image
-          src={`${process.env.BASEURL}/banner.png`}
-          alt="banner"
-          fill
-          className="object-fit"
-          priority
-        ></Image>
-      </div>
-      <div className="container mx-auto">
-        <div>HOME</div>
-      </div>
-      {/* {JSON.stringify(userData) !== "null" ? JSON.stringify(userData) : ""} */}
-      {/* <Loader show={true}/> */}
-    </div>
-  );
+  return <div>Search</div>;
 }

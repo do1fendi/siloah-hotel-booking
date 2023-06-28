@@ -6,7 +6,8 @@ import Google from "@/components/Google";
 import Facebook from "@/components/Facebook";
 import Link from "next/link";
 import Error from "@/components/Error";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+import useRouteListStore from "@/store/routeList";
 
 type iFormProps = {
   firstName: string;
@@ -71,7 +72,8 @@ export default function page({}: {}) {
       error: false,
     },
   });
-  const path = useRouter();
+  const { routeList, acceptedList } = useRouteListStore((state) => state);
+  // const path = useRouter();
 
   const onChange = (inpt: HTMLInputElement) => {
     setForm({ ...form, [inpt.name]: inpt.value });
@@ -158,8 +160,11 @@ export default function page({}: {}) {
               token: dt.data.token,
             });
 
-            // window.location.replace("/");
-            path.back();
+            // set back to previous page after login
+            if (routeList[routeList.length - 2] !== undefined && acceptedList.some(value => routeList[routeList.length - 2].includes(value)))
+              window.location.replace(routeList[routeList.length - 2]);
+            else window.location.replace(`${process.env.BASEURL}`);
+            // path.back();
           }
           console.log(dt);
         })();

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import useUserStore from "@/store/user";
+import useRouteListStore from "@/store/routeList";
 
 type Props = {};
 
@@ -16,15 +17,17 @@ export default function Header({}: Props) {
   const [showNav, setShowNav] = useState<boolean>(false);
   const { userData, setUserData } = useUserStore((state) => state);
   const [userInital, setUserInitial] = useState<null | string>(null);
-  const router = usePathname();
+  const path = usePathname();
   const param = useSearchParams();
+  const { routeList, setRouteList } = useRouteListStore((state) => state);
 
   // set all showCurrency, showLang, showNave to false if route change
   useEffect(() => {
     setShowCurrency(false);
     setShowLang(false);
-    setShowNav(false);
-  }, [router]);
+    setShowNav(false);   
+    setRouteList([...routeList, `${process.env.BASEURL}${path}?${param}`]);
+  }, [path]);
 
   useEffect(() => {
     if (userData !== null) setUserInitial(userData.name[0].toUpperCase());
@@ -32,6 +35,7 @@ export default function Header({}: Props) {
 
   return (
     <div className="flex justify-between items-center p-2 lg:p-5 shadow-sm">
+      {JSON.stringify(routeList)}
       <div>
         <p className="text-2xl text-teal-600 font-bold">
           <Link href={"/"}> SILOAH</Link>

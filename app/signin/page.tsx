@@ -6,7 +6,8 @@ import Google from "@/components/Google";
 import Facebook from "@/components/Facebook";
 import Link from "next/link";
 import Error from "@/components/Error";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+import useRouteListStore from "@/store/routeList";
 
 type iFormProps = {
   email: string;
@@ -29,7 +30,7 @@ type iFormErrProps = {
 };
 
 export default function page({}: {}) {
-  const path = useRouter();
+  const { routeList, acceptedList } = useRouteListStore((state) => state);
   const { lang } = useLangStore((state) => state);
   const { setUserData } = useUserStore((state) => state);
   const [form, setForm] = useState<iFormProps>({
@@ -59,9 +60,7 @@ export default function page({}: {}) {
       inpt.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g) == null
     )
       setFormErr({ ...formErr, [key]: { error: true } });
-    else if (
-      (inpt.name === "password" && inpt.value.length < 8) 
-    )
+    else if (inpt.name === "password" && inpt.value.length < 8)
       setFormErr({ ...formErr, [key]: { error: true } });
     else setFormErr({ ...formErr, [key]: { error: false } });
   };
@@ -126,8 +125,11 @@ export default function page({}: {}) {
               token: dt.data.token,
             });
 
-            //window.location.replace("/");
-            path.back();
+            // set back to previous page after login
+            if (routeList[routeList.length - 2] !== undefined && acceptedList.some(value => routeList[routeList.length - 2].includes(value)))
+              window.location.replace(routeList[routeList.length - 2]);
+            else window.location.replace(`${process.env.BASEURL}`);
+            // path.back();
           }
           console.log(dt);
         })();
@@ -148,7 +150,7 @@ export default function page({}: {}) {
         <p className="text-lg font-bold hidden lg:block">
           {lang === "TW" ? "免費入會" : "Sign Up"}
         </p>
-        <form className="mt-0 lg:mt-5">          
+        <form className="mt-0 lg:mt-5">
           <div className="flex flex-col mb-2 lg:mb-5">
             <label htmlFor="email" className="mb-[2px]">
               {lang === "TW" ? "電子信箱" : "Email"}
@@ -191,7 +193,7 @@ export default function page({}: {}) {
               </label>
             )}
           </div>
-         
+
           <button
             className="rounded-lg bg-orange-500 hover:bg-orange-400 text-gray-100 p-2 w-full"
             onClick={(e) => onSubmit(e)}
@@ -222,9 +224,7 @@ export default function page({}: {}) {
         <div className="signup mt-5">
           <Link href="/signup">
             <button className="border border-orange-500 hover:bg-orange-500 hover:text-gray-100 p-2 rounded w-full">
-              {lang === "TW"
-                ? "我是新朋友"
-                : "Create account"}
+              {lang === "TW" ? "我是新朋友" : "Create account"}
             </button>
           </Link>
         </div>

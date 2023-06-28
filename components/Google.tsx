@@ -2,9 +2,9 @@
 import Script from "next/script";
 import { useState } from "react";
 import jwtDecode from "jwt-decode";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import useUserStore from "@/store/user";
-
+import useRouteListStore from "@/store/routeList";
 
 export interface IGoogleProps {
   clientId: String;
@@ -26,7 +26,7 @@ type googleRet = {
   sub: String;
 };
 export default function Google(props: IGoogleProps) {
-  const router = useRouter();
+  const { routeList, acceptedList } = useRouteListStore((state) => state);
   const { userData, setUserData } = useUserStore((state) => state);
   const [isGoogleLogin, setIsgoogleLogin] = useState<boolean>(false);
   const handleResponse = (response: any) => {
@@ -56,14 +56,22 @@ export default function Google(props: IGoogleProps) {
       // console.log(dt);
       if (dt.status === "Error") {
         setUserData(null);
-        window.location.replace("/");
+        // window.location.reload();
       } else {
         setUserData({
           logged: true,
           name: `${dt.data.firstName} ${dt.data.lastName}`,
           token: dt.data.token,
         });
-        window.location.replace("/");
+        // set back to previous page after login
+        if (
+          routeList[routeList.length - 1] !== undefined &&
+          acceptedList.some((value) =>
+            routeList[routeList.length - 1].includes(value)
+          )
+        )
+          window.location.replace(routeList[routeList.length - 1]);
+        else window.location.replace(`${process.env.BASEURL}`);
       }
     })();
   };
@@ -119,6 +127,7 @@ export default function Google(props: IGoogleProps) {
       {/* <div id="btn"></div> */}
 
       {/* <Button onClick={() => setIsgoogleLogin(true)} text="Testing Google" /> */}
+      {JSON.stringify(routeList)}
       <button
         className="border border-orange-500 hover:bg-orange-500 hover:text-gray-100 p-2 rounded w-full"
         onClick={() => googleLogin()}
