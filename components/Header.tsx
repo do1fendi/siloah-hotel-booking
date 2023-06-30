@@ -6,20 +6,26 @@ import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import useUserStore from "@/store/user";
 import useRouteListStore from "@/store/routeList";
+import useShowHandlerStore from "@/store/showHandler";
 
 type Props = {};
 
 export default function Header({}: Props) {
   const { lang, setLang } = useLangStore((state) => state);
-  const [showLang, setShowLang] = useState<boolean>(false);
   const { currency, setCurrency } = useCurrencyStore((state) => state);
-  const [showCurrency, setShowCurrency] = useState<boolean>(false);
-  const [showNav, setShowNav] = useState<boolean>(false);
   const { userData, setUserData } = useUserStore((state) => state);
   const [userInital, setUserInitial] = useState<null | string>(null);
   const path = usePathname();
   const param = useSearchParams();
   const { routeList, setRouteList } = useRouteListStore((state) => state);
+  const {
+    showLang,
+    setShowLang,
+    showCurrency,
+    setShowCurrency,
+    showNav,
+    setShowNav,
+  } = useShowHandlerStore((state) => state);
 
   // set all showCurrency, showLang, showNave to false if route change
   useEffect(() => {
@@ -28,13 +34,23 @@ export default function Header({}: Props) {
     setShowNav(false);
     // if (path === "/")
     //   setRouteList([...routeList, `${process.env.BASEURL}/?${param}`]);
-    // else 
+    // else
     setRouteList([...routeList, `${window.origin}${path}?${param}`]);
   }, [path]);
 
   useEffect(() => {
     if (userData !== null) setUserInitial(userData.name[0].toUpperCase());
   }, [userData]);
+
+  useEffect(() => {
+    document.addEventListener("click", handleClick);
+  }, []);
+
+  const handleClick = () => {
+    // setShowCurrency(false);
+    // setShowLang(false);
+    // setShowNav(false);
+  };
 
   return (
     <div className="flex justify-between items-center p-2 lg:p-5 shadow-sm">

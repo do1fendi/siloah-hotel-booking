@@ -8,6 +8,7 @@ import Link from "next/link";
 import Error from "@/components/Error";
 // import { usePathname } from "next/navigation";
 import useRouteListStore from "@/store/routeList";
+import useShowHandlerStore from "@/store/showHandler";
 
 type iFormProps = {
   firstName: string;
@@ -42,6 +43,7 @@ type iFormErrProps = {
 };
 
 export default function page({}: {}) {
+  const { setCloseAllShow } = useShowHandlerStore((state) => state);
   const { lang } = useLangStore((state) => state);
   // const path = usePathname();
   const { setUserData } = useUserStore((state) => state);
@@ -178,7 +180,7 @@ export default function page({}: {}) {
     });
   };
   return (
-    <div className="flex justify-center items-center p-2 lg:p-5 lg:p-0 mt-2 lg:mt-8 text-md lg:text-lg">
+    <div className="flex justify-center items-center p-2 lg:p-5 lg:p-0 mt-2 lg:mt-8 text-md lg:text-lg" onClick={setCloseAllShow}>
       <div className="shadow-xl p-5 border rounded-lg w-full lg:w-auto lg:min-w-[500px]">
         <Error
           show={formErr.dbResponse!.error}

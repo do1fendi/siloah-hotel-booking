@@ -4,9 +4,11 @@ import useUserStore from "@/store/user";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 // import Loader from "@/components/Loader"
+import useShowHandlerStore from "@/store/showHandler";
 
 export default function Home() {
   const { userData, setUserData } = useUserStore((state) => state);
+  const { setCloseAllShow } = useShowHandlerStore((state) => state);
   // const searchParams = useSearchParams();
   const path = useRouter();
   useEffect(() => {
@@ -37,5 +39,5 @@ export default function Home() {
       })();
     }
   }, [userData]);
-  return <div>Search</div>;
+  return <div onClick={setCloseAllShow}>Search</div>;
 }

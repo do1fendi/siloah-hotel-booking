@@ -3,12 +3,15 @@ import Image from "next/image";
 import useUserStore from "@/store/user";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import useShowHandlerStore from "@/store/showHandler";
 // import Loader from "@/components/Loader"
 
 export default function Home() {
   const { userData, setUserData } = useUserStore((state) => state);
   // const searchParams = useSearchParams();
   const router = useRouter();
+  const { setCloseAllShow } = useShowHandlerStore((state) => state);
+
   useEffect(() => {
     // for (const [key, value] of searchParams.entries()) {
     //   console.log(`${key}, ${value}`);
@@ -40,7 +43,7 @@ export default function Home() {
     // router.push("/search/?code=asdd&ab=aaa");
   }, [userData]);
   return (
-    <div>
+    <div onClick={setCloseAllShow}>
       <div className="banner w-full h-[140px] lg:h-[340px] relative">
         <Image
           src={`${process.env.BASEURL}/banner.png`}
