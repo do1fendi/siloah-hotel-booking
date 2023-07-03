@@ -4,6 +4,7 @@ import useUserStore from "@/store/user";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useShowHandlerStore from "@/store/showHandler";
+import Search from "@/components/Search";
 // import Loader from "@/components/Loader"
 
 export default function Home() {
@@ -53,8 +54,10 @@ export default function Home() {
           priority
         ></Image>
       </div>
-      <div className="container mx-auto">
-        <div>HOME</div>
+      <div className="flex justify-center -mt-12 relative z-10">
+        <div className="p-5 bg-white shadow-lg rounded-lg lg:w-[800px] relative">
+          <Search />
+        </div>
       </div>
       {/* {JSON.stringify(userData) !== "null" ? JSON.stringify(userData) : ""} */}
       {/* <Loader show={true}/> */}
