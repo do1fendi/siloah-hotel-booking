@@ -1,7 +1,7 @@
 "use client";
 import useLangStore from "@/store/lang";
 import useCurrencyStore from "@/store/currency";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import useUserStore from "@/store/user";
@@ -11,6 +11,7 @@ import useShowHandlerStore from "@/store/showHandler";
 type Props = {};
 
 export default function Header({}: Props) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const { lang, setLang } = useLangStore((state) => state);
   const { currency, setCurrency } = useCurrencyStore((state) => state);
   const { userData, setUserData } = useUserStore((state) => state);
@@ -25,16 +26,13 @@ export default function Header({}: Props) {
     setShowCurrency,
     showNav,
     setShowNav,
+    showOccupation,
+    setShowOccupation,
+    setCloseAllShow
   } = useShowHandlerStore((state) => state);
 
   // set all showCurrency, showLang, showNave to false if route change
-  useEffect(() => {
-    setShowCurrency(false);
-    setShowLang(false);
-    setShowNav(false);
-    // if (path === "/")
-    //   setRouteList([...routeList, `${process.env.BASEURL}/?${param}`]);
-    // else
+  useEffect(() => {   
     setRouteList([...routeList, `${window.origin}${path}?${param}`]);
   }, [path]);
 
@@ -42,18 +40,26 @@ export default function Header({}: Props) {
     if (userData !== null) setUserInitial(userData.name[0].toUpperCase());
   }, [userData]);
 
-  useEffect(() => {
-    document.addEventListener("click", handleClick);
-  }, []);
 
-  const handleClick = () => {
-    // setShowCurrency(false);
-    // setShowLang(false);
-    // setShowNav(false);
-  };
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setCloseAllShow();
+      }
+    }
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [wrapperRef]);
 
   return (
-    <div className="flex justify-between items-center p-2 lg:p-5 shadow-sm">
+    <div ref={wrapperRef} className="flex justify-between items-center p-2 lg:p-5 shadow-sm">
       {/* {JSON.stringify(routeList)} */}
       <div>
         <p className="text-2xl text-teal-600 font-bold">
@@ -66,8 +72,6 @@ export default function Header({}: Props) {
             className="font-bold px-2"
             onClick={() => {
               setShowCurrency(true);
-              setShowLang(false);
-              setShowNav(false);
             }}
           >
             ${currency}

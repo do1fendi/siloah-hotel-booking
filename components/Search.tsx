@@ -1,10 +1,23 @@
 import DatePicker from "react-datepicker";
 import { useState, useEffect } from "react";
+import SearchOccupation from "./SearchOccupation";
+import useShowHandlerStore from "@/store/showHandler";
+
+type Occupation = {
+  room: number;
+  adult: number;
+  children: number;
+};
 
 export default function Search({}) {
   // const [startDate, setStartDate] = useState(new Date());
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+  // const [showSearchOccupation, setShowSearchOccupation] = useState(false);
+  const { showOccupation, setShowOccupation, setShowCurrency } = useShowHandlerStore(
+    (state) => state
+  );
+  const [occupation, setOccupation] = useState<Occupation>();
   const years = new Range();
   const months = [
     "January",
@@ -51,7 +64,7 @@ export default function Search({}) {
     const curDate = new Date();
     curDate.setFullYear(curDate.getFullYear() + 1);
     curDate.setDate(curDate.getDate());
-    console.log(curDate);
+    // console.log(curDate);
     return curDate;
   };
 
@@ -141,7 +154,15 @@ export default function Search({}) {
             popperPlacement="bottom-end"
           />
         </div>
-        <div>Adult</div>
+        <div className="">
+          Adult
+          <button onClick={() => setShowOccupation(true)}>press</button>
+          <SearchOccupation
+            // show={showSearchOccupation}
+            // setShow={setShowSearchOccupation}
+            setOccupation={setOccupation}
+          />
+        </div>
       </div>
     </>
   );
