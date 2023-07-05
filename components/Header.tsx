@@ -28,18 +28,17 @@ export default function Header({}: Props) {
     setShowNav,
     showOccupation,
     setShowOccupation,
-    setCloseAllShow
+    setCloseAllShow,
   } = useShowHandlerStore((state) => state);
 
   // set all showCurrency, showLang, showNave to false if route change
-  useEffect(() => {   
+  useEffect(() => {
     setRouteList([...routeList, `${window.origin}${path}?${param}`]);
   }, [path]);
 
   useEffect(() => {
     if (userData !== null) setUserInitial(userData.name[0].toUpperCase());
   }, [userData]);
-
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -59,7 +58,10 @@ export default function Header({}: Props) {
   }, [wrapperRef]);
 
   return (
-    <div ref={wrapperRef} className="flex justify-between items-center p-2 lg:p-5 shadow-sm">
+    <div
+      ref={wrapperRef}
+      className="flex justify-between items-center p-2 lg:p-5 shadow-sm"
+    >
       {/* {JSON.stringify(routeList)} */}
       <div>
         <p className="text-2xl text-teal-600 font-bold">
@@ -72,6 +74,8 @@ export default function Header({}: Props) {
             className="font-bold px-2"
             onClick={() => {
               setShowCurrency(true);
+              setShowLang(false);
+              setShowNav(false);
             }}
           >
             ${currency}

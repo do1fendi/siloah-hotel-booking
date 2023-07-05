@@ -1,21 +1,43 @@
 "use client";
 import Image from "next/image";
 import useUserStore from "@/store/user";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import useLangStore from "@/store/lang";
 // import Loader from "@/components/Loader"
-import useShowHandlerStore from "@/store/showHandler";
+
+type querySearchType = {
+  city: string;
+  room: number;
+  adult: number;
+  children: number;
+  lang: string;
+};
 
 export default function Home() {
   const { userData, setUserData } = useUserStore((state) => state);
-  const { setCloseAllShow } = useShowHandlerStore((state) => state);
-  // const searchParams = useSearchParams();
-  const path = useRouter();
-  useEffect(() => {
-    // for (const [key, value] of searchParams.entries()) {
-    //   console.log(`${key}, ${value}`);
-    // }
+  const { lang } = useLangStore((state) => state);
+  const param = useSearchParams();
+  const [querySearch, setQuerySearch] = useState<querySearchType>({
+    city: "",
+    room: 0,
+    adult: 0,
+    children: 0,
+    lang: "TW",
+  });
 
+  useEffect(() => {
+    setQuerySearch({
+      ...querySearch,
+      city: param.get("city")!,
+      room: parseInt(param.get("room")!),
+      adult: parseInt(param.get("adult")!),
+      children: parseInt(param.get("children")!),
+      lang: lang,
+    });
+  }, [param, lang]);
+
+  useEffect(() => {
     if (userData != null) {
       (async () => {
         const config = {
@@ -39,5 +61,6 @@ export default function Home() {
       })();
     }
   }, [userData]);
-  return <div onClick={setCloseAllShow}>Search</div>;
+
+  return <div>{JSON.stringify(querySearch)}</div>;
 }
