@@ -1,75 +1,79 @@
-import DatePicker from "react-datepicker";
+// import DatePicker from "react-datepicker";
+import DatePicker from "react-tailwindcss-datepicker";
 import { useState, useEffect, useRef } from "react";
 import SearchOccupation from "./SearchOccupation";
 import useShowHandlerStore from "@/store/showHandler";
 import { BsSearch } from "react-icons/Bs";
 import useLangStore from "@/store/lang";
 import { IoIosArrowDropdown } from "react-icons/io";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-type Occupation = {
+type occupationType = {
   room: number;
   adult: number;
   children: number;
 };
 
+type valueDateType = {
+  startDate: Date;
+  endDate: Date;
+};
+
+
 export default function Search({}) {
   // const [startDate, setStartDate] = useState(new Date());
   const searchInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const param = useSearchParams();
   const { lang } = useLangStore();
   const [searchCity, setSearchCity] = useState<string>("");
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
-  // const [showSearchOccupation, setShowSearchOccupation] = useState(false);
-  const { showOccupation, setShowOccupation, setShowCurrency } =
-    useShowHandlerStore((state) => state);
-  const [occupation, setOccupation] = useState<Occupation>();
-  const years = new Range();
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+  const { setShowOccupation } = useShowHandlerStore((state) => state);
+  const [occupation, setOccupation] = useState<occupationType>();
+  const [valueDate, setValueDate] = useState<valueDateType>({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
 
   useEffect(() => {
-    //init date search range
+    // init date
     const dtStart = new Date();
-
     dtStart.setDate(dtStart.getDate() + 7);
 
-    setStartDate(dtStart);
+    const dtEnd = new Date();
+    dtEnd.setDate(dtStart.getDate() + 1);
+
+    setValueDate({ startDate: dtStart, endDate: dtEnd });
   }, []);
 
-  useEffect(() => {
-    if (startDate !== undefined) {
-      const dtEnd = new Date();
-      dtEnd.setDate(startDate.getDate() + 1);
-      setEndDate(dtEnd);
-    }
-  }, [startDate]);
+  // if date change
+  const onDateChange = (newValue: valueDateType) => {
+    // console.log("newValue:", newValue);
+    setValueDate({
+      startDate: new Date(newValue.startDate),
+      endDate: new Date(newValue.endDate),
+    });
+  };
 
-  // function getYear(date: Date): string | number | readonly string[] | undefined {
-
-  //   throw new Error("Function not implemented.");
-  // }
-
-  // function getMonth(date: Date) {
-  //   throw new Error("Function not implemented.");
-  // }
-
-  const onChange = (ev: HTMLInputElement) => {
+  const onCityChange = (ev: HTMLInputElement) => {
     setSearchCity((prev) => (prev = ev.value));
   };
+
+  // get data from database
+  useEffect(() => {
+    if (param.get("city") !== null) setSearchCity(param.get("city")!);
+    if (
+      param.get("room") !== null &&
+      param.get("adult") !== null &&
+      param.get("children") !== null
+    )
+      setOccupation({
+        ...occupation,
+        room: parseInt(param.get("room")!),
+        adult: parseInt(param.get("adult")!),
+        children: parseInt(param.get("children")!),
+      });
+    
+  }, [param]);
 
   const maxDate = () => {
     const curDate = new Date();
@@ -83,8 +87,12 @@ export default function Search({}) {
     if (searchCity === "") searchInputRef.current?.focus();
     else {
       //2023-09-18
-      const checkIn = `${startDate?.getFullYear()}-${startDate?.getMonth()}-${startDate?.getDate()}`;
-      const checkOut = `${endDate?.getFullYear()}-${endDate?.getMonth()}-${endDate?.getDate()}`;
+      const checkIn = `${new Date(valueDate.startDate).getFullYear()}-${
+        valueDate.startDate?.getMonth() + 1
+      }-${valueDate.startDate?.getDate()}`;
+      const checkOut = `${new Date(valueDate.endDate).getFullYear()}-${
+        valueDate.endDate?.getMonth() + 1
+      }-${valueDate.endDate?.getDate()}`;
       router.push(
         `/search/?city=${searchCity}&checkIn=${checkIn}&checkOut=${checkOut}&room=${occupation?.room}&adult=${occupation?.adult}&children=${occupation?.children}`
       );
@@ -101,86 +109,22 @@ export default function Search({}) {
             type="text"
             placeholder="City"
             className="focus:text-gray-600 focus:caret-teal-500  pl-14 border text-base lg:text-lg p-2 rounded mb-2 border-gray-300 w-full focus:ring-teal-500 focus:border-teal-500 shadow-sm form-input"
-            onChange={(ev) => onChange(ev.target)}
+            onChange={(ev) => onCityChange(ev.target)}
             value={searchCity}
           />
         </label>
       </div>
       <div className="flex justify-between items-center flex-col lg:flex-row gap-2 lg:gap-5">
-        <div className="datePicker flex gap-3 justify-between">
+        <div className="datePicker w-full lg:w-1/2">
           <DatePicker
-            renderCustomHeader={({
-              date,
-              decreaseMonth,
-              increaseMonth,
-              prevMonthButtonDisabled,
-              nextMonthButtonDisabled,
-            }) => (
-              <div className="flex justify-between px-5">
-                <button
-                  onClick={decreaseMonth}
-                  disabled={prevMonthButtonDisabled}
-                >
-                  {"<"}
-                </button>
-
-                <div className="p-5 lg:text-xl">
-                  <span>{months[date.getMonth()]}</span>
-                  <span> {date.getFullYear()}</span>
-                </div>
-
-                <button
-                  onClick={increaseMonth}
-                  disabled={nextMonthButtonDisabled}
-                >
-                  {">"}
-                </button>
-              </div>
-            )}
-            selected={startDate}
-            onChange={(date) => setStartDate(date!)}
-            minDate={startDate}
-            dateFormat="d, MMMM yyyy"
-          />
-          <DatePicker
-            renderCustomHeader={({
-              date,
-              decreaseMonth,
-              increaseMonth,
-              prevMonthButtonDisabled,
-              nextMonthButtonDisabled,
-            }) => (
-              <div className="flex justify-between px-5">
-                <button
-                  onClick={decreaseMonth}
-                  disabled={prevMonthButtonDisabled}
-                >
-                  {"<"}
-                </button>
-
-                <div className="p-5 lg:text-xl">
-                  <span>{months[date.getMonth()]}</span>
-                  <span> {date.getFullYear()}</span>
-                </div>
-
-                <button
-                  onClick={increaseMonth}
-                  disabled={nextMonthButtonDisabled}
-                >
-                  {">"}
-                </button>
-              </div>
-            )}
-            selected={endDate}
-            onChange={(date) => setEndDate(date!)}
-            // selectsEnd
-            startDate={startDate}
-            endDate={endDate}
-            minDate={startDate}
+            value={valueDate}
+            onChange={onDateChange as any}
+            primaryColor={"teal"}
+            startFrom={valueDate.startDate}
+            minDate={new Date()}
             maxDate={maxDate()}
-            dateFormat="d, MMMM yyyy"
-            popperClassName="some-custom-class"
-            popperPlacement="bottom-end"
+            inputClassName="w-full p-2 border rounded focus:ring-0 focu text-gray-500"
+            toggleClassName="absolute bg-teal-500 rounded-r text-gray-100 right-0 h-full px-3 text-gray-100  disabled:opacity-40 disabled:cursor-not-allowed"
           />
         </div>
         <div className="relative border border-gray-300 rounded w-full lg:w-1/2 h-10 lg:h-11 flex justify-between items-center px-2">

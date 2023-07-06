@@ -53,8 +53,8 @@ export default function Home() {
           priority
         ></Image>
       </div>
-      <div className="flex justify-center -mt-12 relative z-10">
-        <div className="p-5 bg-white shadow-lg rounded-lg lg:w-[800px] relative">
+      <div className="flex justify-center -mt-24 relative z-10">
+        <div className="p-5 bg-white shadow-lg rounded-lg w-full mx-2 lg:m-0 lg:w-[800px] relative">
           <Search />
         </div>
       </div>

@@ -343,6 +343,11 @@ date-fns@^2.0.1, date-fns@^2.24.0:
   dependencies:
     "@babel/runtime" "^7.21.0"
 
+dayjs@^1.11.9:
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.9.tgz#9ca491933fadd0a60a2c19f6c237c03517d71d1a"
+  integrity sha512-QvzAURSbQ0pKdIye2txOzNaHmxtUBXerpY0FJsFXUMKbIZeFm5ht1LS/jFsrncjnmtv8HsG0W2g6c0zUjZWmpA==
+
 didyoumean@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/didyoumean/-/didyoumean-1.2.2.tgz#989346ffe9e839b4555ecf5666edea0d3e8ad037"
@@ -930,6 +935,11 @@ react-popper@^2.2.5, react-popper@^2.3.0:
   dependencies:
     react-fast-compare "^3.0.1"
     warning "^4.0.2"
+
+react-tailwindcss-datepicker@^1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/react-tailwindcss-datepicker/-/react-tailwindcss-datepicker-1.6.3.tgz#99411fc0bdd5a3dd028f6e4d65270f479eca7723"
+  integrity sha512-W7oq+kb+nBTvOwa3EOBXlcuTEyRT5G3AKfRESvTapWgdOlE26mqDGH8j6aLghA1Ez6+JsuSGSQYgC1L2XJ5hhg==
 
 react@18.2.0:
   version "18.2.0"

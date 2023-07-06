@@ -3,15 +3,13 @@
 @tailwind utilities;
 
 
-.react-datepicker-wrapper {
-    @apply w-full
-}
+
 .react-datepicker__input-container input {
     @apply block w-full text-base lg:text-lg bg-white border border-gray-300 rounded shadow-sm form-input focus:ring-teal-500 focus:border-teal-500
 }
 
 .react-datepicker-popper {
-    @apply z-40 w-full lg:w-72 text-sm bg-white shadow px-3 py-2 border-2 border-gray-200 rounded
+    @apply z-40 absolute w-full lg:w-72 text-sm bg-white shadow px-3 py-2 border-2 border-gray-200 rounded
 }
 
 .react-datepicker-left {
@@ -104,3 +102,12 @@
 .react-datepicker__aria-live{
     @apply hidden
 }
+
+/* Override datePicker style */
+.datePicker > div > div {
+    @apply w-full lg:w-auto
+}
+/* .datePicker > div > input {
+    @apply border focus:border-red-800 focus:ring-red-800
+}
+ */
