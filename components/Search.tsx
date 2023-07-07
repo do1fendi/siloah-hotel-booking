@@ -19,7 +19,6 @@ type valueDateType = {
   endDate: Date;
 };
 
-
 export default function Search({}) {
   // const [startDate, setStartDate] = useState(new Date());
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -72,7 +71,6 @@ export default function Search({}) {
         adult: parseInt(param.get("adult")!),
         children: parseInt(param.get("children")!),
       });
-    
   }, [param]);
 
   const maxDate = () => {
@@ -87,12 +85,22 @@ export default function Search({}) {
     if (searchCity === "") searchInputRef.current?.focus();
     else {
       //2023-09-18
-      const checkIn = `${new Date(valueDate.startDate).getFullYear()}-${
+      const checkIn = `${new Date(valueDate.startDate).getFullYear()}-${(
         valueDate.startDate?.getMonth() + 1
-      }-${valueDate.startDate?.getDate()}`;
-      const checkOut = `${new Date(valueDate.endDate).getFullYear()}-${
+      )
+        .toString()
+        .padStart(2, "0")}-${valueDate.startDate
+        ?.getDate()
+        .toString()
+        .padStart(2, "0")}`;
+      const checkOut = `${new Date(valueDate.endDate).getFullYear()}-${(
         valueDate.endDate?.getMonth() + 1
-      }-${valueDate.endDate?.getDate()}`;
+      )
+        .toString()
+        .padStart(2, "0")}-${valueDate.endDate
+        ?.getDate()
+        .toString()
+        .padStart(2, "0")}`;
       router.push(
         `/search/?city=${searchCity}&checkIn=${checkIn}&checkOut=${checkOut}&room=${occupation?.room}&adult=${occupation?.adult}&children=${occupation?.children}`
       );
@@ -129,15 +137,15 @@ export default function Search({}) {
         </div>
         <div className="relative border border-gray-300 rounded w-full lg:w-1/2 h-10 lg:h-11 flex justify-between items-center px-2">
           <div className="text-sm">
-            <span className="mr-2 bg-pink-600 text-gray-100 rounded-xl px-2 py-[2px]">
+            <span className="mr-2 border border-gray-600 text-gray-600 rounded-xl px-2 py-[2px]">
               {occupation?.room}{" "}
               {lang === "TW"
                 ? "間客房"
-                : occupation!.room > 1
+                : occupation!.room != undefined && occupation!.room > 1
                 ? "Rooms"
                 : "Room"}
             </span>
-            <span className="mr-2 bg-teal-600 text-gray-100 rounded-xl px-2 py-[2px]">
+            <span className="mr-2 border border-gray-600  text-gray-600 rounded-xl px-2 py-[2px]">
               {occupation?.adult}{" "}
               {lang === "TW"
                 ? "位大人"
@@ -146,7 +154,7 @@ export default function Search({}) {
                 : "Adult"}
             </span>
             {occupation !== undefined && occupation!.children > 0 ? (
-              <span className="mr-2 bg-teal-600 text-gray-100 rounded-xl px-2 py-[2px]">
+              <span className="mr-2 border border-gray-600 text-gray-600 rounded-xl px-2 py-[2px]">
                 {occupation!.children} {lang === "TW" ? "位兒童" : "Children"}
               </span>
             ) : (
