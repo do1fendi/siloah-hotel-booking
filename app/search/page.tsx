@@ -7,7 +7,7 @@ import useLangStore from "@/store/lang";
 import useCurrencyStore from "@/store/currency";
 import Search from "@/components/Search";
 import HotelAvailableList from "@/components/HotelAvailableList";
-// import Loader from "@/components/Loader"
+import Loader from "@/components/Loader";
 
 type querySearchType = {
   city: string;
@@ -23,6 +23,7 @@ type querySearchType = {
 };
 
 export default function Home() {
+  const [showLoader, setShowLoader] = useState<boolean>(false);
   const { userData, setUserData } = useUserStore((state) => state);
   const [hotelAvailableData, setHotelAvailableData] = useState<any | null>(
     null
@@ -43,6 +44,7 @@ export default function Home() {
   });
 
   useEffect(() => {
+    setShowLoader(true);
     setQuerySearch((prev) => {
       prev = {
         ...querySearch,
@@ -52,12 +54,13 @@ export default function Home() {
         children: parseInt(param.get("children")!),
         checkIn: param.get("checkIn")!,
         checkOut: param.get("checkOut")!,
+        currency: currency,
         lang: lang,
       };
       runApi(prev);
       return prev;
     });
-  }, [param, lang]);
+  }, [param, lang, currency]);
 
   const runApi = (dt: querySearchType) => {
     (async () => {
@@ -84,6 +87,7 @@ export default function Home() {
       //   setUserData(null);
       //   window.location.reload();
       // }
+      setShowLoader(false);
     })();
   };
 
@@ -93,6 +97,7 @@ export default function Home() {
         <Search />
       </div>
       <HotelAvailableList data={hotelAvailableData} />
+      <Loader show={showLoader} />
     </div>
   );
 }
