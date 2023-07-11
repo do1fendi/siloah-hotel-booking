@@ -24,7 +24,7 @@ export default function Search({}) {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const param = useSearchParams();
-  const { lang } = useLangStore();
+  const { lang, setLang } = useLangStore();
   const [searchCity, setSearchCity] = useState<string>("");
   const { setShowOccupation } = useShowHandlerStore((state) => state);
   const [occupation, setOccupation] = useState<occupationType>();
@@ -59,7 +59,7 @@ export default function Search({}) {
 
   // get data from database
   useEffect(() => {
-    if (param.get("city") !== null) setSearchCity(param.get("city")!);
+    if (param.get("city") !== null) setSearchCity(param.get("city")!);   
     if (
       param.get("room") !== null &&
       param.get("adult") !== null &&
@@ -131,8 +131,8 @@ export default function Search({}) {
             startFrom={valueDate.startDate}
             minDate={new Date()}
             maxDate={maxDate()}
-            inputClassName="w-full p-2 border rounded focus:ring-0 focu text-gray-500"
-            toggleClassName="absolute bg-teal-500 rounded-r text-gray-100 right-0 h-full px-3 text-gray-100  disabled:opacity-40 disabled:cursor-not-allowed"
+            inputClassName="w-full p-2 border rounded focus:ring-0 text-gray-500"
+            // toggleClassName="absolute bg-teal-500 rounded-r text-gray-100 right-0 h-full px-3 text-gray-100  disabled:opacity-40 disabled:cursor-not-allowed"
           />
         </div>
         <div className="relative border border-gray-300 rounded w-full lg:w-1/2 h-10 lg:h-11 flex justify-between items-center px-2">

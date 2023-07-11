@@ -10,7 +10,7 @@ import HotelAvailableList from "@/components/HotelAvailableList";
 import Loader from "@/components/Loader";
 
 type querySearchType = {
-  city: string;
+  hotelCode: string;
   room: number;
   adult: number;
   children: number;
@@ -31,7 +31,7 @@ export default function Home() {
   const { lang } = useLangStore((state) => state);
   const param = useSearchParams();
   const [querySearch, setQuerySearch] = useState<querySearchType>({
-    city: "",
+    hotelCode: "",
     room: 0,
     adult: 0,
     children: 0,
@@ -74,11 +74,11 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    setShowLoader(true);
+    // setShowLoader(true);
     setQuerySearch((prev) => {
       prev = {
         ...querySearch,
-        city: param.get("city")!,
+        hotelCode: param.get("searchCode")!,
         room: parseInt(param.get("room")!),
         adult: parseInt(param.get("adult")!),
         children: parseInt(param.get("children")!),
@@ -87,7 +87,7 @@ export default function Home() {
         currency: currency,
         lang: lang,
       };
-      runApi(prev);
+      //runApi(prev);
       return prev;
     });
   }, [param, lang, currency]);
@@ -123,10 +123,10 @@ export default function Home() {
 
   return (
     <div className="container mx-auto max-w-[1024px]">
-      <div className="mt-5 shadow-lg p-5">
+      {/* <div className="mt-5 shadow-lg p-5">
         <Search />
-      </div>
-      <HotelAvailableList data={hotelAvailableData} />
+      </div> */}
+      {JSON.stringify(querySearch)}
       <Loader show={showLoader} />
     </div>
   );
