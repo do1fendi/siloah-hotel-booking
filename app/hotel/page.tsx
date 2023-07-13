@@ -127,7 +127,8 @@ export default function Home() {
                   };
                 }
               );
-            console.log(arrMerge);
+            arrMerge.reverse();
+            // console.log(arrMerge);
 
             // create array key of roomTypeCode
             let arrRoomType = arrMerge.map((room: any) => room.RoomTypeCode);
@@ -146,7 +147,7 @@ export default function Home() {
             console.log(arrRoomType);
             // const arrBasedOnRoomType =
 
-            prev = arrRoomType
+            prev = arrRoomType;
             return prev;
           });
         }
@@ -215,13 +216,13 @@ export default function Home() {
           hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
             .HotelDescriptiveInfo.Descriptions.Description.length > 0
             ? hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo.HotelDescriptiveInfo.Descriptions.Description.filter(
-              (a: any) => a.Text.Type == "ShortDescription"
-            )[0].Text.value
+                (a: any) => a.Text.Type == "ShortDescription"
+              )[0].Text.value
             : ""}
         </p>
       </div>
       <div id="roomList">
-            <HotelRoomList data={roomData} />
+        <HotelRoomList data={roomData} />
       </div>
       {/* <div className="mt-5 shadow-lg p-5">
         <Search />
