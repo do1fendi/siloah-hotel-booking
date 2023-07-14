@@ -453,7 +453,7 @@ const useDictionaryStore = create<iDictionaryState>()((set) => ({
       { code: 283, en: "Luggage service", tw: "行李服務" },
       { code: 284, en: "Piano bar", tw: "鋼琴吧" },
       { code: 285, en: "VIP security", tw: "貴賓保安" },
-      { code: 286, en: "Complimetary wirless internet", tw: "免費無線網絡" },
+      { code: 286, en: "Free WIFI", tw: "免費無線網絡" },
       { code: 287, en: " Concierge breakfast", tw: "  禮賓早餐" },
       { code: 288, en: "Same gender floor", tw: "同性別樓層" },
       { code: 289, en: "Children programs", tw: "兒童節目" },
@@ -1364,7 +1364,7 @@ const useDictionaryStore = create<iDictionaryState>()((set) => ({
       { code: 278, en: "Umbrellas", tw: "雨傘" },
       { code: 280, en: "Grocery store", tw: "雜貨店" },
       { code: 282, en: "Airport shuttle service", tw: "機場接送服務" },
-      { code: 286, en: "Complimentary wireless internet", tw: "免費無線上網" },
+      { code: 286, en: "Free WIFI", tw: "免費無線上網" },
       { code: 289, en: "Children programs", tw: "兒童節目" },
       { code: 292, en: "Newspaper", tw: "報紙" },
       {

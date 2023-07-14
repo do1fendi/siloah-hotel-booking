@@ -25,8 +25,8 @@ const nextConfig = {
     // BASEURL: "http://192.168.12.3:3000",
     // BASEURL: "https://do1fendi.github.io/siloah-hotel-booking",
     // BASEURL: "https://node.taiwanviptravel.com/siloah-hotel-booking",
-    SERVER: "http://localhost:5000",
-    // SERVER: "https://node.taiwanviptravel.com",
+    // SERVER: "http://localhost:5000",
+    SERVER: "https://node.taiwanviptravel.com",
   },
 };
 

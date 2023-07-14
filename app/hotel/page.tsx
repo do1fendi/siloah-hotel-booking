@@ -15,7 +15,7 @@ type querySearchType = {
   room: number;
   adult: number;
   children: number;
-  childAge: string;
+  childAges: string;
   checkIn: string;
   checkOut: string;
   currency: string;
@@ -34,7 +34,7 @@ export default function Home() {
     room: 0,
     adult: 0,
     children: 0,
-    childAge: "",
+    childAges: "",
     checkIn: "",
     checkOut: "",
     currency: currency,
@@ -82,6 +82,7 @@ export default function Home() {
         room: parseInt(param.get("room")!),
         adult: parseInt(param.get("adult")!),
         children: parseInt(param.get("children")!),
+        childAges:param.get("children")!,
         checkIn: param.get("checkIn")!,
         checkOut: param.get("checkOut")!,
         currency: currency,
@@ -221,7 +222,14 @@ export default function Home() {
             : ""}
         </p>
       </div>
-      <div id="roomList">
+      <div className="mt-5">
+        <p className="text-xs text-gray-500">
+          {lang === "TW"
+            ? "價格不包含稅金和附加費用"
+            : "Prices do not include taxes & fees"}
+        </p>
+      </div>
+      <div id="roomList" className="mt-2">
         <HotelRoomList data={roomData} />
       </div>
       {/* <div className="mt-5 shadow-lg p-5">

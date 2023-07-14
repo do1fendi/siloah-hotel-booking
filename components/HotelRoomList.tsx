@@ -56,7 +56,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
   return (
     <>
       {data !== null && (
-        <div ref={animateRef} className="mt-8 flex flex-col gap-5 lg:p-0">
+        <div ref={animateRef} className="flex flex-col gap-5 lg:p-0">
           {data.map((dt: any, index: number) => (
             <div
               key={index}
@@ -73,31 +73,87 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                       (dict) => dict.code === dt.roomType
                     )[0].en}
               </h2>
-
+              {/* Room List */}
               <div className="flex flex-col gap-5 mt-5">
-                {dt.roomList.slice(0,4).map((rm: any, i: number) => (
+                {dt.roomList.slice(0, 4).map((rm: any, i: number) => (
                   <div
-                    className="rounded p-2 bg-gray-100 flex flex-col lg:flex-row justify-between gap-5"
+                    className="rounded p-2 bg-gray-100 flex flex-col lg:flex-row justify-between gap-5 shadow"
                     key={i}
                   >
-                    <div className="w-full">
-                      <p>
-                        {rm.RoomDescription.Name} - {rm.RoomViewDescription}
+                    <div className="w-full flex flex-col gap-2">
+                      <p className="capitalize">
+                        <span className="font-semibold capitalize">
+                          {rm.RoomDescription.Name.toLowerCase()}
+                        </span>{" "}
+                        {rm.RoomViewDescription && (
+                          <span className="ml-2 bg-teal-500 text-gray-100 rounded-lg text-xs px-2 py-[2px]">
+                            {rm.RoomViewDescription}
+                          </span>
+                        )}
+                      </p>
+                      <p className="text-sm flex gap-2">
+                        {rm.RatePlans.RatePlan &&
+                          rm.RatePlans.RatePlan[0].MealsIncluded &&
+                          rm.RatePlans.RatePlan[0].MealsIncluded
+                            .MealPlanCode && (
+                            <span className="border border-gray-300 px-2 py-[3px]">
+                              {lang === "TW"
+                                ? dictionary.mealPlan.filter(
+                                    (meal: any) =>
+                                      meal.code ==
+                                      rm.RatePlans.RatePlan[0].MealsIncluded
+                                        .MealPlanCode
+                                  )[0].tw
+                                : dictionary.mealPlan.filter(
+                                    (meal: any) =>
+                                      meal.code ==
+                                      rm.RatePlans.RatePlan[0].MealsIncluded
+                                        .MealPlanCode
+                                  )[0].en}
+                            </span>
+                          )}
+                        {rm.RatePlans.RatePlan &&
+                          rm.RatePlans.RatePlan[0].RatePlanInclusions &&
+                          rm.RatePlans.RatePlan[0].RatePlanInclusions
+                            .RatePlanInclusion && (
+                            <span className="border border-gray-300 px-2 py-[3px]">
+                              {lang === "TW"
+                                ? dictionary.rateType.filter(
+                                    (rate: any) =>
+                                      rate.code ==
+                                      rm.RatePlans.RatePlan[0]
+                                        .RatePlanInclusions.RatePlanInclusion[0]
+                                        .Code
+                                  )[0].tw
+                                : dictionary.rateType.filter(
+                                    (rate: any) =>
+                                      rate.code ==
+                                      rm.RatePlans.RatePlan[0]
+                                        .RatePlanInclusions.RatePlanInclusion[0]
+                                        .Code
+                                  )[0].en}
+                            </span>
+                          )}
                       </p>
                     </div>
                     <div className="bg-white p-2">
+                      <p className="text-right text-sm">
+                        {lang === "TW" ? "每晚價格/每房" : "Price per Night"}
+                      </p>
                       <p className="text-right text-pink-700 w-full lg:w-[120px]">
                         <span className="text-xs">
                           {currency === "TWD" ? "NT$ " : "$ "}
                         </span>
                         <span className="text-2xl">
-                          {rm.AmountAfterTax.toString().replace(
+                          {rm.AverageNightlyRateBeforeTax.toString().replace(
                             /\B(?=(\d{3})+(?!\d))/g,
                             ","
                           )}
                         </span>
                       </p>
-                      <button className="w-full bg-orange-500 hover:bg-orange-400 text-gray-100 text-sm p-2">{lang==="TW"?"預訂":"Reserve"}</button>
+                      <button className="w-full bg-orange-500 hover:bg-orange-400 text-gray-100 text-sm p-2">
+                        {lang === "TW" ? "預訂" : "Reserve"}
+                      </button>
                     </div>
                   </div>
                 ))}

@@ -12,6 +12,7 @@ type occupationType = {
   room: number;
   adult: number;
   children: number;
+  childAges: string;
 };
 
 type valueDateType = {
@@ -70,6 +71,7 @@ export default function Search({}) {
         room: parseInt(param.get("room")!),
         adult: parseInt(param.get("adult")!),
         children: parseInt(param.get("children")!),
+        childAges: param.get("children")!,
       });
   }, [param]);
 
@@ -102,7 +104,7 @@ export default function Search({}) {
         .toString()
         .padStart(2, "0")}`;
       router.push(
-        `/search/?city=${searchCity}&checkIn=${checkIn}&checkOut=${checkOut}&room=${occupation?.room}&adult=${occupation?.adult}&children=${occupation?.children}`
+        `/search/?city=${searchCity}&checkIn=${checkIn}&checkOut=${checkOut}&room=${occupation?.room}&adult=${occupation?.adult}&children=${occupation?.children}&childAges=${occupation?.childAges}`
       );
     }
   };
@@ -156,6 +158,13 @@ export default function Search({}) {
             {occupation !== undefined && occupation!.children > 0 ? (
               <span className="mr-2 border border-gray-600 text-gray-600 rounded-xl px-2 py-[2px]">
                 {occupation!.children} {lang === "TW" ? "位兒童" : "Children"}
+              </span>
+            ) : (
+              ""
+            )}
+            {occupation !== undefined && occupation!.childAges != "" ? (
+              <span className="mr-2 border border-gray-600 text-gray-600 rounded-xl px-2 py-[2px]">
+                {occupation!.childAges}
               </span>
             ) : (
               ""

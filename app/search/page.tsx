@@ -14,7 +14,7 @@ type querySearchType = {
   room: number;
   adult: number;
   children: number;
-  childAge: string;
+  childAges: string;
   checkIn: string;
   checkOut: string;
   currency: string;
@@ -35,7 +35,7 @@ export default function Home() {
     room: 0,
     adult: 0,
     children: 0,
-    childAge: "",
+    childAges: "",
     checkIn: "",
     checkOut: "",
     currency: currency,
@@ -82,6 +82,7 @@ export default function Home() {
         room: parseInt(param.get("room")!),
         adult: parseInt(param.get("adult")!),
         children: parseInt(param.get("children")!),
+        childAges: param.get("childAges")!,
         checkIn: param.get("checkIn")!,
         checkOut: param.get("checkOut")!,
         currency: currency,
