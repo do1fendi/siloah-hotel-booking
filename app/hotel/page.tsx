@@ -82,7 +82,7 @@ export default function Home() {
         room: parseInt(param.get("room")!),
         adult: parseInt(param.get("adult")!),
         children: parseInt(param.get("children")!),
-        childAges:param.get("children")!,
+        childAges: param.get("childAges")!,
         checkIn: param.get("checkIn")!,
         checkOut: param.get("checkOut")!,
         currency: currency,
