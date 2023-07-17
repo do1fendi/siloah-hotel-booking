@@ -124,7 +124,7 @@ const SearchOccupation = ({
       elements.push(
         React.createElement(
           "div",
-          {},
+          {key:i},
           <div className="flex justify-between mt-5">
             <p>
               {lang === "TW" ? `第${i + 1}位兒童年齡` : `Age child ${i + 1}`}

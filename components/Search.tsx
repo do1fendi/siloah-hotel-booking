@@ -162,13 +162,13 @@ export default function Search({}) {
             ) : (
               ""
             )}
-            {occupation !== undefined && occupation!.childAges != "" ? (
+            {/* {occupation !== undefined && occupation!.childAges != "" ? (
               <span className="mr-2 border border-gray-600 text-gray-600 rounded-xl px-2 py-[2px]">
                 {occupation!.childAges}
               </span>
             ) : (
               ""
-            )}
+            )} */}
           </div>
           <button onClick={() => setShowOccupation(true)}>
             <IoIosArrowDropdown size={32} color="gray" />
@@ -183,6 +183,7 @@ export default function Search({}) {
       >
         {lang === "TW" ? "搜 出 好 價" : "SEARCH"}{" "}
       </button>
+      
     </>
   );
 }

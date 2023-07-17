@@ -81,12 +81,12 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                     key={i}
                   >
                     <div className="w-full flex flex-col gap-2">
-                      <p className="capitalize">
+                      <p className="capitalize flex flex-col lg:flex-row justify-start items-start lg:items-center lg:gap-2">
                         <span className="font-semibold capitalize">
                           {rm.RoomDescription.Name.toLowerCase()}
                         </span>{" "}
                         {rm.RoomViewDescription && (
-                          <span className="ml-2 bg-teal-500 text-gray-100 rounded-lg text-xs px-2 py-[2px]">
+                          <span className="bg-teal-500 text-gray-100 rounded-lg text-xs px-2 py-[2px]">
                             {rm.RoomViewDescription}
                           </span>
                         )}

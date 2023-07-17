@@ -2,7 +2,7 @@
 import Image from "next/image";
 import useUserStore from "@/store/user";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import useLangStore from "@/store/lang";
 import useCurrencyStore from "@/store/currency";
 import Search from "@/components/Search";
@@ -30,6 +30,7 @@ export default function Home() {
   const { currency } = useCurrencyStore((state) => state);
   const { lang } = useLangStore((state) => state);
   const param = useSearchParams();
+  const router = useRouter();
   const [querySearch, setQuerySearch] = useState<querySearchType>({
     city: "",
     room: 0,
@@ -113,6 +114,8 @@ export default function Home() {
         setHotelAvailableData(dt.data);
       } catch (error) {
         console.log(error);
+        alert("There is No Available Hotel");
+        router.push("/");
       }
       // if (dt.status === "Error") {
       //   setUserData(null);
