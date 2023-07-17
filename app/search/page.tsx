@@ -115,7 +115,7 @@ export default function Home() {
       } catch (error) {
         console.log(error);
         alert("There is No Available Hotel");
-        router.push("/");
+        // router.push("/");
       }
       // if (dt.status === "Error") {
       //   setUserData(null);

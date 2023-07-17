@@ -143,7 +143,7 @@ export default function Search({}) {
               {occupation?.room}{" "}
               {lang === "TW"
                 ? "間客房"
-                : occupation!.room != undefined && occupation!.room > 1
+                : occupation?.room != undefined && occupation!.room > 1
                 ? "Rooms"
                 : "Room"}
             </span>
@@ -151,7 +151,7 @@ export default function Search({}) {
               {occupation?.adult}{" "}
               {lang === "TW"
                 ? "位大人"
-                : occupation!.adult > 1
+                : occupation?.adult != undefined &&occupation!.adult > 1
                 ? "Adults"
                 : "Adult"}
             </span>
