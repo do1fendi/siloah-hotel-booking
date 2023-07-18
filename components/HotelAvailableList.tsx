@@ -49,7 +49,7 @@ export default function HotelAvailableList({ data }: IHotelAvailable) {
         data.GetHotelAvailRS &&
         data.GetHotelAvailRS.HotelAvailInfos && (
           <div ref={animateRef} className="mt-8 flex flex-col gap-5 p-2 lg:p-0">
-            {data.GetHotelAvailRS.HotelAvailInfos.HotelAvailInfo.map(
+            {data.GetHotelAvailRS.HotelAvailInfos.HotelAvailInfo.filter((filtered:any) => filtered.HotelRateInfo).map(
               (dt: any, i: number) => (
                 <div
                   className="w-full border border-teal-500 rounded p-2 lg:p-5 transform transition-all duration-700 ease-out scale-0"

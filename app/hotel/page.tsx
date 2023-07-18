@@ -113,7 +113,7 @@ export default function Home() {
         setHotelDetailData(dt.data);
         // response room and roomRate objects are seperated, so combine them together
         if (
-          dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelRateInfo.RateInfos
+          dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelRateInfo && dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelRateInfo.RateInfos && dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelRateInfo.RateInfos
             .ConvertedRateInfo
         ) {
           setRoomData((prev: any) => {

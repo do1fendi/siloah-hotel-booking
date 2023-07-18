@@ -5,6 +5,7 @@ import useCurrencyStore from "@/store/currency";
 import Link from "next/link";
 // import { useSearchParams } from "next/navigation";
 import useDictionaryStore from "@/store/dictionary";
+import { MdBed } from "react-icons/md";
 
 interface IHotelRoom {
   data: any | null;
@@ -91,6 +92,30 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                           </span>
                         )}
                       </p>
+                      <p className="flex gap-2 items-center text-sm">
+                        <MdBed size={16} />
+                        {rm.BedTypeOptions &&
+                          rm.BedTypeOptions.BedTypes &&
+                          rm.BedTypeOptions.BedTypes[0].BedType && (
+                            <span>
+                              {rm.BedTypeOptions.BedTypes[0].BedType[0].Count}{" "}
+                              {""}
+                              {lang === "TW"
+                                ? dictionary.bedType.filter(
+                                    (e) =>
+                                      e.code ===
+                                      rm.BedTypeOptions.BedTypes[0].BedType[0]
+                                        .Code
+                                  )[0].tw
+                                : dictionary.bedType.filter(
+                                    (e) =>
+                                      e.code ===
+                                      rm.BedTypeOptions.BedTypes[0].BedType[0]
+                                        .Code
+                                  )[0].en}
+                            </span>
+                          )}
+                      </p>
                       <p className="text-sm flex gap-2">
                         {rm.RatePlans.RatePlan &&
                           rm.RatePlans.RatePlan[0].MealsIncluded &&
@@ -135,6 +160,17 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                             </span>
                           )}
                       </p>
+                      {rm.RatePlans.RatePlan &&
+                        rm.RatePlans.RatePlan[0].AvailableQuantity &&
+                        rm.RatePlans.RatePlan[0].AvailableQuantity < 2 && (
+                          <p className="text-xs">                           
+                            <span className="text-pink-700">
+                              {lang === "TW" ? "本站上僅剩" : "Only"}{" "}
+                              {rm.RatePlans.RatePlan[0].AvailableQuantity}{" "}
+                              {lang === "TW" ? "間房" : "Room left"}
+                            </span>
+                          </p>
+                        )}
                     </div>
                     <div className="bg-white p-2">
                       <p className="text-right text-sm">

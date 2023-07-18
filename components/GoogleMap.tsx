@@ -62,11 +62,16 @@ export default function GoogleMap({
         strategy="lazyOnload"
       />
       {showMap && (
-        <div className="fixed top-0 left-0 right-0 w-full h-screen bg-white">
-          <div className="flex justify-end p-5">
-            <button onClick={closeMap}>x</button>
+        <div className="fixed top-0 left-0 right-0 w-full h-screen p-8 bg-gray-800/[.8]">
+          <div className="flex justify-end p-5 w-full h-full relative">
+            <button
+              onClick={closeMap}
+              className="absolute top-2 right-2 bg-white z-30 shadow-xl rounded-full w-8 h-8 flex justify-center items-center pb-[3px]"
+            >
+              <span className="text-2xl">x</span>
+            </button>
+            <div id="map" className="w-full h-full"></div>
           </div>
-          <div id="map" className="w-full h-full"></div>
         </div>
       )}
     </>

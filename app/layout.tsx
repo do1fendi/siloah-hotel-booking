@@ -1,7 +1,7 @@
 import "./globals.css";
 
 import Header from "@/components/Header";
-
+import Footer from "@/components/Footer";
 
 
 export const metadata = {
@@ -19,6 +19,7 @@ export default function RootLayout({
       <body className={`text-gray-600`}>
         <Header></Header>
         {children}
+        <Footer></Footer>
       </body>
     </html>
   );
