@@ -86,9 +86,20 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                         <span className="font-semibold capitalize">
                           {rm.RoomDescription.Name.toLowerCase()}
                         </span>{" "}
-                        {rm.RoomViewDescription && (
+                        {/* {rm.RoomViewDescription && (
                           <span className="bg-teal-500 text-gray-100 rounded-lg text-xs px-2 py-[2px]">
                             {rm.RoomViewDescription}
+                          </span>
+                        )} */}
+                        {rm.RoomViewCode && (
+                          <span className="bg-teal-500 text-gray-100 rounded-lg text-xs px-2 py-[2px]">
+                            {lang === "TW"
+                              ? dictionary.roomView.filter(
+                                  (dc: any) => dc.code === rm.RoomViewCode
+                                )[0].tw
+                              : dictionary.roomView.filter(
+                                  (dc: any) => dc.code === rm.RoomViewCode
+                                )[0].en}
                           </span>
                         )}
                       </p>
@@ -163,7 +174,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                       {rm.RatePlans.RatePlan &&
                         rm.RatePlans.RatePlan[0].AvailableQuantity &&
                         rm.RatePlans.RatePlan[0].AvailableQuantity < 2 && (
-                          <p className="text-xs">                           
+                          <p className="text-xs">
                             <span className="text-pink-700">
                               {lang === "TW" ? "本站上僅剩" : "Only"}{" "}
                               {rm.RatePlans.RatePlan[0].AvailableQuantity}{" "}

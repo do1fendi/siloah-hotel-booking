@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import useLangStore from "@/store/lang";
 import useCurrencyStore from "@/store/currency";
+import useDictionaryStore from "@/store/dictionary";
 import Search from "@/components/Search";
 import HotelAvailableList from "@/components/HotelAvailableList";
 import Loader from "@/components/Loader";
@@ -24,6 +25,7 @@ type querySearchType = {
 
 export default function Home() {
   const [showLoader, setShowLoader] = useState<boolean>(false);
+  const { dictionary } = useDictionaryStore((state) => state);
   const { userData, setUserData } = useUserStore((state) => state);
   const [hotelDetailData, setHotelDetailData] = useState<any | null>(null);
   const { currency } = useCurrencyStore((state) => state);
@@ -113,7 +115,9 @@ export default function Home() {
         setHotelDetailData(dt.data);
         // response room and roomRate objects are seperated, so combine them together
         if (
-          dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelRateInfo && dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelRateInfo.RateInfos && dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelRateInfo.RateInfos
+          dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelRateInfo &&
+          dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelRateInfo.RateInfos &&
+          dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelRateInfo.RateInfos
             .ConvertedRateInfo
         ) {
           setRoomData((prev: any) => {
@@ -165,77 +169,109 @@ export default function Home() {
 
   return (
     <div className="container mx-auto max-w-[1024px] p-2 lg:p-5">
-      <div className="border border-teal-500 rounded p-2">
-        <h1 className="text-xl font-bold">
-          {hotelDetailData !== null &&
-          hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo.HotelInfo.HotelName
-            ? hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo.HotelInfo
+      {hotelDetailData !== null && (
+        <div>
+          <div className="border border-teal-500 rounded p-2">
+            <h1 className="text-xl font-bold">
+              {hotelDetailData !== null &&
+              hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo.HotelInfo
                 .HotelName
-            : ""}
-        </h1>
-        <p className="text-sm">
-          <span>
-            {hotelDetailData !== null &&
-            hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
-              .HotelDescriptiveInfo.LocationInfo.Address.AddressLine1
-              ? hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
-                  .HotelDescriptiveInfo.LocationInfo.Address.AddressLine1 + ", "
-              : ""}
-          </span>
-          <span>
-            {hotelDetailData !== null &&
-            hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
-              .HotelDescriptiveInfo.LocationInfo.Address.CityName.value
-              ? hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
-                  .HotelDescriptiveInfo.LocationInfo.Address.CityName.value +
-                ", "
-              : ""}
-          </span>
-          <span>
-            {hotelDetailData !== null &&
-            hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
-              .HotelDescriptiveInfo.LocationInfo.Address.CountryName.value
-              ? hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
-                  .HotelDescriptiveInfo.LocationInfo.Address.CountryName.value +
-                ", "
-              : ""}
-          </span>
-          <span>
-            {hotelDetailData !== null &&
-            hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
-              .HotelDescriptiveInfo.LocationInfo.Address.PostalCode
-              ? hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
+                ? hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo.HotelInfo
+                    .HotelName
+                : ""}
+            </h1>
+            <p className="text-sm">
+              <span>
+                {hotelDetailData !== null &&
+                hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
+                  .HotelDescriptiveInfo.LocationInfo.Address.AddressLine1
+                  ? hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
+                      .HotelDescriptiveInfo.LocationInfo.Address.AddressLine1 +
+                    ", "
+                  : ""}
+              </span>
+              <span>
+                {hotelDetailData !== null &&
+                hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
+                  .HotelDescriptiveInfo.LocationInfo.Address.CityName.value
+                  ? hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
+                      .HotelDescriptiveInfo.LocationInfo.Address.CityName
+                      .value + ", "
+                  : ""}
+              </span>
+              <span>
+                {hotelDetailData !== null &&
+                hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
+                  .HotelDescriptiveInfo.LocationInfo.Address.CountryName.value
+                  ? hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
+                      .HotelDescriptiveInfo.LocationInfo.Address.CountryName
+                      .value + ", "
+                  : ""}
+              </span>
+              <span>
+                {hotelDetailData !== null &&
+                hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
                   .HotelDescriptiveInfo.LocationInfo.Address.PostalCode
-              : ""}
-          </span>
-        </p>
-        <div className="p-2">
-          <p className="border-b"></p>
+                  ? hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
+                      .HotelDescriptiveInfo.LocationInfo.Address.PostalCode
+                  : ""}
+              </span>
+            </p>
+            <div className="p-2">
+              <p className="border-b"></p>
+            </div>
+            <p className="text-sm lowercase">
+              {hotelDetailData !== null &&
+              hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
+                .HotelDescriptiveInfo.Descriptions.Description.length > 0
+                ? hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo.HotelDescriptiveInfo.Descriptions.Description.filter(
+                    (a: any) => a.Text.Type == "ShortDescription"
+                  )[0].Text.value
+                : ""}
+            </p>
+          </div>
+          <div className="mt-5">
+            <p className="text-xs text-gray-500">
+              {lang === "TW"
+                ? "價格不包含稅金和附加費用"
+                : "Prices do not include taxes & fees"}
+            </p>
+          </div>
+          <div id="roomList" className="mt-2">
+            <HotelRoomList data={roomData} />
+          </div>
+          <div
+            id="hotelAmenity"
+            className="mt-5 border border-teal-500 rounded p-2"
+          >
+            <p className="text-lg text-gray-500 font-bold mb-5">
+              {lang === "TW" ? "飯店設施" : "Hotel Amenities"}
+            </p>
+            {hotelDetailData.GetHotelDetailsRS &&
+              hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo &&
+              hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
+                .HotelDescriptiveInfo &&
+              hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
+                .HotelDescriptiveInfo.Amenities &&
+              hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
+                .HotelDescriptiveInfo &&
+              hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo.HotelDescriptiveInfo.Amenities.Amenity.map(
+                (amenity: any, i: number) => (
+                  <span className="mr-3 text-sm" key={i}>
+                    {lang === "TW"
+                      ? dictionary.propertyAmenity.filter(
+                          (dc: any) => dc.code === amenity.Code
+                        )[0]?.tw
+                      : dictionary.propertyAmenity.filter(
+                          (dc: any) => dc.code === amenity.Code
+                        )[0]?.en}
+                  </span>
+                )
+              )}
+          </div>
         </div>
-        <p className="text-sm lowercase">
-          {hotelDetailData !== null &&
-          hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo
-            .HotelDescriptiveInfo.Descriptions.Description.length > 0
-            ? hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo.HotelDescriptiveInfo.Descriptions.Description.filter(
-                (a: any) => a.Text.Type == "ShortDescription"
-              )[0].Text.value
-            : ""}
-        </p>
-      </div>
-      <div className="mt-5">
-        <p className="text-xs text-gray-500">
-          {lang === "TW"
-            ? "價格不包含稅金和附加費用"
-            : "Prices do not include taxes & fees"}
-        </p>
-      </div>
-      <div id="roomList" className="mt-2">
-        <HotelRoomList data={roomData} />
-      </div>
-      {/* <div className="mt-5 shadow-lg p-5">
-        <Search />
-      </div> */}
-      {/* {JSON.stringify(hotelDetailData)} */}
+      )}
+
       <Loader show={showLoader} />
     </div>
   );
