@@ -10,6 +10,7 @@ import Search from "@/components/Search";
 import HotelAvailableList from "@/components/HotelAvailableList";
 import Loader from "@/components/Loader";
 import HotelRoomList from "@/components/HotelRoomList";
+import { LuLogIn, LuLogOut } from "react-icons/lu";
 
 type querySearchType = {
   searchCode: string;
@@ -21,6 +22,11 @@ type querySearchType = {
   checkOut: string;
   currency: string;
   lang: string;
+};
+
+type hotelPolicyType = {
+  checkIn: string;
+  checkOut: string;
 };
 
 export default function Home() {
@@ -39,10 +45,14 @@ export default function Home() {
     childAges: "",
     checkIn: "",
     checkOut: "",
-    currency: currency,
-    lang: "TW",
+    currency: "",
+    lang: "",
   });
   const [roomData, setRoomData] = useState<any>(null);
+  const [hotelPolicy, setHotelPolicy] = useState<hotelPolicyType>({
+    checkIn: "",
+    checkOut: "",
+  });
 
   useEffect(() => {
     // for (const [key, value] of searchParams.entries()) {
@@ -94,6 +104,22 @@ export default function Home() {
       return prev;
     });
   }, [param, lang, currency]);
+
+  // convert time to am pm, original format 1200
+  const convertTime = (tm: string) => {
+    let h = tm.slice(0, 2);
+    const m = tm.slice(2, 4);
+    let amPm = "";
+
+    if (parseInt(h) >= 12 && parseInt(h) < 24) {
+      amPm = "PM";
+      h = parseInt(h) === 12 ? "12" : (parseInt(h) - 12).toString();
+    } else if (parseInt(h) === 24) {
+      amPm = "AM";
+      h = "12";
+    } else amPm = "AM";
+    return `${h}:${m} ${amPm}`;
+  };
 
   const runApi = (dt: querySearchType) => {
     (async () => {
@@ -155,6 +181,31 @@ export default function Home() {
             prev = arrRoomType;
             return prev;
           });
+        }
+
+        // Set Hotel Policy
+        if (
+          // dt.data.GetHotelDetailsRS &&
+          // dt.data.GetHotelDetailsRS.HotelDetailsInfo &&
+          // dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelDescriptiveInfo &&
+          // dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelDescriptiveInfo
+          //   .PropertyInfo &&
+          // dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelDescriptiveInfo
+          //   .PropertyInfo.Polices &&
+          dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelDescriptiveInfo
+            .PropertyInfo.Policies.Policy.length > 0
+        ) {
+          dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelDescriptiveInfo.PropertyInfo.Policies.Policy.forEach(
+            (p: any) => {
+              setHotelPolicy((prev) => {
+                if (p.Text.Type === "CheckOut")
+                  prev = { ...prev, checkOut: p.Text.value };
+                else if (p.Text.Type === "CheckIn")
+                  prev = { ...prev, checkIn: p.Text.value };
+                return prev;
+              });
+            }
+          );
         }
       } catch (error) {
         console.log(error);
@@ -268,6 +319,40 @@ export default function Home() {
                   </span>
                 )
               )}
+          </div>
+          <div
+            id="houseRules"
+            className="mt-5 border border-teal-500 rounded p-2"
+          >
+            <p className="text-lg text-gray-500 font-bold mb-5">
+              {lang === "TW" ? "家庭規則" : "House Rules"}
+            </p>
+
+            <div className="flex">
+              <div className="flex flex-col gap-5 w-full lg:w-3/12">
+                <p className="flex gap-2 items-center">
+                  <LuLogIn /> <span>Check-in</span>
+                </p>
+                <p className="border"></p>
+                <p className="flex gap-2 items-center">
+                  <LuLogOut /> <span>Check-out</span>
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-5 w-full lg:w-9/12">
+                <p>
+                  {hotelPolicy.checkIn !== ""
+                    ? convertTime(hotelPolicy.checkIn)
+                    : ""}
+                </p>
+                <p className="border w-full"></p>
+                <p>
+                  {hotelPolicy.checkOut !== ""
+                    ? convertTime(hotelPolicy.checkOut)
+                    : ""}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       )}

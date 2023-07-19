@@ -198,7 +198,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                           )}
                         </span>
                       </p>
-                      <button className="w-full bg-orange-500 hover:bg-orange-400 text-gray-100 text-sm p-2">
+                      <button className="w-full bg-orange-500 hover:bg-orange-400 text-gray-100 text-sm p-2" onClick={()=>alert(rm.RateKey)}>
                         {lang === "TW" ? "預訂" : "Reserve"}
                       </button>
                     </div>
