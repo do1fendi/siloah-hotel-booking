@@ -52,7 +52,7 @@ export default function HotelAvailableList({ data }: IHotelAvailable) {
             {data.GetHotelAvailRS.HotelAvailInfos.HotelAvailInfo.filter((filtered:any) => filtered.HotelRateInfo).map(
               (dt: any, i: number) => (
                 <div
-                  className="w-full border border-teal-500 rounded p-2 lg:p-5 transform transition-all duration-700 ease-out scale-0"
+                  className="w-full border border-luxgreen hover:shadow-lg shadow-luxgreen p-2 lg:p-5 transform transition-all duration-700 ease-out scale-0"
                   key={dt.HotelInfo.HotelCode}
                 >
                   <div>
@@ -132,7 +132,7 @@ export default function HotelAvailableList({ data }: IHotelAvailable) {
                         },
                       }}
                     >
-                      <button className="bg-orange-500 hover:bg-orange-400 text-gray-100 mt-5 text-md px-3 py-[2px] rounded">
+                      <button className="bg-luxorange hover:bg-orange-500 text-gray-100 mt-5 text-md px-3 py-[2px] rounded">
                         {lang === "TW"
                           ? "查看客房供應情況 >"
                           : "See avaibility >"}

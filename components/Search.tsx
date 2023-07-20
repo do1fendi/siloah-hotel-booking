@@ -118,7 +118,7 @@ export default function Search({}) {
             ref={searchInputRef!}
             type="text"
             placeholder="City"
-            className="focus:text-gray-600 focus:caret-teal-500  pl-14 border text-base lg:text-lg p-2 rounded mb-2 border-gray-300 w-full focus:ring-teal-500 focus:border-teal-500 shadow-sm form-input"
+            className="focus:text-gray-600 focus:border-luxgreen pl-14 border text-base lg:text-lg p-2 rounded mb-2 border-gray-300 w-full focus:ring-teal-500 focus:border-teal-500 shadow-sm form-input"
             onChange={(ev) => onCityChange(ev.target)}
             value={searchCity}
           />
@@ -178,7 +178,7 @@ export default function Search({}) {
       </div>
 
       <button
-        className="w-full bg-orange-500 hover:bg-orange-400 text-gray-100 mt-5 p-2 rounded text-lg"
+        className="w-full bg-luxorange hover:bg-orange-400 text-gray-100 mt-5 p-2 rounded text-lg"
         onClick={onSearch}
       >
         {lang === "TW" ? "搜 出 好 價" : "SEARCH"}{" "}

@@ -1,15 +1,26 @@
+"use client";
 // import useCurrencyStore from "@/store/currency";
 import useLangStore from "@/store/lang";
 import { useRef, useEffect, useState } from "react";
 import useCurrencyStore from "@/store/currency";
-import Link from "next/link";
-// import { useSearchParams } from "next/navigation";
+// import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
+// import { useRouter } from "next/router";
 import useDictionaryStore from "@/store/dictionary";
 import { MdBed } from "react-icons/md";
+import Link from "next/link";
 
 interface IHotelRoom {
   data: any | null;
 }
+type queryParam = {
+  room: number;
+  adult: number;
+  children: number;
+  checkIn: string;
+  checkOut: string;
+  rateKey: string;
+};
 
 type expandType = boolean[];
 
@@ -17,9 +28,18 @@ export default function HotelRoomList({ data }: IHotelRoom) {
   const { currency } = useCurrencyStore((state) => state);
   const { lang } = useLangStore((state) => state);
   const animateRef = useRef<HTMLDivElement>(null);
-  // const param = useSearchParams();
+  const param = useSearchParams();
   const { dictionary } = useDictionaryStore((state) => state);
   const [expand, setExpand] = useState<expandType | null>(null);
+  const router = useRouter();
+  const [queryParam, setQueryParam] = useState<queryParam>({
+    room: 0,
+    adult: 0,
+    children: 0,
+    checkIn: "",
+    checkOut: "",
+    rateKey: "",
+  });
 
   useEffect(() => {
     if (data! != null && animateRef.current) {
@@ -43,6 +63,17 @@ export default function HotelRoomList({ data }: IHotelRoom) {
     }
   }, [data]);
 
+  useEffect(() => {
+    setQueryParam({
+      room: parseInt(param.get("room")!),
+      adult: parseInt(param.get("adult")!),
+      children: parseInt(param.get("children")!),
+      checkIn: param.get("checkIn")!,
+      checkOut: param.get("checkOut")!,
+      rateKey: "",
+    });
+  }, [param]);
+
   // const onExpand = (ind: number) => {
   //   animateRef!.current!.children[ind].classList.remove("h-1/2");
   //   const tmpExpand = expand?.map((exp, i) => (i === ind ? true : exp));
@@ -54,6 +85,20 @@ export default function HotelRoomList({ data }: IHotelRoom) {
   //   });
   // };
 
+  const goBooking = (rateKey: string) => {
+    // const ret = setQueryParam((prev) => {
+    //   prev = { ...prev, rateKey: rateKey };
+    //   // console.log("param", JSON.parse(atob(btoa(JSON.stringify(prev)))));
+    //   // router.push({
+    //   //   pathname: "/book",
+    //   //   query: { id: btoa(JSON.stringify(prev)) },
+    //   // });
+    //   return prev;
+    // });
+    const ret = btoa(JSON.stringify({...queryParam,rateKey:rateKey}))
+    return ret;
+  };
+
   return (
     <>
       {data !== null && (
@@ -61,9 +106,9 @@ export default function HotelRoomList({ data }: IHotelRoom) {
           {data.map((dt: any, index: number) => (
             <div
               key={index}
-              className="relative w-full shadow shadow-teal-500 p-2 lg:p-5 transform transition-all duration-700 ease-out scale-0"
+              className="relative w-full shadow shadow-luxgreen p-2 lg:p-5 transform transition-all duration-700 ease-out scale-0"
             >
-              <h2 className="text-lg font-bold uppercase text-teal-600 underline">
+              <h2 className="text-lg font-bold uppercase text-luxgreen">
                 {lang === "TW"
                   ? dt.roomType !== undefined &&
                     dictionary.roomType.filter(
@@ -103,11 +148,12 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                           </span>
                         )}
                       </p>
-                      <p className="flex gap-2 items-center text-sm">
-                        <MdBed size={16} />
-                        {rm.BedTypeOptions &&
-                          rm.BedTypeOptions.BedTypes &&
-                          rm.BedTypeOptions.BedTypes[0].BedType && (
+
+                      {rm.BedTypeOptions &&
+                        rm.BedTypeOptions.BedTypes &&
+                        rm.BedTypeOptions.BedTypes[0].BedType && (
+                          <p className="flex gap-2 items-center text-sm">
+                            <MdBed size={16} />
                             <span>
                               {rm.BedTypeOptions.BedTypes[0].BedType[0].Count}{" "}
                               {""}
@@ -125,8 +171,8 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                                         .Code
                                   )[0].en}
                             </span>
-                          )}
-                      </p>
+                          </p>
+                        )}
                       <p className="text-sm flex gap-2">
                         {rm.RatePlans.RatePlan &&
                           rm.RatePlans.RatePlan[0].MealsIncluded &&
@@ -198,9 +244,16 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                           )}
                         </span>
                       </p>
-                      <button className="w-full bg-orange-500 hover:bg-orange-400 text-gray-100 text-sm p-2" onClick={()=>alert(rm.RateKey)}>
-                        {lang === "TW" ? "預訂" : "Reserve"}
-                      </button>
+                      <Link
+                        href={{
+                          pathname: "/book",
+                          query: { id: goBooking(rm.RateKey) },
+                        }}
+                      >
+                        <button className="w-full bg-luxorange hover:bg-orange-500 text-gray-100 text-sm p-2">
+                          {lang === "TW" ? "預訂" : "Reserve"}
+                        </button>
+                      </Link>
                     </div>
                   </div>
                 ))}

@@ -11,6 +11,7 @@ import HotelAvailableList from "@/components/HotelAvailableList";
 import Loader from "@/components/Loader";
 import HotelRoomList from "@/components/HotelRoomList";
 import { LuLogIn, LuLogOut } from "react-icons/lu";
+import useCheckTimeStore from "@/store/checkTime";
 
 type querySearchType = {
   searchCode: string;
@@ -53,6 +54,9 @@ export default function Home() {
     checkIn: "",
     checkOut: "",
   });
+  const { checkInTime, checkOutTime, setCheckTime } = useCheckTimeStore(
+    (state) => state
+  );
 
   useEffect(() => {
     // for (const [key, value] of searchParams.entries()) {
@@ -100,7 +104,10 @@ export default function Home() {
         currency: currency,
         lang: lang,
       };
+
+      // run api
       runApi(prev);
+
       return prev;
     });
   }, [param, lang, currency]);
@@ -198,10 +205,15 @@ export default function Home() {
           dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelDescriptiveInfo.PropertyInfo.Policies.Policy.forEach(
             (p: any) => {
               setHotelPolicy((prev) => {
-                if (p.Text.Type === "CheckOut")
+                if (p.Text.Type === "CheckOut") {
                   prev = { ...prev, checkOut: p.Text.value };
-                else if (p.Text.Type === "CheckIn")
+                } else if (p.Text.Type === "CheckIn") {
                   prev = { ...prev, checkIn: p.Text.value };
+                }
+                setCheckTime(
+                  convertTime(prev.checkIn),
+                  convertTime(prev.checkOut)
+                );
                 return prev;
               });
             }
@@ -222,7 +234,7 @@ export default function Home() {
     <div className="container mx-auto max-w-[1024px] p-2 lg:p-5">
       {hotelDetailData !== null && (
         <div>
-          <div className="border border-teal-500 rounded p-2">
+          <div className="border border-luxgreen p-2">
             <h1 className="text-xl font-bold">
               {hotelDetailData !== null &&
               hotelDetailData.GetHotelDetailsRS.HotelDetailsInfo.HotelInfo
@@ -291,11 +303,8 @@ export default function Home() {
           <div id="roomList" className="mt-2">
             <HotelRoomList data={roomData} />
           </div>
-          <div
-            id="hotelAmenity"
-            className="mt-5 border border-teal-500 rounded p-2"
-          >
-            <p className="text-lg text-gray-500 font-bold mb-5">
+          <div id="hotelAmenity" className="mt-5 border border-luxgreen p-2">
+            <p className="text-lg text-luxgreen font-bold mb-5">
               {lang === "TW" ? "飯店設施" : "Hotel Amenities"}
             </p>
             {hotelDetailData.GetHotelDetailsRS &&
@@ -320,11 +329,8 @@ export default function Home() {
                 )
               )}
           </div>
-          <div
-            id="houseRules"
-            className="mt-5 border border-teal-500 rounded p-2"
-          >
-            <p className="text-lg text-gray-500 font-bold mb-5">
+          <div id="houseRules" className="mt-5 border border-luxgreen p-2">
+            <p className="text-lg text-luxgreen font-bold mb-5">
               {lang === "TW" ? "家庭規則" : "House Rules"}
             </p>
 

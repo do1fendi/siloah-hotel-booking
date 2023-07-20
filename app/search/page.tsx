@@ -127,7 +127,7 @@ export default function Home() {
 
   return (
     <div className="container mx-auto max-w-[1024px]">
-      <div className="mt-5 shadow-lg p-5">
+      <div className="mt-5 shadow shadow-luxgreen p-5">
         <Search />
       </div>
       <HotelAvailableList data={hotelAvailableData} />

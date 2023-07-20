@@ -176,14 +176,14 @@ const SearchOccupation = ({
             <div className="flex flex-col gap-5">
               <div className="grid grid-cols-3 gap-5 text-center">
                 <button
-                  className="w-6 h-6 rounded-full border border-teal-500 flex justify-center items-center"
+                  className="w-6 h-6 rounded-full border border-luxgreen flex justify-center items-center"
                   onClick={() => modifyTmpOccupation("room", "min")}
                 >
                   -
                 </button>
                 <span>{tmpOccupation.room}</span>
                 <button
-                  className="w-6 h-6 rounded-full border border-teal-500 flex justify-center items-center"
+                  className="w-6 h-6 rounded-full border border-luxgreen flex justify-center items-center"
                   onClick={() => modifyTmpOccupation("room", "add")}
                 >
                   +
@@ -191,14 +191,14 @@ const SearchOccupation = ({
               </div>
               <div className="grid grid-cols-3 gap-5  text-center">
                 <button
-                  className="w-6 h-6 rounded-full border border-teal-500 flex justify-center items-center"
+                  className="w-6 h-6 rounded-full border border-luxgreen flex justify-center items-center"
                   onClick={() => modifyTmpOccupation("adult", "min")}
                 >
                   -
                 </button>
                 <span>{tmpOccupation.adult}</span>
                 <button
-                  className="w-6 h-6 rounded-full border border-teal-500 flex justify-center items-center"
+                  className="w-6 h-6 rounded-full border border-luxgreen flex justify-center items-center"
                   onClick={() => modifyTmpOccupation("adult", "add")}
                 >
                   +
@@ -206,14 +206,14 @@ const SearchOccupation = ({
               </div>
               <div className="grid grid-cols-3 gap-5 text-center">
                 <button
-                  className="w-6 h-6 rounded-full border border-teal-500 flex justify-center items-center"
+                  className="w-6 h-6 rounded-full border border-luxgreen flex justify-center items-center"
                   onClick={() => modifyTmpOccupation("children", "min")}
                 >
                   -
                 </button>
                 <span>{tmpOccupation.children}</span>
                 <button
-                  className="w-6 h-6 rounded-full border border-teal-500 flex justify-center items-center"
+                  className="w-6 h-6 rounded-full border border-luxgreen flex justify-center items-center"
                   onClick={() => modifyTmpOccupation("children", "add")}
                 >
                   +

@@ -54,7 +54,7 @@ export default function Home() {
         ></Image>
       </div>
       <div className="flex justify-center -mt-24 relative z-10">
-        <div className="p-5 bg-white shadow-lg rounded-lg w-full mx-2 lg:m-0 lg:w-[800px] relative">
+        <div className="p-5 bg-white shadow-lg w-full mx-2 lg:m-0 lg:w-[800px] relative">
           <Search />
         </div>
       </div>

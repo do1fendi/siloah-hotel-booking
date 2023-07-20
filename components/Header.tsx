@@ -65,11 +65,11 @@ export default function Header({}: Props) {
   return (
     <div
       ref={wrapperRef}
-      className="flex justify-between items-center p-2 lg:p-5 shadow-sm"
+      className="flex justify-between items-center p-2 lg:p-5 shadow-sm shadow-luxgreen"
     >
       {/* {JSON.stringify(routeList)} */}
       <div>
-        <p className="text-2xl text-teal-600 font-bold">
+        <p className="text-2xl text-luxgreen font-bold">
           <Link href={"/"}> SILOAH</Link>
         </p>
       </div>
@@ -92,7 +92,7 @@ export default function Header({}: Props) {
                   <button onClick={() => setShowCurrency(false)}>x</button>
                 </div>
                 <button
-                  className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+                  className="border border-luxgreen hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
                   onClick={() => {
                     setCurrency("TWD");
                     setShowCurrency(false);
@@ -101,7 +101,7 @@ export default function Header({}: Props) {
                   $TWD
                 </button>
                 <button
-                  className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-[150px] rounded"
+                  className="border border-luxgreen hover:bg-teal-600 hover:text-gray-100 p-2 w-[150px] rounded"
                   onClick={() => {
                     setCurrency("USD");
                     setShowCurrency(false);
@@ -115,7 +115,7 @@ export default function Header({}: Props) {
         </div>
         <div className="lang relative">
           <button
-            className="border border-teal-600 rounded px-2 hover:bg-teal-600 hover:text-gray-100"
+            className="border border-luxgreen rounded px-2 hover:bg-teal-600 hover:text-gray-100"
             onClick={() => {
               setShowLang(true);
               setShowCurrency(false);
@@ -131,7 +131,7 @@ export default function Header({}: Props) {
                   <button onClick={() => setShowLang(false)}>x</button>
                 </div>
                 <button
-                  className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+                  className="border border-luxgreen hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
                   onClick={() => {
                     setLang("EN");
                     setShowLang(false);
@@ -140,7 +140,7 @@ export default function Header({}: Props) {
                   English
                 </button>
                 <button
-                  className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-[150px] rounded"
+                  className="border border-luxgreen hover:bg-teal-600 hover:text-gray-100 p-2 w-[150px] rounded"
                   onClick={() => {
                     setLang("TW");
                     setShowLang(false);
@@ -162,7 +162,7 @@ export default function Header({}: Props) {
         </div>
         <div className="nav relative">
           <button
-            className="p-2 border border-teal-600"
+            className="p-2 border border-luxgreen"
             onClick={() => {
               setShowNav(true);
               setShowLang(false);
@@ -170,7 +170,7 @@ export default function Header({}: Props) {
             }}
           >
             <svg
-              className="w-6 h-6 text-teal-600"
+              className="w-6 h-6 text-luxgreen"
               aria-hidden="true"
               fill="currentColor"
               viewBox="0 0 20 20"
@@ -198,7 +198,7 @@ export default function Header({}: Props) {
                       }}
                     >
                       <button
-                        className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+                        className="border border-luxgreen hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
                         onClick={() => setShowNav(false)}
                       >
                         {lang === "TW" ? "註冊" : "Sign Up"}
@@ -211,7 +211,7 @@ export default function Header({}: Props) {
                       }}
                     >
                       <button
-                        className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+                        className="border border-luxgreen hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
                         onClick={() => setShowNav(false)}
                       >
                         {lang === "TW" ? "登入" : "Sign In"}
@@ -220,7 +220,7 @@ export default function Header({}: Props) {
                   </div>
                 ) : (
                   <button
-                    className="border border-teal-600 hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
+                    className="border border-luxgreen hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
                     onClick={() => {
                       setUserData(null);
                       setShowNav(false);
