@@ -9,6 +9,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import useDictionaryStore from "@/store/dictionary";
 import { MdBed } from "react-icons/md";
 import Link from "next/link";
+import useCartStore from "@/store/cart";
 
 interface IHotelRoom {
   data: any | null;
@@ -32,6 +33,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
   const { dictionary } = useDictionaryStore((state) => state);
   const [expand, setExpand] = useState<expandType | null>(null);
   const router = useRouter();
+  const { cartData, setCartData } = useCartStore();
   const [queryParam, setQueryParam] = useState<queryParam>({
     room: 0,
     adult: 0,
@@ -86,17 +88,54 @@ export default function HotelRoomList({ data }: IHotelRoom) {
   // };
 
   const goBooking = (rateKey: string) => {
-    // const ret = setQueryParam((prev) => {
-    //   prev = { ...prev, rateKey: rateKey };
-    //   // console.log("param", JSON.parse(atob(btoa(JSON.stringify(prev)))));
-    //   // router.push({
-    //   //   pathname: "/book",
-    //   //   query: { id: btoa(JSON.stringify(prev)) },
-    //   // });
-    //   return prev;
-    // });
-    const ret = btoa(JSON.stringify({...queryParam,rateKey:rateKey}))
+    const ret = btoa(JSON.stringify({ ...queryParam, rateKey: rateKey }));
     return ret;
+  };
+
+  type cartData = {
+    hotelName: string;
+    roomType: string;
+    ratePlanName: string;
+    rateKey: string;
+    price: number;
+  };
+  const addToCart = (dt: cartData) => {
+    // set cart, if cartData not null use spread operator to add new data otherwise without spread operator
+    console.log(cartData);
+    setCartData({
+      data: [
+        {
+          hotelName: dt.hotelName,
+          roomType: dt.roomType,
+          ratePlanName: dt.ratePlanName,
+          rateKey: dt.rateKey,
+          price: dt.price,
+        },
+      ],
+    });
+
+    // if (cartData !== null) {
+    //   setCartData([
+    //     ...cartData.data,
+    //     {
+    //       hotelName: dt.hotelName,
+    //       roomType: dt.roomType,
+    //       ratePlanName: dt.ratePlanName,
+    //       rateKey: dt.rateKey,
+    //       price: dt.price,
+    //     },
+    //   ]);
+    // } else {
+    //   setCartData([
+    //     {
+    //       hotelName: dt.hotelName,
+    //       roomType: dt.roomType,
+    //       ratePlanName: dt.ratePlanName,
+    //       rateKey: dt.rateKey,
+    //       price: dt.price,
+    //     },
+    //   ]);
+    // }
   };
 
   return (
@@ -231,14 +270,14 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                     </div>
                     <div className="bg-white p-2">
                       <p className="text-right text-sm">
-                        {lang === "TW" ? "每晚價格/每房" : "Price per Night"}
+                        {lang === "TW" ? "總價" : "Total price"}
                       </p>
                       <p className="text-right text-pink-700 w-full lg:w-[120px]">
                         <span className="text-xs">
                           {currency === "TWD" ? "NT$ " : "$ "}
                         </span>
                         <span className="text-2xl">
-                          {rm.AverageNightlyRateBeforeTax.toString().replace(
+                          {rm.AmountAfterTax.toString().replace(
                             /\B(?=(\d{3})+(?!\d))/g,
                             ","
                           )}
@@ -254,6 +293,20 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                           {lang === "TW" ? "預訂" : "Reserve"}
                         </button>
                       </Link>
+                      <button
+                        className="w-full border border-luxorange hover:bg-luxorange hover:text-gray-100 text-gray-600 text-sm p-2 mt-2"
+                        onClick={() =>
+                          addToCart({
+                            hotelName: rm.HotelName,
+                            roomType: rm.RoomType,
+                            ratePlanName: rm.RoomDescription.Name,
+                            rateKey: rm.RateKey,
+                            price: rm.AmountAfterTax,
+                          })
+                        }
+                      >
+                        {lang === "TW" ? "加入購物車" : "Add to cart"}
+                      </button>
                     </div>
                   </div>
                 ))}

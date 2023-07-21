@@ -101,8 +101,8 @@ export default function Home() {
         childAges: param.get("childAges")!,
         checkIn: param.get("checkIn")!,
         checkOut: param.get("checkOut")!,
-        currency: currency,
-        lang: lang,
+        currency: param.get("currency")!,
+        lang: param.get("lang")!,
       };
 
       // run api
@@ -161,7 +161,7 @@ export default function Home() {
                   return {
                     ...rate,
                     ...dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelRateInfo
-                      .Rooms.Room[i],
+                      .Rooms.Room[i], ...dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelInfo
                   };
                 }
               );
@@ -293,13 +293,13 @@ export default function Home() {
                 : ""}
             </p>
           </div>
-          <div className="mt-5">
+          {/* <div className="mt-5">
             <p className="text-xs text-gray-500">
               {lang === "TW"
                 ? "價格不包含稅金和附加費用"
                 : "Prices do not include taxes & fees"}
             </p>
-          </div>
+          </div> */}
           <div id="roomList" className="mt-2">
             <HotelRoomList data={roomData} />
           </div>

@@ -39,8 +39,8 @@ export default function Home() {
     childAges: "",
     checkIn: "",
     checkOut: "",
-    currency: currency,
-    lang: "TW",
+    currency: "",
+    lang: "",
   });
 
   useEffect(() => {
@@ -75,7 +75,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    setShowLoader(true);
     setQuerySearch((prev) => {
       prev = {
         ...querySearch,
@@ -86,15 +85,35 @@ export default function Home() {
         childAges: param.get("childAges")!,
         checkIn: param.get("checkIn")!,
         checkOut: param.get("checkOut")!,
-        currency: currency,
-        lang: lang,
+        currency: param.get("currency")!,
+        lang: param.get("lang")!,
       };
+      router.replace(
+        `/search/?city=${prev.city}&checkIn=${prev.checkIn}&checkOut=${prev.checkOut}&room=${prev.room}&adult=${prev.adult}&children=${prev.children}&childAges=${prev.childAges}&lang=${lang}&currency=${currency}`
+      );
       runApi(prev);
+
       return prev;
     });
   }, [param, lang, currency]);
 
+  // useEffect(() => {
+  //   setShowLoader(true);
+  //   runApi({
+  //     city: param.get("city")!,
+  //     room: parseInt(param.get("room")!),
+  //     adult: parseInt(param.get("adult")!),
+  //     children: parseInt(param.get("children")!),
+  //     childAges: param.get("childAges")!,
+  //     checkIn: param.get("checkIn")!,
+  //     checkOut: param.get("checkOut")!,
+  //     currency: param.get("currency")!,
+  //     lang: param.get("lang")!,
+  //   });
+  // }, []);
+
   const runApi = (dt: querySearchType) => {
+    setShowLoader(true);
     (async () => {
       const config = {
         headers: {

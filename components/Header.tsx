@@ -7,6 +7,8 @@ import Link from "next/link";
 import useUserStore from "@/store/user";
 import useRouteListStore from "@/store/routeList";
 import useShowHandlerStore from "@/store/showHandler";
+import { BsFillCartFill } from "react-icons/bs";
+import useCartStore from "@/store/cart";
 
 type Props = {};
 
@@ -19,6 +21,7 @@ export default function Header({}: Props) {
   const path = usePathname();
   const param = useSearchParams();
   const { routeList, setRouteList } = useRouteListStore((state) => state);
+  const { cartData } = useCartStore();
   const {
     showLang,
     setShowLang,
@@ -34,7 +37,8 @@ export default function Header({}: Props) {
   // set all showCurrency, showLang, showNave to false if route change
   useEffect(() => {
     setRouteList([...routeList, `${window.origin}${path}?${param}`]);
-  }, [path]);
+    console.log(cartData);
+  }, [path, param]);
 
   useEffect(() => {
     if (userData !== null) setUserInitial(userData.name[0].toUpperCase());
@@ -159,6 +163,17 @@ export default function Header({}: Props) {
               {userInital}
             </span>
           )}
+        </div>
+        <div className="cart relative mr-2">
+          <Link
+            href={{
+              pathname: "/cart",
+              query: Object.fromEntries(param.entries()), // the data
+            }}
+          >
+            <BsFillCartFill size={24} />
+          </Link>
+          
         </div>
         <div className="nav relative">
           <button

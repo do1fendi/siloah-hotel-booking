@@ -3,8 +3,9 @@ import DatePicker from "react-tailwindcss-datepicker";
 import { useState, useEffect, useRef } from "react";
 import SearchOccupation from "./SearchOccupation";
 import useShowHandlerStore from "@/store/showHandler";
-import { BsSearch } from "react-icons/Bs";
+import { BsSearch } from "react-icons/bs";
 import useLangStore from "@/store/lang";
+import useCurrencyStore from "@/store/currency";
 import { IoIosArrowDropdown } from "react-icons/io";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -26,6 +27,7 @@ export default function Search({}) {
   const router = useRouter();
   const param = useSearchParams();
   const { lang, setLang } = useLangStore();
+  const { currency } = useCurrencyStore();
   const [searchCity, setSearchCity] = useState<string>("");
   const { setShowOccupation } = useShowHandlerStore((state) => state);
   const [occupation, setOccupation] = useState<occupationType>();
@@ -60,7 +62,7 @@ export default function Search({}) {
 
   // get data from database
   useEffect(() => {
-    if (param.get("city") !== null) setSearchCity(param.get("city")!);   
+    if (param.get("city") !== null) setSearchCity(param.get("city")!);
     if (
       param.get("room") !== null &&
       param.get("adult") !== null &&
@@ -104,7 +106,7 @@ export default function Search({}) {
         .toString()
         .padStart(2, "0")}`;
       router.push(
-        `/search/?city=${searchCity}&checkIn=${checkIn}&checkOut=${checkOut}&room=${occupation?.room}&adult=${occupation?.adult}&children=${occupation?.children}&childAges=${occupation?.childAges}`
+        `/search/?city=${searchCity}&checkIn=${checkIn}&checkOut=${checkOut}&room=${occupation?.room}&adult=${occupation?.adult}&children=${occupation?.children}&childAges=${occupation?.childAges}&lang=${lang}&currency=${currency}`
       );
     }
   };
@@ -151,7 +153,7 @@ export default function Search({}) {
               {occupation?.adult}{" "}
               {lang === "TW"
                 ? "位大人"
-                : occupation?.adult != undefined &&occupation!.adult > 1
+                : occupation?.adult != undefined && occupation!.adult > 1
                 ? "Adults"
                 : "Adult"}
             </span>
@@ -183,7 +185,6 @@ export default function Search({}) {
       >
         {lang === "TW" ? "搜 出 好 價" : "SEARCH"}{" "}
       </button>
-      
     </>
   );
 }

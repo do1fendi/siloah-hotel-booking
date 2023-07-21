@@ -167,43 +167,60 @@ export default function Book() {
     <div className="container mx-auto max-w-[1024px] p-2 lg:p-0 mt-5">
       {/* <div className="mt-5 shadow-lg p-5">{JSON.stringify(queryUrl)}</div> */}
       <div className="flex flex-col lg:flex-row gap-5">
-        <div className="left w-full lg:w-5/12 border rounded p-2">
-          <p className="font-bold text-luxgreen text-lg">
-            {lang === "TW" ? "您的訂房資訊" : "Your booking details"}
-          </p>
-          <div className="grid grid-cols-2 mt-5">
-            <div>
-              <p>{lang === "TW" ? "入住時間" : "Check-in"}</p>
-              <p className="font-bold">{convertDate(queryUrl.checkIn)}</p>
-              <p className="text-sm">{checkInTime}</p>
+        <div className="left w-full lg:w-5/12">
+          <div className="w-full border rounded p-2">
+            <p className="font-bold text-luxgreen text-lg">
+              {lang === "TW" ? "您的訂房資訊" : "Your booking details"}
+            </p>
+            <div className="grid grid-cols-2 mt-5">
+              <div>
+                <p>{lang === "TW" ? "入住時間" : "Check-in"}</p>
+                <p className="font-bold">{convertDate(queryUrl.checkIn)}</p>
+                <p className="text-sm">{checkInTime}</p>
+              </div>
+              <div>
+                <p className="px-2">
+                  {lang === "TW" ? "退房時間" : "Check-out"}
+                </p>
+                <p className="font-bold border-l px-2">
+                  {convertDate(queryUrl.checkOut)}
+                </p>
+                <p className="border-l px-2 text-sm">{checkOutTime}</p>
+              </div>
+            </div>
+            <div className="mt-5">
+              <p>{lang === "TW" ? "總共入住：" : "Total length of stay:"}</p>
+              <p className="font-bold">{countTotalNight()}</p>
+            </div>
+            <div className="divider px-2 py-5">
+              <p className="border-b"></p>
             </div>
             <div>
-              <p className="px-2">{lang === "TW" ? "退房時間" : "Check-out"}</p>
-              <p className="font-bold border-l px-2">
-                {convertDate(queryUrl.checkOut)}
+              <p>{lang === "TW" ? "已選擇" : "You selected"}</p>
+              <p className="font-bold">
+                {queryUrl.room}{" "}
+                {lang === "TW"
+                  ? "間客房"
+                  : queryUrl.room > 1
+                  ? "rooms"
+                  : "room"}{" "}
+                for {queryUrl.adult}{" "}
+                {lang === "TW"
+                  ? "位成人"
+                  : queryUrl.adult > 1
+                  ? "adults"
+                  : "adult"}
+                {queryUrl.children > 0
+                  ? lang === "TW"
+                    ? `, ${queryUrl.children} 位孩童`
+                    : `, ${queryUrl.children} child`
+                  : ""}
               </p>
-              <p className="border-l px-2 text-sm">{checkOutTime}</p>
             </div>
           </div>
-          <div className="mt-5">
-            <p>{lang === "TW" ? "總共入住：" : "Total length of stay:"}</p>
-            <p className="font-bold">{countTotalNight()}</p>
-          </div>
-          <div className="divider px-2 py-5">
-            <p className="border-b"></p>
-          </div>
-          <div>
-            <p>{lang === "TW" ? "已選擇" : "You selected"}</p>
-            <p className="font-bold">
-              {queryUrl.room}{" "}
-              {lang === "TW" ? "間客房" : queryUrl.room > 1 ? "rooms" : "room"}{" "}
-              for {queryUrl.adult}{" "}
-              {lang === "TW"
-                ? "位成人"
-                : queryUrl.adult > 1
-                ? "adults"
-                : "adult"}
-                {queryUrl.children>0 ? lang==="TW"? `, ${queryUrl.children} 位孩童` :`, ${queryUrl.children} child` :""}
+          <div className="w-full border rounded p-2 mt-2">
+            <p className="font-bold text-luxgreen text-lg">
+              {lang === "TW" ? "房價明細" : "Your price summary"}
             </p>
           </div>
         </div>
