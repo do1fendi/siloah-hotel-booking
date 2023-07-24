@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import useCurrencyStore from "@/store/currency";
 import { FaRegTrashAlt } from "react-icons/fa";
 import useLangStore from "@/store/lang";
+import useUserStore from "@/store/user";
+import Link from "next/link";
 
 type cartType = {
   hotelName: string;
@@ -17,10 +19,38 @@ type cartType = {
 }[];
 
 export default function Cart() {
+  const { userData, setUserData } = useUserStore();
   const { cartData, setCartData } = useCartStore();
   const [carts, setCarts] = useState<cartType>([]);
   const { currency } = useCurrencyStore();
   const { lang } = useLangStore();
+
+  useEffect(() => {
+    if (userData != null) {
+      (async () => {
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            "x-siloah": "siloah",
+          },
+          method: "POST",
+          body: JSON.stringify({ token: userData.token }),
+        };
+        const result = await fetch(
+          `${process.env.SERVER}/hotel/verifyToken`,
+          config
+        );
+        const dt = await result.json();
+        // console.log(dt);
+        if (dt.status === "Error") {
+          setUserData(null);
+          // router.back();
+          window.location.reload();
+        }
+      })();
+    }
+    // router.push("/search/?code=asdd&ab=aaa");
+  }, []);
 
   useEffect(() => {
     setCarts((prev) => (prev = JSON.parse(decode(cartData))));
@@ -69,16 +99,16 @@ export default function Cart() {
   return (
     <>
       <div className="container mx-auto">
-        <div className="flex flex-col gap-2 lg:gap-5 mt-5 p-2 lg:p-0">
-          <div className="p-2 lg:p-5 border border-luxgreen rounded">
-            <p className="text-xl">
-              {lang === "TW"
-                ? `您的購物車 (${carts.length})`
-                : `Your cart (${carts.length})`}
-            </p>
-          </div>
-          {carts.length > 0 &&
-            carts.map((cart, ind) => (
+        {carts.length > 0 ? (
+          <div className="flex flex-col gap-2 lg:gap-5 mt-5 p-2 lg:p-0">
+            <div className="p-2 lg:p-5 border border-luxgreen rounded">
+              <p className="text-xl">
+                {lang === "TW"
+                  ? `您的購物車 (${carts.length})`
+                  : `Your cart (${carts.length})`}
+              </p>
+            </div>
+            {carts.map((cart, ind) => (
               <div
                 key={ind}
                 className="p-2 lg:p-5 border border-luxgreen rounded flex flex-col gap-2 lg:gap-5"
@@ -99,7 +129,7 @@ export default function Cart() {
                       {convertDate(cart.checkIn)} ~ {convertDate(cart.checkOut)}
                     </p>
                   </div>
-                  <div>
+                  <div className="min-w-[100px] text-right">
                     <p>
                       <span className="text-xs">
                         {currency === "TWD" ? "NT$ " : "$ "}
@@ -117,7 +147,21 @@ export default function Cart() {
                 </div>
               </div>
             ))}
-        </div>
+          </div>
+        ) : (
+          <div className="flex flex-col justify-center items-center h-screen -mt-[110px]">
+            <p className="text-xl font-bold">
+              {lang === "TW" ? "您的購物車是空的" : "Your cart is empty"}
+            </p>
+            <div className="mt-5">
+              <Link href={"/"}>
+                <button className="text-gray-100 bg-luxorange text-lg py-2 px-5 rounded hover:bg-orange-400">
+                  {lang === "TW" ? "找飯店" : "Search Hotel"}
+                </button>
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

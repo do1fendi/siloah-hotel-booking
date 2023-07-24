@@ -43,12 +43,11 @@ export default function Header({}: Props) {
   useEffect(() => {
     setRouteList([...routeList, `${window.origin}${path}?${param}`]);
     //console.log(cartData);
-    if (path === "/cart/" || path === "/book/") {
+    if (path.includes("cart") || path.includes("book")) {
       currencyButton.current?.classList.add("hidden");
       // langButton.current?.classList.add("hidden");
       cartButton.current?.classList.add("hidden");
-    }
-    else{
+    } else {
       currencyButton.current?.classList.remove("hidden");
       // langButton.current?.classList.remove("hidden");
       cartButton.current?.classList.remove("hidden");
@@ -179,29 +178,30 @@ export default function Header({}: Props) {
             </div>
           )}
         </div>
-        <div>
-          {" "}
-          {userInital !== null && (
+        {userInital !== null && (
+          <div>
             <span className="rounded-full bg-pink-600 font-bold text-gray-100 w-8 h-8 flex justify-center items-center p-2">
               {userInital}
             </span>
-          )}
-        </div>
-        <div ref={cartButton} className="cart relative mr-2">
-          <Link
-            href={{
-              pathname: "/cart",
-              query: Object.fromEntries(param.entries()), // the data
-            }}
-          >
-            <BsFillCartFill size={24} />
-            {cartDataLength > 0 && (
-              <span className="absolute -right-3 -top-3 rounded-full w-6 h-6 bg-pink-700 text-gray-100 text-xs flex justify-center items-center">
-                {cartDataLength}
-              </span>
-            )}
-          </Link>
-        </div>
+          </div>
+        )}
+        {cartDataLength > 0 && (
+          <div ref={cartButton} className="cart relative mr-2">
+            <Link
+              href={{
+                pathname: "/cart",
+                query: Object.fromEntries(param.entries()), // the data
+              }}
+            >
+              <BsFillCartFill size={24} />
+              {cartDataLength > 0 && (
+                <span className="absolute -right-3 -top-3 rounded-full w-6 h-6 bg-pink-700 text-gray-100 text-xs flex justify-center items-center">
+                  {cartDataLength}
+                </span>
+              )}
+            </Link>
+          </div>
+        )}
         <div className="nav relative">
           <button
             className="p-2 border border-luxgreen"
@@ -277,6 +277,7 @@ export default function Header({}: Props) {
           )}
         </div>
       </div>
+      {/* {JSON.stringify(routeList)} */}
     </div>
   );
 }
