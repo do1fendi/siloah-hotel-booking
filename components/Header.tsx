@@ -9,6 +9,7 @@ import useRouteListStore from "@/store/routeList";
 import useShowHandlerStore from "@/store/showHandler";
 import { BsFillCartFill } from "react-icons/bs";
 import useCartStore from "@/store/cart";
+import { decode } from "js-base64";
 
 type Props = {};
 
@@ -22,6 +23,10 @@ export default function Header({}: Props) {
   const param = useSearchParams();
   const { routeList, setRouteList } = useRouteListStore((state) => state);
   const { cartData } = useCartStore();
+  const [cartDataLength, setCartDataLength] = useState<number>(0);
+  const langButton = useRef<HTMLDivElement>(null);
+  const currencyButton = useRef<HTMLDivElement>(null);
+  const cartButton = useRef<HTMLDivElement>(null);
   const {
     showLang,
     setShowLang,
@@ -37,7 +42,17 @@ export default function Header({}: Props) {
   // set all showCurrency, showLang, showNave to false if route change
   useEffect(() => {
     setRouteList([...routeList, `${window.origin}${path}?${param}`]);
-    console.log(cartData);
+    //console.log(cartData);
+    if (path === "/cart/" || path === "/book/") {
+      currencyButton.current?.classList.add("hidden");
+      // langButton.current?.classList.add("hidden");
+      cartButton.current?.classList.add("hidden");
+    }
+    else{
+      currencyButton.current?.classList.remove("hidden");
+      // langButton.current?.classList.remove("hidden");
+      cartButton.current?.classList.remove("hidden");
+    }
   }, [path, param]);
 
   useEffect(() => {
@@ -66,6 +81,14 @@ export default function Header({}: Props) {
     if (param.get("currency") !== null) setCurrency(param.get("currency")!);
   }, []);
 
+  // Cart handle
+  useEffect(() => {
+    if (cartData !== "") {
+      const len = JSON.parse(decode(cartData)).length;
+      setCartDataLength((prev) => (prev = len));
+    }
+  }, [cartData]);
+
   return (
     <div
       ref={wrapperRef}
@@ -78,7 +101,7 @@ export default function Header({}: Props) {
         </p>
       </div>
       <div className="flex gap-2 lg:gap-5 justify-center items-center">
-        <div className="currency relative">
+        <div ref={currencyButton} className="currency relative">
           <button
             className="font-bold px-2"
             onClick={() => {
@@ -117,7 +140,7 @@ export default function Header({}: Props) {
             </div>
           )}
         </div>
-        <div className="lang relative">
+        <div ref={langButton} className="lang relative">
           <button
             className="border border-luxgreen rounded px-2 hover:bg-teal-600 hover:text-gray-100"
             onClick={() => {
@@ -164,7 +187,7 @@ export default function Header({}: Props) {
             </span>
           )}
         </div>
-        <div className="cart relative mr-2">
+        <div ref={cartButton} className="cart relative mr-2">
           <Link
             href={{
               pathname: "/cart",
@@ -172,8 +195,12 @@ export default function Header({}: Props) {
             }}
           >
             <BsFillCartFill size={24} />
+            {cartDataLength > 0 && (
+              <span className="absolute -right-3 -top-3 rounded-full w-6 h-6 bg-pink-700 text-gray-100 text-xs flex justify-center items-center">
+                {cartDataLength}
+              </span>
+            )}
           </Link>
-          
         </div>
         <div className="nav relative">
           <button

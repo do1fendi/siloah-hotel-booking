@@ -10,6 +10,7 @@ import useDictionaryStore from "@/store/dictionary";
 import { MdBed } from "react-icons/md";
 import Link from "next/link";
 import useCartStore from "@/store/cart";
+import { decode } from "js-base64";
 
 interface IHotelRoom {
   data: any | null;
@@ -98,45 +99,60 @@ export default function HotelRoomList({ data }: IHotelRoom) {
     ratePlanName: string;
     rateKey: string;
     price: number;
+    checkIn: string;
+    checkOut: string;
   };
   const addToCart = (dt: cartData) => {
     // set cart, if cartData not null use spread operator to add new data otherwise without spread operator
-    console.log(cartData);
-    setCartData({
-      data: [
-        {
-          hotelName: dt.hotelName,
-          roomType: dt.roomType,
-          ratePlanName: dt.ratePlanName,
-          rateKey: dt.rateKey,
-          price: dt.price,
-        },
-      ],
-    });
 
-    // if (cartData !== null) {
-    //   setCartData([
-    //     ...cartData.data,
-    //     {
-    //       hotelName: dt.hotelName,
-    //       roomType: dt.roomType,
-    //       ratePlanName: dt.ratePlanName,
-    //       rateKey: dt.rateKey,
-    //       price: dt.price,
-    //     },
-    //   ]);
-    // } else {
-    //   setCartData([
-    //     {
-    //       hotelName: dt.hotelName,
-    //       roomType: dt.roomType,
-    //       ratePlanName: dt.ratePlanName,
-    //       rateKey: dt.rateKey,
-    //       price: dt.price,
-    //     },
-    //   ]);
-    // }
+    // setCartData(
+    //   JSON.stringify({
+    //     hotelName: dt.hotelName,
+    //     roomType: dt.roomType,
+    //     ratePlanName: dt.ratePlanName,
+    //     rateKey: dt.rateKey,
+    //     price: dt.price,
+    //   })
+    // );
+    // setCartData("hello-world")
+
+    // setTrackUpdate(!trackUpdate);
+
+    if (cartData !== "") {
+      setCartData(
+        JSON.stringify([
+          ...JSON.parse(decode(cartData)),
+          {
+            hotelName: dt.hotelName,
+            roomType: dt.roomType,
+            ratePlanName: dt.ratePlanName,
+            rateKey: dt.rateKey,
+            price: dt.price,
+            checkIn: dt.checkIn,
+            checkOut: dt.checkOut,
+          },
+        ])
+      );
+    } else {
+      setCartData(
+        JSON.stringify([
+          {
+            hotelName: dt.hotelName,
+            roomType: dt.roomType,
+            ratePlanName: dt.ratePlanName,
+            rateKey: dt.rateKey,
+            price: dt.price,
+            checkIn: dt.checkIn,
+            checkOut: dt.checkOut,
+          },
+        ])
+      );
+    }
   };
+
+  // useEffect(() => {
+  //   console.log(cartData);
+  // }, [trackUpdate]);
 
   return (
     <>
@@ -302,6 +318,8 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                             ratePlanName: rm.RoomDescription.Name,
                             rateKey: rm.RateKey,
                             price: rm.AmountAfterTax,
+                            checkIn: queryParam.checkIn,
+                            checkOut: queryParam.checkOut,
                           })
                         }
                       >
@@ -318,7 +336,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
               </div> */}
             </div>
           ))}
-          {/* {JSON.stringify(data)} */}
+          {/* {decode(cartData)} */}
         </div>
       )}
     </>
