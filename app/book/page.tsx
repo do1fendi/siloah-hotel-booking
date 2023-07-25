@@ -298,9 +298,18 @@ export default function Book() {
                 apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
                   .AverageNightlyRate,
               noOfNight: countTotalNight(),
-              noOfRoom: queryUrl.room,
+              noOfRoom:
+                apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                  .AvailableQuantity === 1
+                  ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                      .AvailableQuantity
+                  : queryUrl.room,
               totalAmount:
-                queryUrl.room *
+                (apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                  .AvailableQuantity === 1
+                  ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                      .AvailableQuantity
+                  : queryUrl.room) *
                 apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
                   .AmountAfterTax,
             },
@@ -322,9 +331,18 @@ export default function Book() {
                 apiData.HotelRateInfo?.RateInfos?.RateInfo[0]
                   .AverageNightlyRate,
               noOfNight: countTotalNight(),
-              noOfRoom: queryUrl.room,
+              noOfRoom:
+                apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                  .AvailableQuantity === 1
+                  ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                      .AvailableQuantity
+                  : queryUrl.room,
               totalAmount:
-                queryUrl.room *
+                (apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                  .AvailableQuantity === 1
+                  ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                      .AvailableQuantity
+                  : queryUrl.room) *
                 apiData.HotelRateInfo?.RateInfos?.RateInfo[0].AmountAfterTax,
             },
           };
