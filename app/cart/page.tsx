@@ -16,6 +16,7 @@ type cartType = {
   price: number;
   checkIn: string;
   checkOut: string;
+  selected: boolean;
 }[];
 
 export default function Cart() {
@@ -24,6 +25,7 @@ export default function Cart() {
   const [carts, setCarts] = useState<cartType>([]);
   const { currency } = useCurrencyStore();
   const { lang } = useLangStore();
+  const [anySelected, setAnySelected] = useState<boolean>(false);
 
   useEffect(() => {
     if (userData != null) {
@@ -52,6 +54,7 @@ export default function Cart() {
     // router.push("/search/?code=asdd&ab=aaa");
   }, []);
 
+  // convert cartData by decode it into json as carts
   useEffect(() => {
     setCarts((prev) => (prev = JSON.parse(decode(cartData))));
   }, [cartData]);
@@ -96,57 +99,101 @@ export default function Cart() {
       } ${newDate.getFullYear()}`;
     }
   };
+
+  // function of checkbox is selected or deselected
+  const onSelected = (ind: number, value: boolean) => {
+    const setSelected = carts.map((cart: any, i: number) =>
+      i === ind ? { ...cart, selected: value } : cart
+    );
+    setCarts(setSelected);
+  };
+
+  useEffect(() => {
+    setAnySelected((prev) => {
+      prev = !carts.some((cart) => cart.selected === true);
+      return prev;
+    });
+  }, [carts]);
+
   return (
     <>
-      <div className="container mx-auto">
+      <div className="container mx-auto max-w-[1024px]">
         {carts.length > 0 ? (
-          <div className="flex flex-col gap-2 lg:gap-5 mt-5 p-2 lg:p-0">
-            <div className="p-2 lg:p-5 border border-luxgreen rounded">
-              <p className="text-xl">
-                {lang === "TW"
-                  ? `您的購物車 (${carts.length})`
-                  : `Your cart (${carts.length})`}
-              </p>
-            </div>
-            {carts.map((cart, ind) => (
-              <div
-                key={ind}
-                className="p-2 lg:p-5 border border-luxgreen rounded flex flex-col gap-2 lg:gap-5"
-              >
-                <div>
-                  <div className="flex justify-between items-center">
-                    <p className="text-lg font-bold">{cart.hotelName}</p>
-                    <button onClick={() => onRemoveCart(ind)}>
-                      <FaRegTrashAlt />
-                    </button>
-                  </div>
-                  <p>{cart.roomType}</p>
-                </div>
-                <div className="flex justify-between border-t mt-5 items-center pt-2 lg:pt-5">
-                  <div>
-                    <p>{cart.ratePlanName}</p>
-                    <p className="text-gray-500 text-xs">
-                      {convertDate(cart.checkIn)} ~ {convertDate(cart.checkOut)}
-                    </p>
-                  </div>
-                  <div className="min-w-[100px] text-right">
-                    <p>
-                      <span className="text-xs">
-                        {currency === "TWD" ? "NT$ " : "$ "}
-                      </span>
-                      <span className="text-xl text-pink-700">
-                        {cart.price
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                      </span>
-                    </p>
-                    <p className="text-gray-500 text-xs">
-                      {lang === "TW" ? "包含稅金" : "includes taxes"}
-                    </p>
-                  </div>
-                </div>
+          <div className="flex flex-col lg:flex-row gap-5">
+            <div className="flex flex-col gap-2 lg:gap-5 mt-5 p-2 lg:p-0 w-full lg:w-8/12">
+              <div className="p-2 lg:p-5 border border-luxgreen rounded">
+                <p className="text-xl">
+                  {lang === "TW"
+                    ? `您的購物車 (${carts.length})`
+                    : `Your cart (${carts.length})`}
+                </p>
               </div>
-            ))}
+              {carts.map((cart, ind) => (
+                <div
+                  key={ind}
+                  className="p-2 lg:p-5 border border-luxgreen rounded flex flex-col gap-2 lg:gap-5"
+                >
+                  <div>
+                    <div className="flex justify-between items-center">
+                      <p className="text-lg font-bold">{cart.hotelName}</p>
+                      <button onClick={() => onRemoveCart(ind)}>
+                        <FaRegTrashAlt />
+                      </button>
+                    </div>
+                    <p>{cart.roomType}</p>
+                  </div>
+                  <div className="flex justify-between border-t mt-5 items-center pt-2 lg:pt-5">
+                    <div>
+                      <p className="flex items-center gap-2">
+                        <span>
+                          <input
+                            type="checkbox"
+                            checked={cart.selected}
+                            onChange={(e) => onSelected(ind, e.target.checked)}
+                          ></input>
+                        </span>
+                        <span>{cart.ratePlanName}</span>
+                      </p>
+                      <p className="text-gray-500 text-xs">
+                        {convertDate(cart.checkIn)} ~{" "}
+                        {convertDate(cart.checkOut)}
+                      </p>
+                    </div>
+                    <div className="min-w-[110px] text-right">
+                      <p>
+                        <span className="text-xs">
+                          {currency === "TWD" ? "NT$ " : "$ "}
+                        </span>
+                        <span className="text-xl text-pink-700">
+                          {cart.price
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        </span>
+                      </p>
+                      <p className="text-gray-500 text-xs">
+                        {lang === "TW" ? "包含稅金" : "includes taxes"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="w-full lg:w-4/12 p-2 lg:p-0">
+              <div className="border border-luxgreen rounded p-2 lg:p-5 lg:mt-5">
+                <p>
+                  {lang === "TW"
+                    ? "最終價格將在下一頁計算"
+                    : "Final price will be calculated on the next page"}
+                </p>
+
+                <button
+                  className="w-full bg-luxorange text-gray-100 hover:bg-orange-400 rounded p-2 mt-5 disabled:bg-gray-300"
+                  disabled={anySelected}
+                >
+                  {lang === "TW" ? "下一步" : "Next"}
+                </button>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="flex flex-col justify-center items-center h-screen -mt-[110px]">

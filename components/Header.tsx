@@ -43,7 +43,7 @@ export default function Header({}: Props) {
   useEffect(() => {
     setRouteList([...routeList, `${window.origin}${path}?${param}`]);
     //console.log(cartData);
-    if (path.includes("cart") || path.includes("book")) {
+    if (path.includes("/cart/") || path.includes("/book/")) {
       currencyButton.current?.classList.add("hidden");
       // langButton.current?.classList.add("hidden");
       cartButton.current?.classList.add("hidden");

@@ -41,8 +41,8 @@ export default function Search({}) {
     const dtStart = new Date();
     dtStart.setDate(dtStart.getDate() + 7);
 
-    const dtEnd = new Date();
-    dtEnd.setDate(dtStart.getDate() + 1);
+    const dtEnd = new Date(dtStart);
+    dtEnd.setDate(dtEnd.getDate() + 1);
 
     setValueDate({ startDate: dtStart, endDate: dtEnd });
   }, []);

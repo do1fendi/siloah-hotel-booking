@@ -22,6 +22,7 @@ type queryParam = {
   checkIn: string;
   checkOut: string;
   rateKey: string;
+  lang: string;
 };
 
 type expandType = boolean[];
@@ -42,6 +43,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
     checkIn: "",
     checkOut: "",
     rateKey: "",
+    lang: "",
   });
 
   useEffect(() => {
@@ -74,6 +76,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
       checkIn: param.get("checkIn")!,
       checkOut: param.get("checkOut")!,
       rateKey: "",
+      lang: param.get("lang")!,
     });
   }, [param]);
 
@@ -101,6 +104,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
     price: number;
     checkIn: string;
     checkOut: string;
+    selected: boolean;
   };
   const addToCart = (dt: cartData) => {
     // set cart, if cartData not null use spread operator to add new data otherwise without spread operator
@@ -130,6 +134,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
             price: dt.price,
             checkIn: dt.checkIn,
             checkOut: dt.checkOut,
+            selected: dt.selected,
           },
         ])
       );
@@ -144,6 +149,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
             price: dt.price,
             checkIn: dt.checkIn,
             checkOut: dt.checkOut,
+            selected: dt.selected,
           },
         ])
       );
@@ -320,6 +326,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                             price: rm.AmountAfterTax,
                             checkIn: queryParam.checkIn,
                             checkOut: queryParam.checkOut,
+                            selected: false,
                           })
                         }
                       >

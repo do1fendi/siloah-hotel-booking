@@ -114,9 +114,16 @@ export default function Home() {
 
   // convert time to am pm, original format 1200
   const convertTime = (tm: string) => {
-    let h = tm.slice(0, 2);
-    const m = tm.slice(2, 4);
+    let h = "";
+    let m = "";
     let amPm = "";
+    if (tm.length === 4) {
+      h = tm.slice(0, 2);
+      m = tm.slice(2, 4);
+    } else if (tm.length === 5) {
+      h = tm.slice(0, 2);
+      m = tm.slice(3, 5);
+    }
 
     if (parseInt(h) >= 12 && parseInt(h) < 24) {
       amPm = "PM";
@@ -125,6 +132,7 @@ export default function Home() {
       amPm = "AM";
       h = "12";
     } else amPm = "AM";
+    // alert(`${h}:${m} ${amPm}`)
     return `${h}:${m} ${amPm}`;
   };
 
@@ -161,7 +169,8 @@ export default function Home() {
                   return {
                     ...rate,
                     ...dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelRateInfo
-                      .Rooms.Room[i], ...dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelInfo
+                      .Rooms.Room[i],
+                    ...dt.data.GetHotelDetailsRS.HotelDetailsInfo.HotelInfo,
                   };
                 }
               );
