@@ -530,7 +530,7 @@ export default function Book() {
       {apiData && (
         <div className="flex flex-col lg:flex-row gap-5">
           <div className="left w-full lg:w-5/12">
-            <div className="w-full border rounded p-2">
+            <div className="w-full border border-gray-400 bg-gray-50 rounded p-2  ">
               <p className="font-bold text-luxgreen text-lg">
                 {lang === "TW" ? "您的訂房資訊" : "Your booking details"}
               </p>
@@ -588,7 +588,7 @@ export default function Book() {
                 <p>{form.bookingDetail.roomType}</p>
               </div>
             </div>
-            <div className="w-full border rounded p-2 mt-2">
+            <div className="w-full border border-gray-400 bg-gray-50 rounded p-2 mt-2">
               <p className="font-bold text-luxgreen text-lg">
                 {lang === "TW" ? "房價明細" : "Your price summary"}
               </p>
@@ -631,7 +631,7 @@ export default function Book() {
             </div>
           </div>
           <div className="right w-full lg:w-7/12 flex flex-col gap-5">
-            <div className="border rounded p-2">
+            <div className="border border-gray-400 bg-gray-50 rounded p-2  ">
               <p className="text-xl text-luxgreen font-bold">
                 {form.bookingDetail.hotelName}
               </p>
@@ -646,7 +646,7 @@ export default function Book() {
                 ""
               )}
             </div>
-            <div id="orderer" className="border rounded p-2">
+            <div id="orderer" className="border border-gray-400 bg-gray-50 rounded p-2">
               <p className="text-xl text-luxgreen font-bold">
                 {lang === "TW" ? "請填寫以下資訊" : "Let us know who you are"}
               </p>
