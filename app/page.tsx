@@ -44,17 +44,17 @@ export default function Home() {
 
   return (
     <div>
-      <div className="banner w-full h-[140px] lg:h-[340px] relative">
+      <div className="banner w-full h-[140px] lg:h-[500px] relative">
         <Image
-          src={`${process.env.BASEURL}/banner.png`}
+          src={`${process.env.BASEURL}/banner.jpg`}
           alt="banner"
           fill
           className="object-fit"
           priority
         ></Image>
       </div>
-      <div className="flex justify-center -mt-24 relative z-10">
-        <div className="p-5 bg-white shadow-lg w-full mx-2 lg:m-0 lg:w-[800px] relative">
+      <div className="flex justify-center -mt-16 lg:-mt-56 relative z-10">
+        <div className="p-5 bg-white/90 drop-shadow-xl shadow-white w-full mx-2 lg:m-0 lg:w-[900px] relative">
           <Search />
         </div>
       </div>
