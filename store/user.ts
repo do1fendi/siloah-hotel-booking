@@ -22,6 +22,7 @@ const setLocalStorage = (key: string, value: userData | null) => {
 type userData = {
   logged: boolean;
   name: string;
+  em:string;
   token: string;
 };
 

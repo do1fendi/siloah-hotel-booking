@@ -21,6 +21,10 @@ type queryUrlType = {
 };
 
 type formType = {
+  user: {
+    fullName: string;
+    email: string;
+  };
   orderer: {
     fullName: string;
     email: string;
@@ -127,6 +131,10 @@ export default function Book() {
   const { checkInTime, checkOutTime } = useCheckTimeStore((state) => state);
   const [apiData, setApiData] = useState<any>();
   const [form, setForm] = useState<formType>({
+    user: {
+      fullName: "",
+      email: "",
+    },
     orderer: {
       fullName: "",
       email: "",
@@ -370,6 +378,13 @@ export default function Book() {
       //   });
     }
   };
+
+  useEffect(() => {
+    setForm({
+      ...form,
+      user: { ...form.user, fullName: userData?.name!, email: userData?.em! },
+    });
+  }, [userData]);
 
   useEffect(() => {
     if (apiData) {
@@ -1037,7 +1052,7 @@ export default function Book() {
             {/* <div> {JSON.stringify(form)}</div>{" "} */}
           </div>
 
-          {/* {JSON.stringify(queryUrl)} */}
+          {/* {JSON.stringify(userData)} */}
         </div>
       )}
 

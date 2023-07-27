@@ -36,7 +36,7 @@ export default function Google(props: IGoogleProps) {
     // console.log(response);
     // console.log(jwtDecode(response.credential));
     const decoded: googleRet = jwtDecode(response.credential);
-
+   
     (async () => {
       const config = {
         headers: {
@@ -63,6 +63,7 @@ export default function Google(props: IGoogleProps) {
       } else {
         setUserData({
           logged: true,
+          em: decoded.email.toString(),
           name: `${dt.data.firstName} ${dt.data.lastName}`,
           token: dt.data.token,
         });
