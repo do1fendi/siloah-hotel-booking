@@ -19,6 +19,9 @@ module.exports = {
         luxorange: "#EC7D3C",
         luxgreen: "#1B5948",
       },
+      blur: {
+        xs: "2px",
+      },
     },
   },
   plugins: [

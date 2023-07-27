@@ -9,7 +9,7 @@ interface iRouteListState {
 const useRouteListStore = create<iRouteListState>()((set) => ({
   routeList: [],
   // set list for check previous page includes acceptedList, otherwise go to home
-  acceptedList: ["search"],
+  acceptedList: ["search", "book", "cart"],
   setRouteList: (a: string[]) => {
     set({ routeList: a });
   },

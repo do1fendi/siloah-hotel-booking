@@ -49,12 +49,12 @@ export default function Home() {
           src={`${process.env.BASEURL}/banner.jpg`}
           alt="banner"
           fill
-          className="object-fit"
+          className="object-fit blur-xs"
           priority
         ></Image>
       </div>
       <div className="flex justify-center -mt-16 lg:-mt-56 relative z-10">
-        <div className="p-5 bg-white/90 drop-shadow-xl shadow-white w-full mx-2 lg:m-0 lg:w-[900px] relative">
+        <div className="p-5 bg-white drop-shadow-xl shadow-white w-full mx-2 lg:m-0 lg:w-[900px] relative">
           <Search />
         </div>
       </div>

@@ -25,6 +25,7 @@ type formType = {
     fullName: string;
     email: string;
     country: string;
+    mobileCode: string;
     mobile: string;
   };
   guest: {
@@ -81,6 +82,22 @@ type formErrorType = {
       tw: string;
     };
   };
+  gsFn: {
+    error: boolean;
+    state: boolean;
+    msg: {
+      en: string;
+      tw: string;
+    };
+  };
+  gsCountry: {
+    error: boolean;
+    state: boolean;
+    msg: {
+      en: string;
+      tw: string;
+    };
+  };
 };
 
 const optionList = [
@@ -96,6 +113,7 @@ export default function Book() {
   const { userData, setUserData } = useUserStore((state) => state);
   const { currency } = useCurrencyStore((state) => state);
   const { lang, setLang } = useLangStore((state) => state);
+  const [bookForOther, setBookForOther] = useState<boolean>(false);
   const param = useSearchParams();
   const router = useRouter();
   const [queryUrl, setQueryUrl] = useState<queryUrlType>({
@@ -113,6 +131,7 @@ export default function Book() {
       fullName: "",
       email: "",
       country: "",
+      mobileCode: "",
       mobile: "",
     },
     guest: {
@@ -141,13 +160,16 @@ export default function Book() {
   const orEmail = useRef<HTMLInputElement>(null);
   const orCountry = useRef<HTMLInputElement>(null);
   const orMobile = useRef<HTMLInputElement>(null);
+  const bookForOtherRef = useRef<HTMLDivElement>(null);
+  const gsFn = useRef<HTMLInputElement>(null);
+  const gsCountry = useRef<HTMLInputElement>(null);
 
   const [errorForm, setErrorForm] = useState<formErrorType>({
     orFn: {
       error: false,
       state: false,
       msg: {
-        en: "Please entery your full name",
+        en: "Please enter your full name",
         tw: "請輸入姓名",
       },
     },
@@ -171,8 +193,24 @@ export default function Book() {
       error: false,
       state: false,
       msg: {
-        en: "Type the correct mobile",
+        en: "Please entery the correct mobile",
         tw: "輸入正確的手機號碼",
+      },
+    },
+    gsFn: {
+      error: false,
+      state: false,
+      msg: {
+        en: "Please enter your full name",
+        tw: "請輸入姓名",
+      },
+    },
+    gsCountry: {
+      error: false,
+      state: false,
+      msg: {
+        en: "Please select country",
+        tw: "請選擇國家",
       },
     },
   });
@@ -483,20 +521,24 @@ export default function Book() {
         });
         break;
       case "orCountry":
-        setForm({
-          ...form,
-          orderer: {
-            ...form.orderer,
-            country: e.value,
-            mobile:
-              lang === "TW" && e.value !== null
-                ? country.filter((c) => c.tw === e.value).length > 0
-                  ? country.filter((c) => c.tw === e.value)[0].mobileCode
-                  : ""
-                : country.filter((c) => c.en === e.value).length > 0
-                ? country.filter((c) => c.en === e.value)[0].mobileCode
-                : "",
-          },
+        setForm((prev) => {
+          prev = {
+            ...prev,
+            orderer: {
+              ...prev.orderer,
+              country: e.value,
+              mobileCode:
+                lang === "TW" && e.value !== null
+                  ? country.filter((c) => c.tw === e.value).length > 0
+                    ? country.filter((c) => c.tw === e.value)[0].mobileCode
+                    : ""
+                  : country.filter((c) => c.en === e.value).length > 0
+                  ? country.filter((c) => c.en === e.value)[0].mobileCode
+                  : "",
+            },
+          };
+
+          return prev;
         });
         setErrorForm((prev) => {
           let found = false;
@@ -517,11 +559,132 @@ export default function Book() {
         break;
       case "orMobile":
         setForm({ ...form, orderer: { ...form.orderer, mobile: e.value } });
+        setErrorForm((prev) => {
+          const reg = /^[1-9]\d{8,16}$/;
+          reg.test(e.value)
+            ? (prev = {
+                ...prev,
+                orMobile: { ...prev.orMobile, error: false, state: true },
+              })
+            : (prev = {
+                ...prev,
+                orMobile: { ...prev.orMobile, error: true, state: true },
+              });
+          return prev;
+        });
         break;
+      case "gsFn":
+        setForm({ ...form, guest: { ...form.guest, fullName: e.value } });
+        setErrorForm((prev) => {
+          e.value.length < 1
+            ? (prev = {
+                ...prev,
+                gsFn: { ...prev.gsFn, error: true, state: true },
+              })
+            : (prev = {
+                ...prev,
+                gsFn: { ...prev.gsFn, error: false, state: true },
+              });
+          return prev;
+        });
+        break;
+      case "gsCountry":
+        setForm((prev) => {
+          prev = {
+            ...prev,
+            guest: {
+              ...prev.guest,
+              country: e.value,
+            },
+          };
+          return prev;
+        });
+        setErrorForm((prev) => {
+          let found = false;
+          if (country.find((el) => el.en === e.value)) found = true;
+          if (country.find((el) => el.tw === e.value)) found = true;
 
+          !found
+            ? (prev = {
+                ...prev,
+                gsCountry: { ...prev.gsCountry, error: true, state: true },
+              })
+            : (prev = {
+                ...prev,
+                gsCountry: { ...prev.gsCountry, error: false, state: true },
+              });
+          return prev;
+        });
+        break;
       default:
         break;
     }
+  };
+
+  // animating bookForOther
+  useEffect(() => {
+    if (bookForOther === true) {
+      bookForOtherRef.current?.classList.remove("scale-0");
+      bookForOtherRef.current?.classList.remove("h-0");
+      bookForOtherRef.current?.classList.add("scale-100");
+      bookForOtherRef.current?.classList.add("h-full");
+    } else {
+      bookForOtherRef.current?.classList.add("h-0");
+      bookForOtherRef.current?.classList.remove("scale-100");
+      bookForOtherRef.current?.classList.remove("h-full");
+      bookForOtherRef.current?.classList.add("scale-0");
+    }
+  }, [bookForOther]);
+
+  // onNext function
+  const onNext = () => {
+    const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    const regMobile = /^[1-9]\d{8,16}$/;
+
+    setErrorForm((prev) => {
+      if (form.orderer.fullName.length < 1) {
+        prev = { ...prev, orFn: { ...prev.orFn, error: true, state: true } };
+        orFn.current?.focus();
+      } else if (!regexEmail.test(form.orderer.email)) {
+        prev = {
+          ...prev,
+          orEmail: { ...prev.orEmail, error: true, state: true },
+        };
+        orEmail.current?.focus();
+      } else if (
+        country.find((el) => el.en === form.orderer.country) === undefined &&
+        country.find((el) => el.tw === form.orderer.country) === undefined
+      ) {
+        prev = {
+          ...prev,
+          orCountry: { ...prev.orCountry, error: true, state: true },
+        };
+        orCountry.current?.focus();
+      } else if (!regMobile.test(form.orderer.mobile)) {
+        prev = {
+          ...prev,
+          orMobile: { ...prev.orMobile, error: true, state: true },
+        };
+        orMobile.current?.focus();
+      } else if (bookForOther && form.guest.fullName.length < 1) {
+        prev = { ...prev, gsFn: { ...prev.gsFn, error: true, state: true } };
+        gsFn.current?.focus();
+      } else if (
+        bookForOther &&
+        country.find((el) => el.en === form.guest.country) === undefined &&
+        country.find((el) => el.tw === form.guest.country) === undefined
+      ) {
+        prev = {
+          ...prev,
+          gsCountry: { ...prev.gsCountry, error: true, state: true },
+        };
+        gsCountry.current?.focus();
+      } else {
+        // No error do booking
+        alert("Ok");
+      }
+      return prev;
+    });
   };
 
   return (
@@ -646,11 +809,14 @@ export default function Book() {
                 ""
               )}
             </div>
-            <div id="orderer" className="border border-gray-400 bg-gray-50 rounded p-2">
+            <div
+              id="orderer"
+              className="border border-gray-400 bg-gray-50 rounded p-2"
+            >
               <p className="text-xl text-luxgreen font-bold">
                 {lang === "TW" ? "請填寫以下資訊" : "Let us know who you are"}
               </p>
-              <form className="text-md mt-5 flex flex-col gap-3">
+              <div className="text-md mt-5 flex flex-col gap-3">
                 <div>
                   <label htmlFor="orFn">
                     {lang === "TW" ? "英文名(同護照)" : "Full Name"}{" "}
@@ -746,18 +912,127 @@ export default function Book() {
                       {lang === "TW" ? "電話號碼" : "Mobile"}{" "}
                       <span className="text-pink-700 text-lg">*</span>
                     </label>
-                    <input
-                      ref={orMobile}
-                      className="border rounded w-full p-2 mt-2"
-                      type="text"
-                      name="orMobile"
-                      id="orMobile"
-                      value={form.orderer.mobile}
-                      onChange={(e) => onChange(e.currentTarget)}
-                    />
+                    <div className="w-full mt-2 flex ">
+                      <span className="w-2/6 p-2 text-center border-l border-t border-b">
+                        {form.orderer.mobileCode}
+                      </span>
+                      <input
+                        className={`focus:outline-0 focus:ring-2 border rounded-r w-full p-2 ${
+                          errorForm.orMobile.state === true
+                            ? errorForm.orMobile.error === true
+                              ? "border-pink-700"
+                              : "border-green-600"
+                            : ""
+                        }`}
+                        ref={orMobile}
+                        type="text"
+                        name="orMobile"
+                        id="orMobile"
+                        value={form.orderer.mobile}
+                        onChange={(e) => onChange(e.currentTarget)}
+                      />
+                    </div>
+                    {errorForm.orMobile.error && (
+                      <p className="text-sm text-pink-700">
+                        {lang === "TW"
+                          ? errorForm.orMobile.msg.tw
+                          : errorForm.orMobile.msg.en}
+                      </p>
+                    )}
                   </div>
                 </div>
-              </form>
+                <div>
+                  <input
+                    type="checkbox"
+                    name="bookForOther"
+                    id="bookForOther"
+                    onChange={(e) => setBookForOther(e.currentTarget.checked)}
+                  />
+                  <span className="ml-2">
+                    {lang === "TW" ? "為他人訂房" : "Book for someone else"}
+                  </span>
+
+                  <div
+                    ref={bookForOtherRef}
+                    className="overflow-hidden transform origin-top-left transition-all duration-700 ease-out scale-0 h-0 bg-gray-100 p-2 lg:p-5"
+                  >
+                    <p className="text-lg font-semi">
+                      {lang === "TW" ? "住客資料" : "Guest Information"}
+                    </p>
+                    <div className="mt-2 flex flex-col lg:flex-row justify-between gap-5">
+                      <div className="w-full">
+                        <label htmlFor="gsFn">
+                          {lang === "TW" ? "英文名(同護照)" : "Full Name"}{" "}
+                          <span className="text-pink-700 text-lg">*</span>
+                        </label>
+                        <input
+                          ref={gsFn}
+                          className={`focus:outline-0 focus:ring-2 border rounded w-full p-2 mt-2 ${
+                            errorForm.gsFn.state === true
+                              ? errorForm.gsFn.error === true
+                                ? "border-pink-700"
+                                : "border-green-600"
+                              : ""
+                          }`}
+                          type="text"
+                          name="gsFn"
+                          id="gsFn"
+                          value={form.guest.fullName}
+                          onChange={(e) => onChange(e.currentTarget)}
+                        />
+                        {errorForm.gsFn.error && (
+                          <p className="text-sm text-pink-700">
+                            {lang === "TW"
+                              ? errorForm.gsFn.msg.tw
+                              : errorForm.gsFn.msg.en}
+                          </p>
+                        )}
+                      </div>
+                      <div className="w-full">
+                        <label htmlFor="gsCountry">
+                          {lang === "TW" ? "居住地" : "Country"}{" "}
+                          <span className="text-pink-700 text-lg">*</span>
+                        </label>
+                        <input
+                          ref={gsCountry}
+                          list="listCountry"
+                          className={`focus:outline-0 focus:ring-2 border rounded w-full p-2 mt-2 ${
+                            errorForm.gsCountry.state === true
+                              ? errorForm.gsCountry.error === true
+                                ? "border-pink-700"
+                                : "border-green-600"
+                              : ""
+                          }`}
+                          name="gsCountry"
+                          id="gsCountry"
+                          value={form.guest.country}
+                          onChange={(e) => onChange(e.currentTarget)}
+                        ></input>
+                        <datalist id="listCountry">
+                          {lang === "TW"
+                            ? country.map((o) => <option value={o.tw} />)
+                            : country.map((o) => <option value={o.en} />)}
+                        </datalist>
+                        {errorForm.gsCountry.error && (
+                          <p className="text-sm text-pink-700">
+                            {lang === "TW"
+                              ? errorForm.gsCountry.msg.tw
+                              : errorForm.gsCountry.msg.en}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <button
+                    className="p-2 bg-luxorange hover:bg-orange-400 text-gray-100 w-full rounded"
+                    onClick={() => onNext()}
+                  >
+                    {lang === "TW" ? "下一步" : "Next"}
+                  </button>
+                </div>
+              </div>
             </div>
             {/* <div> {JSON.stringify(form)}</div>{" "} */}
           </div>

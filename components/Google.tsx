@@ -2,7 +2,7 @@
 import Script from "next/script";
 import { useState } from "react";
 import jwtDecode from "jwt-decode";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import useUserStore from "@/store/user";
 import useRouteListStore from "@/store/routeList";
 // import { usePathname } from "next/navigation";
@@ -28,6 +28,7 @@ type googleRet = {
 };
 export default function Google(props: IGoogleProps) {
   // const path = usePathname();
+  const router = useRouter();
   const { routeList, acceptedList } = useRouteListStore((state) => state);
   const { userData, setUserData } = useUserStore((state) => state);
   const [isGoogleLogin, setIsgoogleLogin] = useState<boolean>(false);
