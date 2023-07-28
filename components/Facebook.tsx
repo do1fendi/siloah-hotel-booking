@@ -37,7 +37,7 @@ export default function Facebook(props: IFacebookProps) {
                   }),
                 };
                 const result = await fetch(
-                  `${process.env.SERVER}/hotel/customer/signin`,
+                  `${process.env.SERVER}/hotel/user/signin`,
                   config
                 );
                 const dt = await result.json();

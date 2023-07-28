@@ -52,7 +52,7 @@ export default function Google(props: IGoogleProps) {
         }),
       };
       const result = await fetch(
-        `${process.env.SERVER}/hotel/customer/signin`,
+        `${process.env.SERVER}/hotel/user/signin`,
         config
       );
       const dt = await result.json();
