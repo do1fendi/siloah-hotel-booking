@@ -50,7 +50,7 @@ type formType = {
     averageNightlyRate: number;
     totalAmount: number;
     currency: string;
-  };
+  }[];
 };
 
 type formErrorType = {
@@ -146,21 +146,23 @@ export default function Book() {
       fullName: "",
       country: "",
     },
-    bookingDetail: {
-      hotelCode: "",
-      hotelName: "",
-      roomType: "",
-      bookingKey: "",
-      checkIn: "",
-      checkOut: "",
-      noOfRoom: 0,
-      noOfNight: 0,
-      amountAfterTax: 0,
-      amountBeforeTax: 0,
-      averageNightlyRate: 0,
-      totalAmount: 0,
-      currency: "",
-    },
+    bookingDetail: [
+      {
+        hotelCode: "",
+        hotelName: "",
+        roomType: "",
+        bookingKey: "",
+        checkIn: "",
+        checkOut: "",
+        noOfRoom: 0,
+        noOfNight: 0,
+        amountAfterTax: 0,
+        amountBeforeTax: 0,
+        averageNightlyRate: 0,
+        totalAmount: 0,
+        currency: "",
+      },
+    ],
   });
   const { country } = useCountryStore();
 
@@ -392,93 +394,103 @@ export default function Book() {
         if (apiData.BookingKey) {
           prev = {
             ...prev,
-            bookingDetail: {
-              ...prev.bookingDetail,
-              bookingKey: apiData.BookingKey,
-            },
+            bookingDetail: [
+              {
+                ...prev.bookingDetail[0],
+                bookingKey: apiData.BookingKey,
+              },
+            ],
           };
         }
         if (apiData.HotelInfo?.HotelCode && apiData.HotelInfo?.HotelName) {
           prev = {
             ...prev,
-            bookingDetail: {
-              ...prev.bookingDetail,
-              hotelCode: apiData.HotelInfo?.HotelCode,
-              hotelName: apiData.HotelInfo?.HotelName,
-            },
+            bookingDetail: [
+              {
+                ...prev.bookingDetail[0],
+                hotelCode: apiData.HotelInfo?.HotelCode,
+                hotelName: apiData.HotelInfo?.HotelName,
+              },
+            ],
           };
         }
 
         if (apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo) {
           prev = {
             ...prev,
-            bookingDetail: {
-              ...prev.bookingDetail,
-              currency:
-                apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
-                  .CurrencyCode,
-              checkIn:
-                apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
-                  .StartDate,
-              checkOut:
-                apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0].EndDate,
-              amountAfterTax:
-                apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
-                  .AmountAfterTax,
-              amountBeforeTax:
-                apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
-                  .AmountBeforeTax,
-              averageNightlyRate:
-                apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
-                  .AverageNightlyRate,
-              noOfNight: countTotalNight(),
-              noOfRoom:
-                apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
-                  .AvailableQuantity === 1
-                  ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
-                      .AvailableQuantity
-                  : queryUrl.room,
-              totalAmount:
-                (apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
-                  .AvailableQuantity === 1
-                  ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
-                      .AvailableQuantity
-                  : queryUrl.room) *
-                apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
-                  .AmountAfterTax,
-            },
+            bookingDetail: [
+              {
+                ...prev.bookingDetail[0],
+                currency:
+                  apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
+                    .CurrencyCode,
+                checkIn:
+                  apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
+                    .StartDate,
+                checkOut:
+                  apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
+                    .EndDate,
+                amountAfterTax:
+                  apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
+                    .AmountAfterTax,
+                amountBeforeTax:
+                  apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
+                    .AmountBeforeTax,
+                averageNightlyRate:
+                  apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
+                    .AverageNightlyRate,
+                noOfNight: countTotalNight(),
+                noOfRoom:
+                  apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                    .AvailableQuantity === 1
+                    ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans
+                        .RatePlan[0].AvailableQuantity
+                    : queryUrl.room,
+                totalAmount:
+                  (apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                    .AvailableQuantity === 1
+                    ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans
+                        .RatePlan[0].AvailableQuantity
+                    : queryUrl.room) *
+                  apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
+                    .AmountAfterTax,
+              },
+            ],
           };
         } else {
           prev = {
             ...prev,
-            bookingDetail: {
-              ...prev.bookingDetail,
-              currency:
-                apiData.HotelRateInfo?.RateInfos?.RateInfo[0].CurrencyCode,
-              checkIn: apiData.HotelRateInfo?.RateInfos?.RateInfo[0].StartDate,
-              checkOut: apiData.HotelRateInfo?.RateInfos?.RateInfo[0].EndDate,
-              amountAfterTax:
-                apiData.HotelRateInfo?.RateInfos?.RateInfo[0].AmountAfterTax,
-              amountBeforeTax:
-                apiData.HotelRateInfo?.RateInfos?.RateInfo[0].AmountBeforeTax,
-              averageNightlyRate:
-                apiData.HotelRateInfo?.RateInfos?.RateInfo[0]
-                  .AverageNightlyRate,
-              noOfNight: countTotalNight(),
-              noOfRoom:
-                apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
-                  .AvailableQuantity === 1
-                  ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
-                      .AvailableQuantity
-                  : queryUrl.room,
-              totalAmount:
-                (apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
-                  .AvailableQuantity === 1
-                  ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
-                      .AvailableQuantity
-                  : queryUrl.room) *
-                apiData.HotelRateInfo?.RateInfos?.RateInfo[0].AmountAfterTax,
-            },
+            bookingDetail: [
+              {
+                ...prev.bookingDetail[0],
+                currency:
+                  apiData.HotelRateInfo?.RateInfos?.RateInfo[0].CurrencyCode,
+                checkIn:
+                  apiData.HotelRateInfo?.RateInfos?.RateInfo[0].StartDate,
+                checkOut: apiData.HotelRateInfo?.RateInfos?.RateInfo[0].EndDate,
+                amountAfterTax:
+                  apiData.HotelRateInfo?.RateInfos?.RateInfo[0].AmountAfterTax,
+                amountBeforeTax:
+                  apiData.HotelRateInfo?.RateInfos?.RateInfo[0].AmountBeforeTax,
+                averageNightlyRate:
+                  apiData.HotelRateInfo?.RateInfos?.RateInfo[0]
+                    .AverageNightlyRate,
+                noOfNight: countTotalNight(),
+                noOfRoom:
+                  apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                    .AvailableQuantity === 1
+                    ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans
+                        .RatePlan[0].AvailableQuantity
+                    : queryUrl.room,
+                totalAmount:
+                  (apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                    .AvailableQuantity === 1
+                    ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans
+                        .RatePlan[0].AvailableQuantity
+                    : queryUrl.room) *
+                  apiData.HotelRateInfo?.RateInfos?.RateInfo[0].AmountAfterTax,
+              },
+            ],
           };
         }
 
@@ -488,12 +500,14 @@ export default function Book() {
         ) {
           prev = {
             ...prev,
-            bookingDetail: {
-              ...prev.bookingDetail,
-              roomType:
-                apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
-                  .RatePlanName,
-            },
+            bookingDetail: [
+              {
+                ...prev.bookingDetail[0],
+                roomType:
+                  apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                    .RatePlanName,
+              },
+            ],
           };
         }
 
@@ -714,7 +728,7 @@ export default function Book() {
             );
             const dt = await result.json();
             console.log(dt);
-            alert("Store ok")
+            alert("Store ok");
           } catch (error) {
             console.log(error);
           }
@@ -787,7 +801,7 @@ export default function Book() {
                       : `, ${queryUrl.children} child`
                     : ""}
                 </p>
-                <p>{form.bookingDetail.roomType}</p>
+                <p>{form.bookingDetail[0].roomType}</p>
               </div>
             </div>
             <div className="w-full border border-gray-400 bg-gray-50 rounded p-2 mt-2">
@@ -808,22 +822,24 @@ export default function Book() {
                 <div className="text-right">
                   <p>
                     <span className="text-xs">
-                      {form.bookingDetail.currency === "TWD" ? "NT$ " : "$ "}
+                      {form.bookingDetail[0].currency === "TWD" ? "NT$ " : "$ "}
                     </span>
-                    {form.bookingDetail.amountAfterTax
+                    {form.bookingDetail[0].amountAfterTax
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                   </p>
-                  <p className="border-b mb-5">{form.bookingDetail.noOfRoom}</p>
+                  <p className="border-b mb-5">
+                    {form.bookingDetail[0].noOfRoom}
+                  </p>
                   <p>
                     <span className="mr-5">
                       {lang === "TW" ? "總價" : "Total amount"}
                     </span>
                     <span className="text-xs">
-                      {form.bookingDetail.currency === "TWD" ? "NT$ " : "$ "}
+                      {form.bookingDetail[0].currency === "TWD" ? "NT$ " : "$ "}
                     </span>
                     <span className="text-lg text-pink-700">
-                      {form.bookingDetail.totalAmount
+                      {form.bookingDetail[0].totalAmount
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     </span>
@@ -835,7 +851,7 @@ export default function Book() {
           <div className="right w-full lg:w-7/12 flex flex-col gap-5">
             <div className="border border-gray-400 bg-gray-50 rounded p-2  ">
               <p className="text-xl text-luxgreen font-bold">
-                {form.bookingDetail.hotelName}
+                {form.bookingDetail[0].hotelName}
               </p>
               {apiData?.HotelInfo?.LocationInfo?.Address?.AddressLine1 ? (
                 <p className="mt-2">

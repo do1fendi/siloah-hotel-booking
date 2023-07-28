@@ -1,6 +1,6 @@
 "use client";
 import useCartStore from "@/store/cart";
-import { decode } from "js-base64";
+import { encode, decode } from "js-base64";
 import { useEffect, useState } from "react";
 import useCurrencyStore from "@/store/currency";
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -19,6 +19,11 @@ type cartType = {
   selected: boolean;
 }[];
 
+// param to pass to package page
+type paramToPassType = {
+  id: string;
+};
+
 export default function Cart() {
   const { userData, setUserData } = useUserStore();
   const { cartData, setCartData } = useCartStore();
@@ -26,6 +31,7 @@ export default function Cart() {
   const { currency } = useCurrencyStore();
   const { lang } = useLangStore();
   const [anySelected, setAnySelected] = useState<boolean>(false);
+  const [paramToPass, setParamToPass] = useState<paramToPassType>({ id: "" });
 
   useEffect(() => {
     if (userData != null) {
@@ -106,14 +112,27 @@ export default function Cart() {
       i === ind ? { ...cart, selected: value } : cart
     );
     setCarts(setSelected);
+    // set param to pass to package page, filter the carts with selected true and encoded it
+    setParamToPass({
+      id: encode(
+        JSON.stringify(setSelected.filter((s) => s.selected === true))
+      ),
+    });
   };
 
   useEffect(() => {
     setAnySelected((prev) => {
-      prev = !carts.some((cart) => cart.selected === true);
+      prev = carts.some((cart) => cart.selected === true);
       return prev;
     });
   }, [carts]);
+
+  const onNext = () => {
+    if (anySelected) {
+      // console.log(carts.filter((cart) => cart.selected === true));
+      console.log(JSON.parse(decode(paramToPass.id)));
+    }
+  };
 
   return (
     <>
@@ -185,15 +204,18 @@ export default function Cart() {
                     ? "最終價格將在下一頁計算"
                     : "Final price will be calculated on the next page"}
                 </p>
-
-                <button
-                  className="w-full bg-luxorange text-gray-100 hover:bg-orange-400 rounded p-2 mt-5 disabled:bg-gray-300"
-                  disabled={anySelected}
-                >
-                  {lang === "TW" ? "下一步" : "Next"}
-                </button>
+                <Link href={{ pathname: "/package", query: paramToPass }}>
+                  <button
+                    className="w-full bg-luxorange text-gray-100 hover:bg-orange-400 rounded p-2 mt-5 disabled:bg-gray-300"
+                    disabled={!anySelected}
+                    onClick={() => onNext()}
+                  >
+                    {lang === "TW" ? "下一步" : "Next"}
+                  </button>
+                </Link>
               </div>
             </div>
+            {/* {JSON.stringify(carts)} */}
           </div>
         ) : (
           <div className="flex flex-col justify-center items-center h-screen -mt-[110px]">

@@ -43,13 +43,17 @@ export default function Header({}: Props) {
   useEffect(() => {
     setRouteList([...routeList, `${window.origin}${path}?${param}`]);
     //console.log(cartData);
-    if (path.includes("/cart/") || path.includes("/book/")) {
+    if (
+      path.includes("/cart/") ||
+      path.includes("/package/") ||
+      path.includes("/book/")
+    ) {
       currencyButton.current?.classList.add("hidden");
-      // langButton.current?.classList.add("hidden");
+      langButton.current?.classList.add("hidden");
       cartButton.current?.classList.add("hidden");
     } else {
       currencyButton.current?.classList.remove("hidden");
-      // langButton.current?.classList.remove("hidden");
+      langButton.current?.classList.remove("hidden");
       cartButton.current?.classList.remove("hidden");
     }
   }, [path, param]);
@@ -185,23 +189,23 @@ export default function Header({}: Props) {
             </span>
           </div>
         )}
-        {cartDataLength > 0 && (
-          <div ref={cartButton} className="cart relative mr-2">
-            <Link
-              href={{
-                pathname: "/cart",
-                query: Object.fromEntries(param.entries()), // the data
-              }}
-            >
-              <BsFillCartFill size={24} />
-              {cartDataLength > 0 && (
-                <span className="absolute -right-3 -top-3 rounded-full w-6 h-6 bg-pink-700 text-gray-100 text-xs flex justify-center items-center">
-                  {cartDataLength}
-                </span>
-              )}
-            </Link>
-          </div>
-        )}
+
+        <div ref={cartButton} className="cart relative mr-2">
+          <Link
+            href={{
+              pathname: "/cart",
+              query: Object.fromEntries(param.entries()), // the data
+            }}
+          >
+            <BsFillCartFill size={24} />
+            {cartDataLength > 0 && (
+              <span className="absolute -right-3 -top-3 rounded-full w-6 h-6 bg-pink-700 text-gray-100 text-xs flex justify-center items-center">
+                {cartDataLength}
+              </span>
+            )}
+          </Link>
+        </div>
+
         <div className="nav relative">
           <button
             className="p-2"
