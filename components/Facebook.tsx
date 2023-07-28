@@ -49,6 +49,7 @@ export default function Facebook(props: IFacebookProps) {
                   setUserData({
                     logged: true,
                     name: `${dt.data.firstName} ${dt.data.lastName}`,
+                    em: `${dt.data.email}`,
                     token: dt.data.token,
                   });
                   // set back to previous page after login
