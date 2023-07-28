@@ -59,7 +59,7 @@ export default function Facebook(props: IFacebookProps) {
                       routeList[routeList.length - 1].includes(value)
                     )
                   )
-                    window.location.replace(routeList[routeList.length - 1]);
+                    window.location.replace(routeList[routeList.length - 2]);
                     window.location.replace(`${process.env.BASEURL}`);
                 }
               })();
