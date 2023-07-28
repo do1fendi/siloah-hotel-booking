@@ -111,7 +111,7 @@ export default function page({}: {}) {
             ),
           };
           const result = await fetch(
-            `${process.env.SERVER}/hotel/customer/signin`,
+            `${process.env.SERVER}/hotel/user/signin`,
             config
           );
           const dt = await result.json();
@@ -124,6 +124,7 @@ export default function page({}: {}) {
           } else {
             setUserData({
               logged: true,
+              em: `${dt.data.email}`,
               name: `${dt.data.firstName} ${dt.data.lastName}`,
               token: dt.data.token,
             });
@@ -145,7 +146,10 @@ export default function page({}: {}) {
     });
   };
   return (
-    <div className="flex justify-center items-center p-2 lg:p-5 lg:p-0 mt-2 lg:mt-8 text-md lg:text-lg" onClick={setCloseAllShow}>
+    <div
+      className="flex justify-center items-center p-2 lg:p-5 lg:p-0 mt-2 lg:mt-8 text-md lg:text-lg"
+      onClick={setCloseAllShow}
+    >
       <div className="shadow-xl p-5 border rounded-lg w-full lg:w-auto lg:min-w-[500px]">
         <Error
           show={formErr.dbResponse!.error}

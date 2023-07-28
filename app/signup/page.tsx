@@ -146,7 +146,7 @@ export default function page({}: {}) {
             ),
           };
           const result = await fetch(
-            `${process.env.SERVER}/hotel/customer/signup`,
+            `${process.env.SERVER}/hotel/user/signup`,
             config
           );
           const dt = await result.json();
@@ -159,6 +159,7 @@ export default function page({}: {}) {
           } else {
             setUserData({
               logged: true,
+              em: `${dt.data.email}`,
               name: `${dt.data.firstName} ${dt.data.lastName}`,
               token: dt.data.token,
             });

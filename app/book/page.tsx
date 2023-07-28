@@ -696,7 +696,31 @@ export default function Book() {
         gsCountry.current?.focus();
       } else {
         // No error do booking
-        alert("Ok");
+
+        (async () => {
+          setShowLoader(true);
+          const config = {
+            headers: {
+              "Content-Type": "application/json",
+              "x-siloah": "siloah",
+            },
+            method: "POST",
+            body: JSON.stringify(form),
+          };
+          try {
+            const result = await fetch(
+              `${process.env.SERVER}/hotel/hotelBook/`,
+              config
+            );
+            const dt = await result.json();
+            console.log(dt);
+            alert("Store ok")
+          } catch (error) {
+            console.log(error);
+          }
+
+          setShowLoader(false);
+        })();
       }
       return prev;
     });
