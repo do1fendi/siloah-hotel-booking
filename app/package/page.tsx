@@ -125,17 +125,19 @@ export default function Package(props: IPackageProps) {
   };
 
   // put api response data in hotelData into form as part of booking detail
-  const parseResponse = useMemo(() => {
+  useEffect(() => {
     if (hotelData.length > 0) {
-      console.log(hotelData[0]);
       const tmpBookingDetail: any = [];
+      const paramNoOfRoom = JSON.parse(decode(param.get("id")!))[0].noOfRoom;
       hotelData.forEach((el: any, i: number) => {
+        console.log(i, hotelData[i]);
         let tmpNoOfRoom =
-          JSON.parse(decode(param.get("id")!))[i].noOfRoom >
-          el.HotelRateInfo.Rooms.Room[0].RatePlans.RatePlan[0].AvailableQuantity
-            ? el.HotelRateInfo.Rooms.Room[0].RatePlans.RatePlan[0]
+          paramNoOfRoom >
+          el.HotelRateInfo?.Rooms?.Room[0].RatePlans?.RatePlan[0]
+            .AvailableQuantity
+            ? el.HotelRateInfo?.Rooms?.Room[0].RatePlans?.RatePlan[0]
                 .AvailableQuantity
-            : JSON.parse(decode(param.get("id")!))[i].noOfRoom;
+            : paramNoOfRoom;
 
         let tmpAmountAfterTax = el.HotelRateInfo?.RateInfos?.ConvertedRateInfo
           ? el.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0].AmountAfterTax
@@ -146,7 +148,6 @@ export default function Package(props: IPackageProps) {
           hotelCode: el.HotelInfo?.HotelCode!,
           hotelName: el.HotelInfo?.HotelName!,
           noOfRoom: tmpNoOfRoom,
-
           roomType:
             el.HotelRateInfo?.Rooms?.Room[0].RatePlans?.RatePlan[0]
               .RatePlanName,
@@ -157,7 +158,6 @@ export default function Package(props: IPackageProps) {
             el.HotelRateInfo?.RateInfos.RateInfo[0].EndDate
           ),
           amountAfterTax: tmpAmountAfterTax,
-
           amountBeforeTax: el.HotelRateInfo?.RateInfos?.ConvertedRateInfo
             ? el.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0].AmountBeforeTax
             : el.HotelRateInfo?.RateInfos?.RateInfo[0].AmountBeforeTax,
