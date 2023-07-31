@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { decode } from "js-base64";
 export interface IPackageProps {}
@@ -34,15 +34,41 @@ type formType = {
     amountAfterTax: number;
     amountBeforeTax: number;
     averageNightlyRate: number;
-    totalAmount: number;
+    subAmount: number;
     currency: string;
   }[];
+  payment: {
+    totalAmount: number;
+    currency: string;
+  };
 };
 
 export default function Package(props: IPackageProps) {
   const param = useSearchParams();
   const [arrRateKey, setArrReteKey] = useState<arrRateKeyType>([]);
   const [hotelData, setHotelData] = useState<any>([]);
+  const [form, setForm] = useState<formType>({
+    user: {
+      fullName: "",
+      email: "",
+    },
+    orderer: {
+      fullName: "",
+      email: "",
+      country: "",
+      mobileCode: "",
+      mobile: "",
+    },
+    guest: {
+      fullName: "",
+      country: "",
+    },
+    bookingDetail: [],
+    payment: {
+      totalAmount: 0,
+      currency: "",
+    },
+  });
   // update based on param
   useEffect(() => {
     // setArrReteKey((prev) => {
@@ -59,8 +85,8 @@ export default function Package(props: IPackageProps) {
     JSON.parse(decode(param.get("id")!)).map((dt: any) => {
       //   arr.push(dt.rateKey);
       (async () => {
-        const xx = await runApi(dt.rateKey);
-        console.log(xx);
+        const response = await runApi(dt.rateKey);
+        setHotelData((prev: any) => (prev = [...prev, response]));
       })();
     });
   }, [param]);
@@ -87,6 +113,82 @@ export default function Package(props: IPackageProps) {
       alert("There is No Available Hotel");
     }
   };
+
+  const countTotalNight = (inData: string, outDate: string): number => {
+    let date_1 = new Date(outDate);
+    let date_2 = new Date(inData);
+
+    let difference = date_1.getTime() - date_2.getTime();
+    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
+
+    return TotalDays;
+  };
+
+  // put api response data in hotelData into form as part of booking detail
+  const parseResponse = useMemo(() => {
+    if (hotelData.length > 0) {
+      console.log(hotelData[0]);
+      const tmpBookingDetail: any = [];
+      hotelData.forEach((el: any, i: number) => {
+        let tmpNoOfRoom =
+          JSON.parse(decode(param.get("id")!))[i].noOfRoom >
+          el.HotelRateInfo.Rooms.Room[0].RatePlans.RatePlan[0].AvailableQuantity
+            ? el.HotelRateInfo.Rooms.Room[0].RatePlans.RatePlan[0]
+                .AvailableQuantity
+            : JSON.parse(decode(param.get("id")!))[i].noOfRoom;
+
+        let tmpAmountAfterTax = el.HotelRateInfo?.RateInfos?.ConvertedRateInfo
+          ? el.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0].AmountAfterTax
+          : el.HotelRateInfo?.RateInfos?.RateInfo[0].AmountAfterTax;
+
+        tmpBookingDetail.push({
+          bookingKey: el.BookingKey,
+          hotelCode: el.HotelInfo?.HotelCode!,
+          hotelName: el.HotelInfo?.HotelName!,
+          noOfRoom: tmpNoOfRoom,
+
+          roomType:
+            el.HotelRateInfo?.Rooms?.Room[0].RatePlans?.RatePlan[0]
+              .RatePlanName,
+          checkIn: el.HotelRateInfo?.RateInfos.RateInfo[0].StartDate,
+          checkOut: el.HotelRateInfo?.RateInfos.RateInfo[0].EndDate,
+          noOfNight: countTotalNight(
+            el.HotelRateInfo?.RateInfos.RateInfo[0].StartDate,
+            el.HotelRateInfo?.RateInfos.RateInfo[0].EndDate
+          ),
+          amountAfterTax: tmpAmountAfterTax,
+
+          amountBeforeTax: el.HotelRateInfo?.RateInfos?.ConvertedRateInfo
+            ? el.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0].AmountBeforeTax
+            : el.HotelRateInfo?.RateInfos?.RateInfo[0].AmountBeforeTax,
+
+          averageNightlyRate: el.HotelRateInfo?.RateInfos?.ConvertedRateInfo
+            ? el.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
+                .AverageNightlyRate
+            : el.HotelRateInfo?.RateInfos?.RateInfo[0].AverageNightlyRate,
+
+          subAmount: tmpNoOfRoom * tmpAmountAfterTax,
+          currency: el.ConvertedCurrencyCode
+            ? el.ConvertedCurrencyCode
+            : el.CurrencyCode,
+        });
+      });
+      setForm((prev) => {
+        prev = {
+          ...prev,
+          bookingDetail: tmpBookingDetail,
+          payment: {
+            ...prev.payment,
+            currency: tmpBookingDetail[0].currency,
+            totalAmount: tmpBookingDetail.reduce((total: number, amt: any) => {
+              return total + amt.subAmount;
+            }, 0),
+          },
+        };
+        return prev;
+      });
+    }
+  }, [hotelData, param]);
   return (
     <div>
       <div className="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto">
@@ -104,6 +206,8 @@ export default function Package(props: IPackageProps) {
           </div>
         </div>
       </div>
+      <p>{JSON.stringify(form)}</p>
+      <p className="mt-5">{JSON.stringify(decode(param.get("id")!))}</p>
     </div>
   );
 }

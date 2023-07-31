@@ -79,10 +79,10 @@ export default function Header({}: Props) {
     };
   }, [wrapperRef]);
 
-  useEffect(() => {
-    if (param.get("lang") !== null) setLang(param.get("lang")!);
-    if (param.get("currency") !== null) setCurrency(param.get("currency")!);
-  }, []);
+  // useEffect(() => {
+  //   if (param.get("lang") !== null) setLang(param.get("lang")!);
+  //   if (param.get("currency") !== null) setCurrency(param.get("currency")!);
+  // }, []);
 
   // Cart handle
   useEffect(() => {

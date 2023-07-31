@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import useShowHandlerStore from "@/store/showHandler";
 import useLangStore from "@/store/lang";

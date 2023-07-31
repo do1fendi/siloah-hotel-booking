@@ -48,9 +48,13 @@ type formType = {
     amountAfterTax: number;
     amountBeforeTax: number;
     averageNightlyRate: number;
-    totalAmount: number;
+    subAmount: number;
     currency: string;
   }[];
+  payment: {
+    totalAmount: number;
+    currency: string;
+  };
 };
 
 type formErrorType = {
@@ -159,10 +163,14 @@ export default function Book() {
         amountAfterTax: 0,
         amountBeforeTax: 0,
         averageNightlyRate: 0,
-        totalAmount: 0,
+        subAmount: 0,
         currency: "",
       },
     ],
+    payment: {
+      totalAmount: 0,
+      currency: "",
+    },
   });
   const { country } = useCountryStore();
 
@@ -390,6 +398,7 @@ export default function Book() {
 
   useEffect(() => {
     if (apiData) {
+      console.log("apidata", apiData);
       setForm((prev) => {
         if (apiData.BookingKey) {
           prev = {
@@ -421,9 +430,9 @@ export default function Book() {
             bookingDetail: [
               {
                 ...prev.bookingDetail[0],
-                currency:
-                  apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
-                    .CurrencyCode,
+                currency: apiData.ConvertedCurrencyCode
+                  ? apiData.ConvertedCurrencyCode
+                  : apiData.CurrencyCode,
                 checkIn:
                   apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
                     .StartDate,
@@ -446,16 +455,29 @@ export default function Book() {
                     ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans
                         .RatePlan[0].AvailableQuantity
                     : queryUrl.room,
-                totalAmount:
+                subAmount:
                   (apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
                     .AvailableQuantity === 1
                     ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans
                         .RatePlan[0].AvailableQuantity
                     : queryUrl.room) *
-                  apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
-                    .AmountAfterTax,
+                  apiData.HotelRateInfo?.RateInfos?.RateInfo[0].AmountAfterTax,
               },
             ],
+            payment: {
+              ...prev.payment,
+              totalAmount:
+                (apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                  .AvailableQuantity === 1
+                  ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                      .AvailableQuantity
+                  : queryUrl.room) *
+                apiData.HotelRateInfo?.RateInfos?.ConvertedRateInfo[0]
+                  .AmountAfterTax,
+              currency: apiData.ConvertedCurrencyCode
+                ? apiData.ConvertedCurrencyCode
+                : apiData.CurrencyCode,
+            },
           };
         } else {
           prev = {
@@ -463,8 +485,9 @@ export default function Book() {
             bookingDetail: [
               {
                 ...prev.bookingDetail[0],
-                currency:
-                  apiData.HotelRateInfo?.RateInfos?.RateInfo[0].CurrencyCode,
+                currency: apiData.ConvertedCurrencyCode
+                  ? apiData.ConvertedCurrencyCode
+                  : apiData.CurrencyCode,
                 checkIn:
                   apiData.HotelRateInfo?.RateInfos?.RateInfo[0].StartDate,
                 checkOut: apiData.HotelRateInfo?.RateInfos?.RateInfo[0].EndDate,
@@ -482,7 +505,7 @@ export default function Book() {
                     ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans
                         .RatePlan[0].AvailableQuantity
                     : queryUrl.room,
-                totalAmount:
+                subAmount:
                   (apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
                     .AvailableQuantity === 1
                     ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans
@@ -491,6 +514,19 @@ export default function Book() {
                   apiData.HotelRateInfo?.RateInfos?.RateInfo[0].AmountAfterTax,
               },
             ],
+            payment: {
+              ...prev.payment,
+              totalAmount:
+                (apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                  .AvailableQuantity === 1
+                  ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                      .AvailableQuantity
+                  : queryUrl.room) *
+                apiData.HotelRateInfo?.RateInfos?.RateInfo[0].AmountAfterTax,
+              currency: apiData.ConvertedCurrencyCode
+                ? apiData.ConvertedCurrencyCode
+                : apiData.CurrencyCode,
+            },
           };
         }
 
@@ -839,7 +875,7 @@ export default function Book() {
                       {form.bookingDetail[0].currency === "TWD" ? "NT$ " : "$ "}
                     </span>
                     <span className="text-lg text-pink-700">
-                      {form.bookingDetail[0].totalAmount
+                      {form.payment.totalAmount
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     </span>

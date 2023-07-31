@@ -2,7 +2,7 @@
 import Image from "next/image";
 import useUserStore from "@/store/user";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import useLangStore from "@/store/lang";
 import useCurrencyStore from "@/store/currency";
 import useDictionaryStore from "@/store/dictionary";
@@ -37,6 +37,7 @@ export default function Home() {
   const [hotelDetailData, setHotelDetailData] = useState<any | null>(null);
   const { currency } = useCurrencyStore((state) => state);
   const { lang } = useLangStore((state) => state);
+  const router = useRouter();
   const param = useSearchParams();
   const [querySearch, setQuerySearch] = useState<querySearchType>({
     searchCode: "",
@@ -101,8 +102,10 @@ export default function Home() {
         childAges: param.get("childAges")!,
         checkIn: param.get("checkIn")!,
         checkOut: param.get("checkOut")!,
-        currency: param.get("currency")!,
-        lang: param.get("lang")!,
+        currency: currency,
+        lang: lang,
+        // currency: currency,
+        // lang: lang,
       };
 
       // run api
@@ -111,6 +114,27 @@ export default function Home() {
       return prev;
     });
   }, [param, lang, currency]);
+
+  // useEffect(() => {
+  //   setQuerySearch((prev) => {
+  //     prev = {
+  //       ...querySearch,
+  //       searchCode: param.get("searchCode")!,
+  //       room: parseInt(param.get("room")!),
+  //       adult: parseInt(param.get("adult")!),
+  //       children: parseInt(param.get("children")!),
+  //       childAges: param.get("childAges")!,
+  //       checkIn: param.get("checkIn")!,
+  //       checkOut: param.get("checkOut")!,
+  //       currency: currency,
+  //       lang: lang,
+  //     };
+  //     const result = '?' + new URLSearchParams(JSON.parse(JSON.stringify(prev))).toString();
+  //     window.location.replace("/hotel/" + result);
+
+  //     return prev;
+  //   });
+  // }, [lang, currency]);
 
   // convert time to am pm, original format 1200
   const convertTime = (tm: string) => {

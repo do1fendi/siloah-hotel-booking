@@ -85,8 +85,8 @@ export default function Home() {
         childAges: param.get("childAges")!,
         checkIn: param.get("checkIn")!,
         checkOut: param.get("checkOut")!,
-        currency: param.get("currency")!,
-        lang: param.get("lang")!,
+        currency: currency,
+        lang: lang,
       };
       router.replace(
         `/search/?city=${prev.city}&checkIn=${prev.checkIn}&checkOut=${prev.checkOut}&room=${prev.room}&adult=${prev.adult}&children=${prev.children}&childAges=${prev.childAges}&lang=${lang}&currency=${currency}`

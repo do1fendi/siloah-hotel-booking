@@ -105,23 +105,10 @@ export default function HotelRoomList({ data }: IHotelRoom) {
     checkIn: string;
     checkOut: string;
     selected: boolean;
+    noOfRoom: number;
   };
   const addToCart = (dt: cartData) => {
     // set cart, if cartData not null use spread operator to add new data otherwise without spread operator
-
-    // setCartData(
-    //   JSON.stringify({
-    //     hotelName: dt.hotelName,
-    //     roomType: dt.roomType,
-    //     ratePlanName: dt.ratePlanName,
-    //     rateKey: dt.rateKey,
-    //     price: dt.price,
-    //   })
-    // );
-    // setCartData("hello-world")
-
-    // setTrackUpdate(!trackUpdate);
-
     if (cartData !== "") {
       setCartData(
         JSON.stringify([
@@ -135,6 +122,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
             checkIn: dt.checkIn,
             checkOut: dt.checkOut,
             selected: dt.selected,
+            noOfRoom: dt.noOfRoom,
           },
         ])
       );
@@ -150,15 +138,12 @@ export default function HotelRoomList({ data }: IHotelRoom) {
             checkIn: dt.checkIn,
             checkOut: dt.checkOut,
             selected: dt.selected,
+            noOfRoom: dt.noOfRoom,
           },
         ])
       );
     }
   };
-
-  // useEffect(() => {
-  //   console.log(cartData);
-  // }, [trackUpdate]);
 
   return (
     <>
@@ -327,6 +312,11 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                             checkIn: queryParam.checkIn,
                             checkOut: queryParam.checkOut,
                             selected: false,
+                            noOfRoom:
+                              rm.RatePlans.RatePlan[0].AvailableQuantity >
+                              queryParam.room
+                                ? queryParam.room
+                                : rm.RatePlans.RatePlan[0].AvailableQuantity,
                           })
                         }
                       >

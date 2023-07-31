@@ -17,6 +17,7 @@ type cartType = {
   checkIn: string;
   checkOut: string;
   selected: boolean;
+  noOfRoom: number;
 }[];
 
 // param to pass to package page
@@ -172,6 +173,7 @@ export default function Cart() {
                           ></input>
                         </span>
                         <span>{cart.ratePlanName}</span>
+                        <span className="ml-2">x {cart.noOfRoom}</span>
                       </p>
                       <p className="text-gray-500 text-xs">
                         {convertDate(cart.checkIn)} ~{" "}
@@ -184,7 +186,7 @@ export default function Cart() {
                           {currency === "TWD" ? "NT$ " : "$ "}
                         </span>
                         <span className="text-xl text-pink-700">
-                          {cart.price
+                          {(cart.price * cart.noOfRoom)
                             .toString()
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                         </span>

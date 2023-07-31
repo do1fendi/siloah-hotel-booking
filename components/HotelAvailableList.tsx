@@ -1,3 +1,4 @@
+"use client";
 import useCurrencyStore from "@/store/currency";
 import useLangStore from "@/store/lang";
 import useDictionaryStore from "@/store/dictionary";

@@ -1,3 +1,4 @@
+"use client";
 // import DatePicker from "react-datepicker";
 import DatePicker from "react-tailwindcss-datepicker";
 import { useState, useEffect, useRef } from "react";
