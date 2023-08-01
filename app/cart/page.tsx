@@ -217,7 +217,7 @@ export default function Cart() {
                 </Link>
               </div>
             </div>
-            {JSON.stringify(carts)}
+            {/* {JSON.stringify(carts)} */}
           </div>
         ) : (
           <div className="flex flex-col justify-center items-center h-screen -mt-[110px]">
