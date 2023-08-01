@@ -109,6 +109,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
   };
   const addToCart = (dt: cartData) => {
     // set cart, if cartData not null use spread operator to add new data otherwise without spread operator
+    console.log("cart", dt);
     if (cartData !== "") {
       setCartData(
         JSON.stringify([
@@ -308,7 +309,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                             roomType: rm.RoomType,
                             ratePlanName: rm.RoomDescription.Name,
                             rateKey: rm.RateKey,
-                            price: rm.AmountAfterTax,
+                            price: parseFloat(rm.AmountAfterTax),
                             checkIn: queryParam.checkIn,
                             checkOut: queryParam.checkOut,
                             selected: false,

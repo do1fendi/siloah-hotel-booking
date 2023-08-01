@@ -176,7 +176,7 @@ export default function Home() {
           config
         );
         const dt = await result.json();
-        console.log(dt);
+        console.log("List Hotel by global Code", dt);
         setHotelDetailData(dt.data);
         // response room and roomRate objects are seperated, so combine them together
         if (

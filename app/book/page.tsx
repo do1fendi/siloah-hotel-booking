@@ -50,6 +50,7 @@ type formType = {
     averageNightlyRate: number;
     subAmount: number;
     currency: string;
+    penalty: any;
   }[];
   payment: {
     totalAmount: number;
@@ -165,6 +166,7 @@ export default function Book() {
         averageNightlyRate: 0,
         subAmount: 0,
         currency: "",
+        penalty: "",
       },
     ],
     payment: {
@@ -547,6 +549,20 @@ export default function Book() {
           };
         }
 
+        // set penalty
+        if (apiData.HotelRateInfo?.Rooms?.Room) {
+          prev = {
+            ...prev,
+            bookingDetail: [
+              {
+                ...prev.bookingDetail[0],
+                penalty:
+                  apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                    .RateInfo.CancelPenalties.CancelPenalty[0],
+              },
+            ],
+          };
+        }
         return prev;
       });
     }
@@ -1125,7 +1141,7 @@ export default function Book() {
                 </div>
               </div>
             </div>
-            {/* <div> {JSON.stringify(form)}</div>{" "} */}
+            <div> {JSON.stringify(form)}</div>{" "}
           </div>
 
           {/* {JSON.stringify(userData)} */}

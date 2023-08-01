@@ -15,6 +15,7 @@ const useLangStore = create<iLangState>()(
     }),
     {
       name: "_ln",
+      skipHydration: true,
     }
   )
 );
