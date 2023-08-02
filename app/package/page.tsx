@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { decode } from "js-base64";
 import useLangStore from "@/store/lang";
 import useCurrencyStore from "@/store/currency";
+import usePackageStore from "@/store/package";
 export interface IPackageProps {}
 
 type arrRateKeyType = string[];
@@ -57,6 +58,7 @@ export default function Package(props: IPackageProps) {
   const [arrRateKey, setArrReteKey] = useState<arrRateKeyType>([]);
   const [loading, setLoading] = useState<loadingType>([]);
   const [hotelData, setHotelData] = useState<any>([]);
+  const { packs } = usePackageStore();
   const [form, setForm] = useState<formType>({
     user: {
       fullName: "",
@@ -84,7 +86,7 @@ export default function Package(props: IPackageProps) {
     // setArrReteKey((prev) => {
     //   const arr: Array<string> = [];
 
-    //   JSON.parse(decode(param.get("id")!)).map((dt: any) => {
+    //   JSON.parse(decode(packs)).map((dt: any) => {
     //     arr.push(dt.rateKey);
     //   });
     //   prev = [...prev, ...arr];
@@ -92,16 +94,19 @@ export default function Package(props: IPackageProps) {
     //   return prev;
     // });
     const tmpLoadingArr: loadingType = [];
-    JSON.parse(decode(param.get("id")!)).map((dt: any) => {
-      //   arr.push(dt.rateKey);
-      tmpLoadingArr.push({ loading: true });
-      (async () => {
-        const response = await runApi(dt.rateKey);
-        setHotelData((prev: any) => (prev = [...prev, response]));
-      })();
-    });
+    // JSON.parse(decode(packs)).map((dt: any) => {
+    if (JSON.parse(decode(packs!)) !== null) {
+      JSON.parse(decode(packs!)).map((pack: any) => {
+        //   arr.push(dt.rateKey);
+        tmpLoadingArr.push({ loading: true });
+        (async () => {
+          const response = await runApi(pack.rateKey);
+          setHotelData((prev: any) => (prev = [...prev, response]));
+        })();
+      });
 
-    setLoading(tmpLoadingArr);
+      setLoading(tmpLoadingArr);
+    } else setHotelData([]);
   }, [param]);
 
   const runApi = async (rate: string) => {
@@ -170,7 +175,7 @@ export default function Package(props: IPackageProps) {
   useEffect(() => {
     if (hotelData.length > 0) {
       const tmpBookingDetail: any = [];
-      const paramNoOfRoom = JSON.parse(decode(param.get("id")!))[0].noOfRoom;
+      const paramNoOfRoom = JSON.parse(decode(packs!))[0].noOfRoom;
       hotelData.forEach((el: any, i: number) => {
         console.log(i, hotelData[i]);
         setLoading((prev) => {
@@ -267,7 +272,7 @@ export default function Package(props: IPackageProps) {
         </div>
       }
     */}
-      <div className="">
+      <div className="container mx-auto max-w-[1024px] p-2 lg:p-0 mt-5">
         {loading.length > 0 && (
           <div className="w-full flex flex-col gap-5 border rounded border-luxgreen p-2 lg:p-5">
             <p className="text-xl text-luxgreen font-bold">
@@ -339,7 +344,7 @@ export default function Package(props: IPackageProps) {
       </div>
       {/* <div>{JSON.stringify(loading)}</div>
       <p>{JSON.stringify(form)}</p>
-      <p className="mt-5">{JSON.stringify(decode(param.get("id")!))}</p> */}
+      <p className="mt-5">{JSON.stringify(decode(packs))}</p> */}
     </div>
   );
 }

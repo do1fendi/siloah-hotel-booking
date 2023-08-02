@@ -9,13 +9,12 @@ interface iLangState {
 
 const useLangStore = create<iLangState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       lang: "TW",
       setLang: (a) => set({ lang: a }),
     }),
     {
       name: "_ln",
-      skipHydration: true,
     }
   )
 );

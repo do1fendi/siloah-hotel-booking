@@ -1141,7 +1141,7 @@ export default function Book() {
                 </div>
               </div>
             </div>
-            <div> {JSON.stringify(form)}</div>{" "}
+            {/* <div> {JSON.stringify(form)}</div>{" "} */}
           </div>
 
           {/* {JSON.stringify(userData)} */}

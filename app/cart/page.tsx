@@ -7,6 +7,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import useLangStore from "@/store/lang";
 import useUserStore from "@/store/user";
 import Link from "next/link";
+import usePackageStore from "@/store/package";
 
 type cartType = {
   hotelName: string;
@@ -33,6 +34,7 @@ export default function Cart() {
   const { lang } = useLangStore();
   const [anySelected, setAnySelected] = useState<boolean>(false);
   const [paramToPass, setParamToPass] = useState<paramToPassType>({ id: "" });
+  const { setPackage } = usePackageStore();
 
   useEffect(() => {
     if (userData != null) {
@@ -119,6 +121,7 @@ export default function Cart() {
         JSON.stringify(setSelected.filter((s) => s.selected === true))
       ),
     });
+    setPackage(JSON.stringify(setSelected.filter((s) => s.selected === true)));
   };
 
   useEffect(() => {
@@ -156,7 +159,10 @@ export default function Cart() {
                   <div>
                     <div className="flex justify-between items-center">
                       <p className="text-lg font-bold">{cart.hotelName}</p>
-                      <button onClick={() => onRemoveCart(ind)}>
+                      <button
+                        className="min-w-[30px]"
+                        onClick={() => onRemoveCart(ind)}
+                      >
                         <FaRegTrashAlt />
                       </button>
                     </div>
@@ -173,14 +179,21 @@ export default function Cart() {
                           ></input>
                         </span>
                         <span>{cart.ratePlanName}</span>
-                        <span className="ml-2">x {cart.noOfRoom}</span>
                       </p>
                       <p className="text-gray-500 text-xs">
                         {convertDate(cart.checkIn)} ~{" "}
                         {convertDate(cart.checkOut)}
                       </p>
+                      <p className="text-gray-500 text-xs">
+                        {cart.noOfRoom}{" "}
+                        {lang === "TW"
+                          ? "房間"
+                          : cart.noOfRoom > 1
+                          ? "Rooms"
+                          : "Room"}
+                      </p>
                     </div>
-                    <div className="min-w-[110px] text-right">
+                    <div className="min-w-[130px] text-right">
                       <p>
                         <span className="text-xs">
                           {currency === "TWD" ? "NT$ " : "$ "}
@@ -206,11 +219,11 @@ export default function Cart() {
                     ? "最終價格將在下一頁計算"
                     : "Final price will be calculated on the next page"}
                 </p>
-                <Link href={{ pathname: "/package", query: paramToPass }}>
+                <Link href="/package">
                   <button
                     className="w-full bg-luxorange text-gray-100 hover:bg-orange-400 rounded p-2 mt-5 disabled:bg-gray-300"
                     disabled={!anySelected}
-                    onClick={() => onNext()}
+                    
                   >
                     {lang === "TW" ? "下一步" : "Next"}
                   </button>

@@ -10,13 +10,16 @@ import useShowHandlerStore from "@/store/showHandler";
 import { BsFillCartFill } from "react-icons/bs";
 import useCartStore from "@/store/cart";
 import { decode } from "js-base64";
+import useStore from "@/store/useStore";
 
 type Props = {};
 
 export default function Header({}: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const { lang, setLang } = useLangStore((state) => state);
-  const { currency, setCurrency } = useCurrencyStore((state) => state);
+  const lang = useStore(useLangStore, (state) => state.lang);
+  const setLang = useStore(useLangStore, (state) => state);
+  const currency = useStore(useCurrencyStore, (state) => state.currency);
+  const setCurrency = useStore(useCurrencyStore, (state) => state);
   const { userData, setUserData } = useUserStore((state) => state);
   const [userInital, setUserInitial] = useState<null | string>(null);
   const path = usePathname();
@@ -79,11 +82,6 @@ export default function Header({}: Props) {
     };
   }, [wrapperRef]);
 
-  // useEffect(() => {
-  //   if (param.get("lang") !== null) setLang(param.get("lang")!);
-  //   if (param.get("currency") !== null) setCurrency(param.get("currency")!);
-  // }, []);
-
   // Cart handle
   useEffect(() => {
     if (cartData !== "") {
@@ -124,7 +122,7 @@ export default function Header({}: Props) {
                 <button
                   className="border border-luxgreen hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
                   onClick={() => {
-                    setCurrency("TWD");
+                    setCurrency?.setCurrency("TWD");
                     setShowCurrency(false);
                   }}
                 >
@@ -133,7 +131,7 @@ export default function Header({}: Props) {
                 <button
                   className="border border-luxgreen hover:bg-teal-600 hover:text-gray-100 p-2 w-[150px] rounded"
                   onClick={() => {
-                    setCurrency("USD");
+                    setCurrency?.setCurrency("USD");
                     setShowCurrency(false);
                   }}
                 >
@@ -163,7 +161,7 @@ export default function Header({}: Props) {
                 <button
                   className="border border-luxgreen hover:bg-teal-600 hover:text-gray-100 p-2 w-full rounded"
                   onClick={() => {
-                    setLang("EN");
+                    setLang?.setLang("EN");
                     setShowLang(false);
                   }}
                 >
@@ -172,7 +170,7 @@ export default function Header({}: Props) {
                 <button
                   className="border border-luxgreen hover:bg-teal-600 hover:text-gray-100 p-2 w-[150px] rounded"
                   onClick={() => {
-                    setLang("TW");
+                    setLang?.setLang("TW");
                     setShowLang(false);
                   }}
                 >

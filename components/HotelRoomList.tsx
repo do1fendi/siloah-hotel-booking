@@ -314,7 +314,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
                             checkOut: queryParam.checkOut,
                             selected: false,
                             noOfRoom:
-                              rm.RatePlans.RatePlan[0].AvailableQuantity >
+                            rm.RatePlans.RatePlan[0].LimitedAvailability || rm.RatePlans.RatePlan[0].AvailableQuantity >
                               queryParam.room
                                 ? queryParam.room
                                 : rm.RatePlans.RatePlan[0].AvailableQuantity,

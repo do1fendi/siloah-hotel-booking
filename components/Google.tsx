@@ -36,7 +36,7 @@ export default function Google(props: IGoogleProps) {
     // console.log(response);
     // console.log(jwtDecode(response.credential));
     const decoded: googleRet = jwtDecode(response.credential);
-   
+    console.log(jwtDecode(response.credential));
     (async () => {
       const config = {
         headers: {
@@ -81,14 +81,15 @@ export default function Google(props: IGoogleProps) {
   };
 
   const googleLogin = () => {
-    (window as any).googleButtonWrapper.click();
+    console.log((window as any).googleButtonWrapper);
+    // (window as any).googleButtonWrapper.click();
   };
 
   return (
     <>
       <Script
         src="https://accounts.google.com/gsi/client"
-        strategy="lazyOnload"
+        // strategy="lazyOnload"
         onLoad={() => {
           (window as any).google.accounts.id.initialize({
             client_id: props.clientId,
@@ -97,8 +98,12 @@ export default function Google(props: IGoogleProps) {
 
           const createFakeGoogleWrapper = () => {
             const googleLoginWrapper = document.createElement("div");
+            googleLoginWrapper.id = "goo";
             // Or you can simple hide it in CSS rule for custom-google-button
-            googleLoginWrapper.style.display = "none";
+            // googleLoginWrapper.style.display = "none";
+            googleLoginWrapper.style.width = "200px";
+            googleLoginWrapper.style.height = "200px";
+            // googleLoginWrapper.style.display = "none";
             googleLoginWrapper.classList.add("custom-google-button");
 
             // Add the wrapper to body
@@ -106,16 +111,16 @@ export default function Google(props: IGoogleProps) {
 
             // Use GSI javascript api to render the button inside our wrapper
             // You can ignore the properties because this button will not appear
-            (window as any).google.accounts.id.renderButton(
-              googleLoginWrapper,
-              {
-                type: "icon",
-                width: "200",
-              }
-            );
+            // (window as any).google.accounts.id.renderButton(
+            //   googleLoginWrapper,
+            //   {
+            //     type: "icon",
+            //     width: "200",
+            //   }
+            // );
 
-            const googleLoginWrapperButton: any =
-              googleLoginWrapper.querySelector("div[role=button]");
+            const googleLoginWrapperButton: HTMLDivElement | null =
+              googleLoginWrapper.querySelector("#goo[role=button]");
 
             return {
               click: () => {
