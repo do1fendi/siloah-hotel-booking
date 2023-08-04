@@ -104,8 +104,7 @@ export default function Google(props: IGoogleProps) {
             });
             const createFakeGoogleWrapper = () => {
               const googleLoginWrapper: any = document.createElement("div");
-              // googleLoginWrapper.setAttribute("id", "aaaa");
-              googleLoginWrapper.setAttribute("role", "button");
+      
               // Or you can simple hide it in CSS rule for custom-google-button
               googleLoginWrapper.style.display = "none";
               // googleLoginWrapper.classList.add("custom-google-button");
@@ -138,12 +137,8 @@ export default function Google(props: IGoogleProps) {
             };
 
             // Now we have a wrapper to click
-
-            // const googleButtonWrapper = createFakeGoogleWrapper();
-
-            // Now we have a wrapper to click
             (window as any).googleButtonWrapper = createFakeGoogleWrapper();
-            // console.log((window as any).googleButtonWrapper);
+            
           } catch (error) {
             console.log(error);
           }
