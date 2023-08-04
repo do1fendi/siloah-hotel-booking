@@ -81,61 +81,77 @@ export default function Google(props: IGoogleProps) {
   };
 
   const googleLogin = () => {
-    console.log((window as any).googleButtonWrapper);
-    // (window as any).googleButtonWrapper.click();
+    // (window as any).google.accounts.id.prompt();
+    // console.log((window as any).googleButtonWrapper);
+    (window as any).googleButtonWrapper.click();
   };
 
   return (
     <>
       <Script
         src="https://accounts.google.com/gsi/client"
-        // strategy="lazyOnload"
+        strategy="lazyOnload"
         onLoad={() => {
-          (window as any).google.accounts.id.initialize({
-            client_id: props.clientId,
-            callback: handleResponse,
-          });
+          if (typeof window === "undefined" || !(window as any).google) {
+            return;
+          }
 
-          const createFakeGoogleWrapper = () => {
-            const googleLoginWrapper = document.createElement("div");
-            googleLoginWrapper.id = "goo";
-            // Or you can simple hide it in CSS rule for custom-google-button
-            // googleLoginWrapper.style.display = "none";
-            googleLoginWrapper.style.width = "200px";
-            googleLoginWrapper.style.height = "200px";
-            // googleLoginWrapper.style.display = "none";
-            googleLoginWrapper.classList.add("custom-google-button");
+          try {
+            (window as any).google.accounts.id.initialize({
+              // log_level: "debug",
+              client_id: props.clientId,
+              callback: handleResponse,
+            });
+            const createFakeGoogleWrapper = () => {
+              const googleLoginWrapper: any = document.createElement("div");
+              // googleLoginWrapper.setAttribute("id", "aaaa");
+              googleLoginWrapper.setAttribute("role", "button");
+              // Or you can simple hide it in CSS rule for custom-google-button
+              googleLoginWrapper.style.display = "none";
+              // googleLoginWrapper.classList.add("custom-google-button");
 
-            // Add the wrapper to body
-            document.body.appendChild(googleLoginWrapper);
+              // Add the wrapper to body
+              document.body.appendChild(googleLoginWrapper);
 
-            // Use GSI javascript api to render the button inside our wrapper
-            // You can ignore the properties because this button will not appear
-            // (window as any).google.accounts.id.renderButton(
-            //   googleLoginWrapper,
-            //   {
-            //     type: "icon",
-            //     width: "200",
-            //   }
-            // );
+              // Use GSI javascript api to render the button inside our wrapper
+              // You can ignore the properties because this button will not appear
+              (window as any).google.accounts.id.renderButton(
+                googleLoginWrapper,
+                {
+                  type: "standard",
+                  theme: "outline",
+                  text: "signin_with",
+                  width: "416px",
+                  shape: "square",
+                }
+              );
 
-            const googleLoginWrapperButton: HTMLDivElement | null =
-              googleLoginWrapper.querySelector("#goo[role=button]");
+              // console.log(googleLoginWrapper.querySelector("div[role=button]"));
+              const googleLoginWrapperButton: any =
+                googleLoginWrapper.querySelector("div[role=button]");
 
-            return {
-              click: () => {
-                googleLoginWrapperButton!.click();
-              },
+              return {
+                click: () => {
+                  googleLoginWrapperButton.click();
+                },
+              };
             };
-          };
 
-          // Now we have a wrapper to click
-          (window as any).googleButtonWrapper = createFakeGoogleWrapper();
+            // Now we have a wrapper to click
+
+            // const googleButtonWrapper = createFakeGoogleWrapper();
+
+            // Now we have a wrapper to click
+            (window as any).googleButtonWrapper = createFakeGoogleWrapper();
+            // console.log((window as any).googleButtonWrapper);
+          } catch (error) {
+            console.log(error);
+          }
         }}
       />
       {/* <div id="btn"></div> */}
 
-      {/* <Button onClick={() => setIsgoogleLogin(true)} text="Testing Google" /> */}
+      {/* <Button onClick={() => setIsgoogleLogin(true)} text="Testing Google" />  */}
       {/* {JSON.stringify(routeList)} */}
       <button
         className="border border-orange-500 hover:bg-orange-500 hover:text-gray-100 p-2 rounded w-full"
