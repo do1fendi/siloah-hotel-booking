@@ -84,7 +84,7 @@ export default function Header({}: Props) {
 
   // Cart handle
   useEffect(() => {
-    if (cartData !== "") {
+    if (cartData !== null && decode(cartData) !== "null") {
       const len = JSON.parse(decode(cartData)).length;
       setCartDataLength((prev) => (prev = len));
     }

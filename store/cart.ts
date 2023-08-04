@@ -79,7 +79,7 @@ interface BearState {
 const useCartStore = create<BearState>()(
   persist(
     (set) => ({
-      cartData: "",
+      cartData: encode("null"),
       setCartData: (a) => set({ cartData: encode(a) }),
     }),
     {

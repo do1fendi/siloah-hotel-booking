@@ -110,7 +110,7 @@ export default function HotelRoomList({ data }: IHotelRoom) {
   const addToCart = (dt: cartData) => {
     // set cart, if cartData not null use spread operator to add new data otherwise without spread operator
     console.log("cart", dt);
-    if (cartData !== "") {
+    if (cartData !== null && decode(cartData) !== "null") {
       setCartData(
         JSON.stringify([
           ...JSON.parse(decode(cartData)),
