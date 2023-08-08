@@ -835,7 +835,11 @@ export default function Book() {
               <div>
                 <p>{lang === "TW" ? "已選擇" : "You selected"}</p>
                 <p className="font-bold">
-                  {queryUrl.room}{" "}
+                  {apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                  .AvailableQuantity === 1
+                  ? apiData.HotelRateInfo?.Rooms?.Room[0].RatePlans.RatePlan[0]
+                      .AvailableQuantity
+                  : queryUrl.room}{" "}
                   {lang === "TW"
                     ? "間客房"
                     : queryUrl.room > 1
@@ -1000,6 +1004,7 @@ export default function Book() {
                       id="orCountry"
                       value={form.orderer.country}
                       onChange={(e) => onChange(e.currentTarget)}
+                      onClick={()=> setForm({...form,orderer:{...form.orderer, country:""}})}
                     ></input>
                     <datalist id="listCountry">
                       {lang === "TW"
@@ -1114,6 +1119,12 @@ export default function Book() {
                           id="gsCountry"
                           value={form.guest.country}
                           onChange={(e) => onChange(e.currentTarget)}
+                          onClick={() =>
+                            setForm({
+                              ...form,
+                              guest: { ...form.guest, country: "" },
+                            })
+                          }
                         ></input>
                         <datalist id="listCountry">
                           {lang === "TW"

@@ -752,6 +752,12 @@ export default function Package(props: IPackageProps) {
                       id="orCountry"
                       value={form.orderer.country}
                       onChange={(e) => onChange(e.currentTarget)}
+                      onClick={() =>
+                        setForm({
+                          ...form,
+                          orderer: { ...form.orderer, country: "" },
+                        })
+                      }
                     ></input>
                     <datalist id="listCountry">
                       {lang === "TW"
@@ -866,6 +872,12 @@ export default function Package(props: IPackageProps) {
                           id="gsCountry"
                           value={form.guest.country}
                           onChange={(e) => onChange(e.currentTarget)}
+                          onClick={() =>
+                            setForm({
+                              ...form,
+                              guest: { ...form.guest, country: "" },
+                            })
+                          }
                         ></input>
                         <datalist id="listCountry">
                           {lang === "TW"

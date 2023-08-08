@@ -104,7 +104,7 @@ export default function Header({}: Props) {
       <div className="flex gap-2 lg:gap-5 justify-center items-center">
         <div ref={currencyButton} className="currency relative">
           <button
-            className="font-bold px-2"
+            className="font-bold"
             onClick={() => {
               setShowCurrency(true);
               setShowLang(false);
@@ -188,7 +188,7 @@ export default function Header({}: Props) {
           </div>
         )}
 
-        <div ref={cartButton} className="cart relative mr-2">
+        <div ref={cartButton} className="cart relative">
           <Link
             href={{
               pathname: "/cart",
@@ -206,7 +206,7 @@ export default function Header({}: Props) {
 
         <div className="nav relative">
           <button
-            className="p-2"
+            className="flex justify-center items-center"
             onClick={() => {
               setShowNav(true);
               setShowLang(false);
