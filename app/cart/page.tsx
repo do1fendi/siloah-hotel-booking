@@ -125,10 +125,11 @@ export default function Cart() {
   };
 
   useEffect(() => {
-    setAnySelected((prev) => {
-      prev = carts.some((cart) => cart.selected === true);
-      return prev;
-    });
+    if (carts && carts.length > 0)
+      setAnySelected((prev) => {
+        prev = carts.some((cart) => cart.selected === true);
+        return prev;
+      });
   }, [carts]);
 
   const onNext = () => {
@@ -141,7 +142,7 @@ export default function Cart() {
   return (
     <>
       <div className="container mx-auto max-w-[1024px]">
-        {carts.length > 0 ? (
+        {carts && carts.length > 0 ? (
           <div className="flex flex-col lg:flex-row gap-5">
             <div className="flex flex-col gap-2 lg:gap-5 mt-5 p-2 lg:p-0 w-full lg:w-8/12">
               <div className="p-2 lg:p-5 border border-luxgreen rounded">
@@ -223,7 +224,6 @@ export default function Cart() {
                   <button
                     className="w-full bg-luxorange text-gray-100 hover:bg-orange-400 rounded p-2 mt-5 disabled:bg-gray-300"
                     disabled={!anySelected}
-                    
                   >
                     {lang === "TW" ? "下一步" : "Next"}
                   </button>

@@ -21,7 +21,7 @@ const nextConfig = {
     unoptimized: true,
   },
   env: {
-    BASEURL: "http://localhost:3000",
+    BASEURL: "http://localhost:3002",
     // BASEURL: "http://192.168.12.3:3000",
     // BASEURL: "https://do1fendi.github.io/siloah-hotel-booking",
     // BASEURL: "https://node.taiwanviptravel.com/siloah-hotel-booking",
