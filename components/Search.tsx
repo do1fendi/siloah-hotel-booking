@@ -9,6 +9,7 @@ import useLangStore from "@/store/lang";
 import useCurrencyStore from "@/store/currency";
 import { IoIosArrowDropdown } from "react-icons/io";
 import { useRouter, useSearchParams } from "next/navigation";
+import { cityLookUp } from "@/store/search";
 
 type occupationType = {
   room: number;
@@ -21,6 +22,13 @@ type valueDateType = {
   startDate: Date;
   endDate: Date;
 };
+
+type cityLookUpType =
+  | {
+      cityName: string;
+      country: string;
+    }[]
+  | null;
 
 export default function Search({}) {
   // const [startDate, setStartDate] = useState(new Date());
@@ -36,6 +44,8 @@ export default function Search({}) {
     startDate: new Date(),
     endDate: new Date(),
   });
+  // const [showLookUp, setShowLookUp] = useState(false);
+  const [resultLookUp, setResultLookUp] = useState<cityLookUpType>(null);
 
   useEffect(() => {
     // init date
@@ -58,6 +68,8 @@ export default function Search({}) {
   };
 
   const onCityChange = (ev: HTMLInputElement) => {
+    // console.log(cityLookUp(ev.value));
+    setResultLookUp(cityLookUp(ev.value));
     setSearchCity((prev) => (prev = ev.value));
   };
 
@@ -114,7 +126,7 @@ export default function Search({}) {
 
   return (
     <>
-      <div>
+      <div className="relative">
         <label className="relative focus-within:text-teal-500 block">
           <BsSearch className="pointer-events-none w-6 h-6 absolute top-3 transform left-3"></BsSearch>
           <input
@@ -126,6 +138,15 @@ export default function Search({}) {
             value={searchCity}
           />
         </label>
+        {resultLookUp !== null && searchCity !== "" && (
+          <div className="absolute z-20 bg-white flex flex-col gap-5 border border-gray-300 w-full rounded p-5">
+            {resultLookUp.map((res, ix: number) => (
+              <p key={ix} className="text-sm cursor-pointer" onClick={()=>{setSearchCity(res.cityName); setResultLookUp(null)}}>
+                {res.cityName}, {res.country}
+              </p>
+            ))}
+          </div>
+        )}
       </div>
       <div className="flex justify-between items-center flex-col lg:flex-row gap-2 lg:gap-5">
         <div className="datePicker w-full lg:w-1/2">
