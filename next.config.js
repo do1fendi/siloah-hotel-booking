@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "export",
-  basePath: "/siloah-hotel-booking",
+  // basePath: "/siloah-hotel-booking",
   trailingSlash: true,
-  assetPrefix: "/siloah-hotel-booking",
+  // assetPrefix: "/siloah-hotel-booking",
   // images: {
   //   loader: "imgix",
   //   path: "",

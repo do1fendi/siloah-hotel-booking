@@ -361,7 +361,7 @@ export default function Package(props: IPackageProps) {
             ...prev.payment,
             currency: tmpBookingDetail[0].currency,
             totalAmount: tmpBookingDetail.reduce((total: number, amt: any) => {
-              return total + amt.subAmount;
+              return Math.round((total + amt.subAmount) *100)/100;
             }, 0),
           },
         };
@@ -761,8 +761,12 @@ export default function Package(props: IPackageProps) {
                     ></input>
                     <datalist id="listCountry">
                       {lang === "TW"
-                        ? country.map((o) => <option value={o.tw} />)
-                        : country.map((o) => <option value={o.en} />)}
+                        ? country.map((o) => (
+                            <option key={o.mobileCode} value={o.tw} />
+                          ))
+                        : country.map((o) => (
+                            <option key={o.mobileCode} value={o.en} />
+                          ))}
                     </datalist>
                     {errorForm.orCountry.error && (
                       <p className="text-sm text-pink-700">
@@ -881,8 +885,12 @@ export default function Package(props: IPackageProps) {
                         ></input>
                         <datalist id="listCountry">
                           {lang === "TW"
-                            ? country.map((o) => <option value={o.tw} />)
-                            : country.map((o) => <option value={o.en} />)}
+                            ? country.map((o) => (
+                                <option key={o.mobileCode} value={o.tw} />
+                              ))
+                            : country.map((o) => (
+                                <option key={o.mobileCode} value={o.en} />
+                              ))}
                         </datalist>
                         {errorForm.gsCountry.error && (
                           <p className="text-sm text-pink-700">
@@ -924,8 +932,9 @@ export default function Package(props: IPackageProps) {
       )}
 
       {/* <div>{JSON.stringify(loading)}</div>
-      <p>{JSON.stringify(form)}</p>
+      // <p>{JSON.stringify(form)}</p>
       <p className="mt-5">{JSON.stringify(decode(packs))}</p> */}
+      {/* <p>{JSON.stringify(form)}</p> */}
     </div>
   );
 }
