@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import useUserStore from "@/store/user";
 import { useSearchParams } from "next/navigation";
 import { decode } from "js-base64";
 import useLangStore from "@/store/lang";
@@ -63,6 +64,7 @@ export default function Package(props: IPackageProps) {
   const { currency } = useCurrencyStore();
   const param = useSearchParams();
   const [arrRateKey, setArrReteKey] = useState<arrRateKeyType>([]);
+  const { userData, setUserData } = useUserStore((state) => state);
   const [loading, setLoading] = useState<loadingType>([]);
   const [hotelData, setHotelData] = useState<any>([]);
   const { packs, setPackage } = usePackageStore();
@@ -199,6 +201,13 @@ export default function Package(props: IPackageProps) {
       },
     },
   });
+
+  useEffect(() => {
+    setForm({
+      ...form,
+      user: { ...form.user, fullName: userData?.name!, email: userData?.em! },
+    });
+  }, [userData]);
 
   // update based on param
   useEffect(() => {
